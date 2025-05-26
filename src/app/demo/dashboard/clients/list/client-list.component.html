@@ -1,0 +1,282 @@
+<div class="client-list-container">
+  <div class="col-sm-12">
+    <app-card [cardTitle]="'Liste des Clients'" class="modern-card">
+      <!-- Enhanced Header Section with Glass Effect -->
+      <div class="header-section">
+        <div class="header-content">
+          <div class="search-section">
+            <div class="search-wrapper">
+              <nz-input-group [nzSuffix]="suffixIconSearch" class="modern-search">
+                <input 
+                  type="text" 
+                  nz-input 
+                  placeholder="Rechercher par nom, email, ville..." 
+                  [(ngModel)]="searchTerm"
+                  class="search-input-field" 
+                />
+              </nz-input-group>
+              <ng-template #suffixIconSearch>
+                <span nz-icon nzType="search" class="search-icon"></span>
+              </ng-template>
+            </div>
+          </div>
+          
+          <div class="actions-section">
+            <div class="export-buttons">
+              <nz-button-group nzSize="small" class="glass-buttons">
+                <button 
+                  nz-button 
+                  nzType="default" 
+                  nz-tooltip
+                  nzTooltipTitle="Imprimer la liste"
+                  (click)="printPdf()"
+                  class="export-btn glass-btn"
+                >
+                  <span nz-icon nzType="printer"></span>
+                </button>
+                <button 
+                  nz-button 
+                  nzType="default" 
+                  nz-tooltip
+                  nzTooltipTitle="Exporter en PDF"
+                  (click)="exportToPdf()"
+                  class="export-btn glass-btn"
+                >
+                  <span nz-icon nzType="file-pdf"></span>
+                </button>
+                <button 
+                  nz-button 
+                  nzType="default" 
+                  nz-tooltip
+                  nzTooltipTitle="Exporter en Excel"
+                  (click)="exportToExcel()"
+                  class="export-btn glass-btn"
+                >
+                  <span nz-icon nzType="file-excel"></span>
+                </button>
+              </nz-button-group>
+            </div>
+            
+            <button 
+              nz-button 
+              nzType="primary" 
+              (click)="createClient()"
+              class="add-client-btn primary-gradient"
+              nzSize="small"
+            >
+              <span nz-icon nzType="plus"></span>
+              <span class="btn-text">Nouveau Client</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Enhanced Loading State with Modern Animation -->
+      <div class="loading-state modern-loading" *ngIf="isLoading">
+        <div class="loading-content">
+          <div class="loading-spinner">
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+          </div>
+          <div class="loading-text">Chargement des clients...</div>
+        </div>
+      </div>
+
+      <!-- Enhanced Table Section with Modern Design -->
+      <div class="table-section modern-table-section" *ngIf="!isLoading">
+        <div class="table-wrapper glass-table">
+          <nz-table 
+            #clientTable 
+            [nzData]="filteredClients" 
+            [nzFrontPagination]="true"
+            [nzShowPagination]="true"
+            [nzPageSize]="pageSize"
+            [nzPageIndex]="currentPage"
+            [nzTotal]="filteredClients.length"
+            [nzPageSizeOptions]="pageSizeOptions"
+            [nzShowSizeChanger]="true"
+            (nzPageIndexChange)="changePage($event)"
+            (nzPageSizeChange)="onPageSizeChange($event)"
+            [nzLoading]="isLoading"
+            [nzShowTotal]="rangeTemplate"
+            nzTableLayout="fixed"
+            class="enhanced-table modern-table"
+            [nzScroll]="{ x: '800px' }"
+          >
+            <thead>
+              <tr class="table-header">
+                <th nzWidth="140px" class="header-cell">
+                  <div class="header-content">
+                    <span nz-icon nzType="user" class="header-icon"></span>
+                    Nom
+                  </div>
+                </th>
+                <th nzWidth="120px" class="header-cell">
+                  <div class="header-content">
+                    Prénom
+                  </div>
+                </th>
+                <th nzWidth="200px" class="header-cell">
+                  <div class="header-content">
+                    <span nz-icon nzType="mail" class="header-icon"></span>
+                    Email
+                  </div>
+                </th>
+                <th nzWidth="130px" class="header-cell">
+                  <div class="header-content">
+                    <span nz-icon nzType="phone" class="header-icon"></span>
+                    Téléphone
+                  </div>
+                </th>
+                <th nzWidth="120px" class="header-cell">
+                  <div class="header-content">
+                    <span nz-icon nzType="environment" class="header-icon"></span>
+                    Ville
+                  </div>
+                </th>
+                <th nzWidth="160px" nzAlign="center" class="header-cell">
+                  <div class="header-content">
+                    <span nz-icon nzType="setting" class="header-icon"></span>
+                    Actions
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let client of clientTable.data; trackBy: trackByClientId" class="table-row">
+                <td class="data-cell">
+                  <div class="client-name modern-client-name">
+                    <div class="name-avatar gradient-avatar">
+                      {{ getClientInitials(client.nom, client.prenom) }}
+                    </div>
+                    <div class="name-info">
+                      <span class="name-text">{{ client.nom }}</span>
+                      <div class="name-indicator"></div>
+                    </div>
+                  </div>
+                </td>
+                <td class="data-cell">
+                  <span class="secondary-text modern-text">{{ client.prenom || '-' }}</span>
+                </td>
+                <td class="data-cell">
+                  <div class="email-cell modern-email">
+                    <div class="email-container">
+                      <span class="email-text">{{ client.email }}</span>
+                      <div class="email-underline"></div>
+                    </div>
+                  </div>
+                </td>
+                <td class="data-cell">
+                  <div class="phone-cell modern-phone">
+                    <span class="phone-badge">{{ client.telephone1 }}</span>
+                  </div>
+                </td>
+                <td class="data-cell">
+                  <nz-tag *ngIf="client.ville" class="city-tag modern-tag">
+                    <span nz-icon nzType="environment"></span>
+                    {{ client.ville }}
+                  </nz-tag>
+                  <span *ngIf="!client.ville" class="secondary-text modern-text">-</span>
+                </td>
+                <td class="actions-cell data-cell">
+                  <div class="table-actions modern-actions">
+                    <button 
+                      nz-button 
+                      nzType="default" 
+                      nzSize="small" 
+                      (click)="editClient(client.idClient)" 
+                      class="action-button edit-btn"
+                      nz-tooltip
+                      nzTooltipTitle="Modifier le client"
+                    >
+                      <span nz-icon nzType="edit"></span>
+                    </button>
+                    <button 
+                      nz-button 
+                      nzDanger 
+                      nzSize="small" 
+                      (click)="openDeleteModal(client.idClient)"
+                      class="action-button delete-btn"
+                      nz-tooltip
+                      nzTooltipTitle="Supprimer le client"
+                    >
+                      <span nz-icon nzType="delete"></span>
+                    </button>
+                  </div>
+                </td>                
+              </tr>
+            </tbody>
+          </nz-table>
+          
+          <ng-template #rangeTemplate let-range="range" let-total>
+            <div class="pagination-info modern-pagination">
+              <div class="pagination-content">
+                <span class="range-text">{{ range[0] }}-{{ range[1] }} sur {{ total }} clients</span>
+                <div class="pagination-indicator"></div>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+
+        <!-- Enhanced Empty State -->
+        <div class="empty-state modern-empty" *ngIf="filteredClients.length === 0 && !isLoading">
+          <div class="empty-content">
+            <div class="empty-icon-container">
+              <span nz-icon nzType="user-add" class="empty-icon"></span>
+              <div class="icon-bg-effect"></div>
+            </div>
+            <h3 class="empty-title">
+              {{ searchTerm ? 'Aucun client trouvé' : 'Aucun client enregistré' }}
+            </h3>
+            <p class="empty-description">
+              {{ searchTerm ? 'Essayez de modifier vos critères de recherche' : 'Commencez par ajouter votre premier client' }}
+            </p>
+            <button 
+              *ngIf="!searchTerm"
+              nz-button 
+              nzType="primary" 
+              (click)="createClient()"
+              class="empty-action-btn modern-primary-btn"
+            >
+              <span nz-icon nzType="plus"></span>
+              <span>Ajouter un Client</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Enhanced Delete Modal with Modern Design -->
+      <nz-modal
+        [(nzVisible)]="showDeleteModal"
+        nzTitle="Confirmer la suppression"
+        (nzOnCancel)="closeDeleteModal()"
+        (nzOnOk)="confirmDelete()"
+        nzOkText="Supprimer"
+        nzCancelText="Annuler"
+        nzOkDanger="true"
+        nzWidth="450px"
+        class="delete-modal modern-modal"
+      >
+        <div class="modal-content modern-modal-content">
+          <div class="warning-section">
+            <div class="warning-icon modern-warning-icon">
+              <span nz-icon nzType="exclamation-circle" nzTheme="fill"></span>
+              <div class="warning-pulse"></div>
+            </div>
+            <div class="modal-text">
+              <h4 class="warning-title">Supprimer ce client ?</h4>
+              <p class="warning-text">
+                Cette action est irréversible et supprimera toutes les données associées à ce client.
+              </p>
+              <div class="warning-highlight">
+                <span nz-icon nzType="info-circle"></span>
+                Assurez-vous que ce client n'a pas de commandes en cours.
+              </div>
+            </div>
+          </div>
+        </div>
+      </nz-modal>
+    </app-card>
+  </div>
+</div>

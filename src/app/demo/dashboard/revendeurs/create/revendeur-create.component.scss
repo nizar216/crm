@@ -1,0 +1,13 @@
+:host ::ng-deep {
+  .ant-form-item {
+    margin-bottom: 24px;
+  }
+
+  .ant-form-item-label {
+    padding-bottom: 8px;
+  }
+
+  .ant-form-item-label > label {
+    font-weight: 500;
+  }
+} 

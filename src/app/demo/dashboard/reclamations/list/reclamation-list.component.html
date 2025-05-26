@@ -1,0 +1,109 @@
+<app-card>
+  <div class="flex flex-col sm:flex-row flex-wrap sm:items-center justify-between p-6 pb-0 sm:pb-6">
+    <h2 class="text-3xl font-semibold leading-tight">Réclamations</h2>
+    <div class="flex items-center space-x-3 mt-3 sm:mt-0">
+      <button nz-button nzType="primary" (click)="createReclamation()">
+        <span nz-icon nzType="plus" nzTheme="outline"></span>
+        Nouvelle Réclamation
+      </button>
+      <button nz-button (click)="exportToPdf()">
+        <span nz-icon nzType="file-pdf" nzTheme="outline"></span>
+        PDF
+      </button>
+      <button nz-button (click)="exportToExcel()">
+        <span nz-icon nzType="file-excel" nzTheme="outline"></span>
+        Excel
+      </button>
+    </div>
+  </div>
+
+  <div class="p-6">
+    <div class="mb-4">
+      <nz-input-group nzPrefixIcon="search">
+        <input
+          type="text"
+          nz-input
+          placeholder="Rechercher..."
+          [(ngModel)]="searchTerm"
+        />
+      </nz-input-group>
+    </div>
+
+    <nz-table
+      #basicTable
+      [nzData]="filteredReclamations"
+      [nzLoading]="isLoading"
+      [nzPageSize]="pageSize"
+      [nzPageIndex]="currentPage"
+      [nzTotal]="filteredReclamations.length"
+      [nzFrontPagination]="false"
+      [nzShowSizeChanger]="true"
+      [nzPageSizeOptions]="pageSizeOptions"
+      (nzPageIndexChange)="changePage($event)"
+      (nzPageSizeChange)="onPageSizeChange($event)"
+    >
+      <thead>
+        <tr>
+          <th>Client</th>
+          <th>Date Saisie</th>
+          <th>Date RDV</th>
+          <th>Type Intervention</th>
+          <th>Actions</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let reclamation of basicTable.data">
+          <td>{{ reclamation.Client?.nom }}</td>
+          <td>{{ reclamation.dateSaisie | date:'dd/MM/yyyy' }}</td>
+          <td>{{ reclamation.dateDeRandezVous | date:'dd/MM/yyyy' }}</td>
+          <td>{{ reclamation.typeIntervention }}</td>
+          <td>
+            <div class="flex items-center space-x-2">
+              <button
+                nz-button
+                nzType="primary"
+                nzShape="circle"
+                nz-tooltip
+                nzTooltipTitle="Modifier"
+                (click)="editReclamation(reclamation.idReclamation)"
+              >
+                <span nz-icon nzType="edit" nzTheme="outline"></span>
+              </button>
+              <button
+                nz-button
+                nzType="primary"
+                nzDanger
+                nzShape="circle"
+                nz-tooltip
+                nzTooltipTitle="Supprimer"
+                (click)="openDeleteModal(reclamation.idReclamation)"
+              >
+                <span nz-icon nzType="delete" nzTheme="outline"></span>
+              </button>
+            </div>
+          </td>
+          <td>
+            <nz-tag [nzColor]="getStatusColor(reclamation.status)">
+              {{ reclamation.status }}
+            </nz-tag>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</app-card>
+
+<!-- Delete Confirmation Modal -->
+<nz-modal
+  [(nzVisible)]="showDeleteModal"
+  nzTitle="Confirmer la suppression"
+  (nzOnCancel)="closeDeleteModal()"
+  [nzOkText]="'Supprimer'"
+  [nzCancelText]="'Annuler'"
+  (nzOnOk)="confirmDelete()"
+>
+  <ng-container *nzModalContent>
+    <p>Êtes-vous sûr de vouloir supprimer cette réclamation ?</p>
+  </ng-container>
+</nz-modal> 

@@ -1,0 +1,15 @@
+.search-input {
+  width: 100%;
+  max-width: 300px;
+}
+
+.button-group {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.actions {
+  white-space: nowrap;
+  text-align: right;
+} 

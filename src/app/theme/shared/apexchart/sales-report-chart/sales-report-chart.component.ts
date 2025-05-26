@@ -51,9 +51,11 @@ export class SalesReportChartComponent {
           useSeriesColors: false
         },
         markers: {
-          width: 10,
-          height: 10,
-          radius: 50
+          strokeWidth: 0,
+          fillColors: ['#faad14', '#1677ff'],
+          shape: 'circle',
+          offsetX: 0,
+          offsetY: 0
         },
         itemMargin: {
           horizontal: 15,

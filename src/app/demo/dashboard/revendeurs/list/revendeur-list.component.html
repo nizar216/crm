@@ -1,0 +1,87 @@
+<div class="row">
+  <div class="col-sm-12">
+    <app-card [cardTitle]="'Liste des Revendeurs'">
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <nz-input-group [nzSuffix]="suffixIconSearch" class="search-input">
+            <input type="text" nz-input placeholder="Rechercher revendeurs..." [(ngModel)]="searchTerm" />
+          </nz-input-group>
+          <ng-template #suffixIconSearch>
+            <span nz-icon nzType="search"></span>
+          </ng-template>
+        </div>
+        <div class="col-md-6 text-end">
+          <div class="button-group">
+            <button 
+              nz-button 
+              nzType="primary" 
+              (click)="createRevendeur()"
+            >
+              <span nz-icon nzType="plus"></span> Ajouter un Revendeur
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div class="text-center py-4" *ngIf="isLoading">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+        <p class="mt-2">Chargement des revendeurs...</p>
+      </div>
+
+      <!-- Table -->
+      <div *ngIf="!isLoading">
+        <nz-table 
+          #revendeurTable 
+          [nzData]="filteredRevendeurs" 
+          [nzFrontPagination]="true"
+          [nzShowPagination]="true"
+          [nzPageSize]="pageSize"
+          [nzPageIndex]="currentPage"
+          [nzTotal]="filteredRevendeurs.length"
+          [nzPageSizeOptions]="pageSizeOptions"
+          [nzShowSizeChanger]="true"
+          (nzPageIndexChange)="changePage($event)"
+          (nzPageSizeChange)="onPageSizeChange($event)"
+          [nzLoading]="isLoading"
+          [nzShowTotal]="rangeTemplate"
+          nzTableLayout="fixed"
+        >
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>Téléphone</th>
+              <th>Email</th>
+              <th>Responsable</th>
+              <th>MF</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let revendeur of revendeurTable.data">
+              <td>{{ revendeur.nom }}</td>
+              <td>{{ revendeur.Telephone }}</td>
+              <td>{{ revendeur.email }}</td>
+              <td>{{ revendeur.responsable }}</td>
+              <td>{{ revendeur.MF }}</td>
+              <td class="actions">
+                <button nz-button nzType="primary" nzSize="small" (click)="editRevendeur(revendeur.idRevendeur)" class="me-1">
+                  <span nz-icon nzType="edit"></span> Modifier
+                </button>
+                <button nz-button nzDanger nzSize="small" (click)="deleteRevendeur(revendeur.idRevendeur)">
+                  <span nz-icon nzType="delete"></span> Supprimer
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+
+        <ng-template #rangeTemplate let-range="range" let-total>
+          {{ range[0] }}-{{ range[1] }} sur {{ total }} revendeurs
+        </ng-template>
+      </div>
+    </app-card>
+  </div>
+</div> 

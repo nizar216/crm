@@ -1,0 +1,138 @@
+// Table Actions Shared Styles
+// This file contains reusable styles for table action buttons and related elements
+
+// Table Actions Container
+.table-actions {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  padding: 0;
+
+  .action-button {
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    height: 20px;
+    min-width: 20px;
+    font-size: 10px;
+    line-height: 1;
+    border: 1px solid transparent;
+    white-space: nowrap;
+
+    .anticon {
+      font-size: 10px;
+      margin-right: 2px;
+    }
+
+    .button-text {
+      font-size: 10px;
+      font-weight: 500;
+    }
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+    }
+
+    &:active {
+      transform: none;
+    }
+  }
+
+  .edit-button {
+    background: #e6f7ff;
+    border-color: #91d5ff;
+    color: #1890ff;
+
+    &:hover {
+      background: #bae7ff;
+      border-color: #69c0ff;
+    }
+
+    &:active {
+      background: #91d5ff;
+      border-color: #40a9ff;
+    }
+  }
+
+  .delete-button {
+    background: #fff1f0;
+    border-color: #ffa39e;
+    color: #ff4d4f;
+
+    &:hover {
+      background: #ffccc7;
+      border-color: #ff7875;
+    }
+
+    &:active {
+      background: #ffa39e;
+      border-color: #ff4d4f;
+    }
+  }
+
+  .view-button {
+    background: #f6ffed;
+    border-color: #b7eb8f;
+    color: #52c41a;
+
+    &:hover {
+      background: #d9f7be;
+      border-color: #95de64;
+    }
+
+    &:active {
+      background: #b7eb8f;
+      border-color: #52c41a;
+    }
+  }
+
+  .add-button {
+    background: #e6f7ff;
+    border-color: #91d5ff;
+    color: #1890ff;
+
+    &:hover {
+      background: #bae7ff;
+      border-color: #69c0ff;
+    }
+
+    &:active {
+      background: #91d5ff;
+      border-color: #40a9ff;
+    }
+  }
+}
+
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .actions-cell {
+    text-align: center; // center content inside <td>
+  }
+  
+  .table-actions {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+  
+    .action-button {
+      height: 30px;
+      width: 30px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+  
+      .anticon {
+        font-size: 14px;
+      }
+    }
+  }
+}

@@ -1,0 +1,66 @@
+/* Styles for the article create form */
+
+:host ::ng-deep {
+  /* Input styles */
+  .ant-input:hover, .ant-input:focus,
+  .ant-input-number:hover, .ant-input-number-focused,
+  .ant-select:hover .ant-select-selector, .ant-select-focused .ant-select-selector {
+    border-color: #7267EF;
+  }
+
+  /* Form label styles */
+  .ant-form-item-label > label {
+    font-weight: 500;
+  }
+
+  .ant-form-item-label > label.ant-form-item-required::before {
+    color: #ff4d4f;
+  }
+
+  /* Form item spacing */
+  .ant-form-item {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Button hover effects */
+  .ant-btn-primary {
+    background-color: #7267EF;
+    border-color: #7267EF;
+    
+    &:hover, &:focus {
+      background-color: #5a4ee4;
+      border-color: #5a4ee4;
+    }
+  }
+
+  /* Required field indicator */
+  .ant-form-item-required::after {
+    display: inline-block;
+    margin-right: 4px;
+    color: #ff4d4f;
+    font-size: 14px;
+    font-family: SimSun, sans-serif;
+    line-height: 1;
+    content: '*';
+  }
+  
+  /* Number input full width */
+  .ant-input-number {
+    width: 100%;
+  }
+  
+  /* Select dropdown styling */
+  .ant-select {
+    width: 100%;
+  }
+}
+
+/* Success modal styles */
+:host ::ng-deep .ant-modal-body {
+  padding: 24px;
+}
+
+/* Back button styles */
+.back-button {
+  margin-bottom: 1rem;
+}

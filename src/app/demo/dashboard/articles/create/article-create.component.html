@@ -1,0 +1,130 @@
+<div class="container-fluid">
+  <app-card [title]="'Créer un nouvel article'">
+    <form nz-form [formGroup]="articleForm" (ngSubmit)="submitForm()">
+      <div class="row">
+        <!-- Famille -->
+        <div class="col-md-6 mb-3">
+          <nz-form-item>
+            <nz-form-label [nzRequired]="true">Famille</nz-form-label>
+            <nz-form-control nzErrorTip="Veuillez sélectionner une famille">
+              <nz-select formControlName="famille" nzPlaceHolder="Sélectionnez une famille">
+                <nz-option *ngFor="let famille of familles" [nzValue]="famille" [nzLabel]="famille"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <!-- Unité -->
+        <div class="col-md-6 mb-3">
+          <nz-form-item>
+            <nz-form-label [nzRequired]="true">Unité</nz-form-label>
+            <nz-form-control nzErrorTip="Veuillez sélectionner une unité">
+              <nz-select formControlName="unite" nzPlaceHolder="Sélectionnez une unité">
+                <nz-option *ngFor="let unite of unites" [nzValue]="unite" [nzLabel]="unite"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <!-- Marque -->
+        <div class="col-md-6 mb-3">
+          <nz-form-item>
+            <nz-form-label [nzRequired]="true">Marque</nz-form-label>
+            <nz-form-control nzErrorTip="Veuillez saisir la marque">
+              <input nz-input formControlName="marque" placeholder="Entrez la marque" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <!-- Modèle -->
+        <div class="col-md-6 mb-3">
+          <nz-form-item>
+            <nz-form-label [nzRequired]="true">Modèle</nz-form-label>
+            <nz-form-control nzErrorTip="Veuillez saisir le modèle">
+              <input nz-input formControlName="model" placeholder="Entrez le modèle" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <!-- Libellé -->
+        <div class="col-12 mb-3">
+          <nz-form-item>
+            <nz-form-label [nzRequired]="true">Libellé</nz-form-label>
+            <nz-form-control nzErrorTip="Le libellé doit contenir au moins 3 caractères">
+              <input nz-input formControlName="libelle" placeholder="Entrez le libellé" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <!-- Prix HT -->
+        <div class="col-md-4 mb-3">
+          <nz-form-item>
+            <nz-form-label [nzRequired]="true">Prix HT</nz-form-label>
+            <nz-form-control nzErrorTip="Veuillez saisir un prix valide">
+              <nz-input-number
+                formControlName="prixHT"
+                [nzMin]="0"
+                [nzStep]="0.01"
+                [nzPrecision]="2"
+                style="width: 100%"
+                placeholder="0.00"
+              ></nz-input-number>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <!-- TVA -->
+        <div class="col-md-4 mb-3">
+          <nz-form-item>
+            <nz-form-label [nzRequired]="true">TVA (%)</nz-form-label>
+            <nz-form-control nzErrorTip="Veuillez saisir un taux de TVA valide">
+              <nz-input-number
+                formControlName="tva"
+                [nzMin]="0"
+                [nzStep]="0.01"
+                [nzPrecision]="2"
+                style="width: 100%"
+                placeholder="0.00"
+              ></nz-input-number>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <!-- Prix Entreprise -->
+        <div class="col-md-4 mb-3">
+          <nz-form-item>
+            <nz-form-label [nzRequired]="true">Prix Entreprise</nz-form-label>
+            <nz-form-control nzErrorTip="Veuillez saisir un prix valide">
+              <nz-input-number
+                formControlName="prixEntreprise"
+                [nzMin]="0"
+                [nzStep]="0.01"
+                [nzPrecision]="2"
+                style="width: 100%"
+                placeholder="0.00"
+              ></nz-input-number>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="row mt-4">
+        <div class="col-12 d-flex justify-content-end gap-2">
+          <button nz-button (click)="goBack()">
+            <span nz-icon nzType="arrow-left"></span>
+            Retour
+          </button>
+          <button nz-button nzType="default" (click)="resetForm()">
+            <span nz-icon nzType="reload"></span>
+            Réinitialiser
+          </button>
+          <button nz-button nzType="primary" type="submit" [nzLoading]="isSubmitting">
+            <span nz-icon nzType="save"></span>
+            Enregistrer
+          </button>
+        </div>
+      </div>
+    </form>
+  </app-card>
+</div>

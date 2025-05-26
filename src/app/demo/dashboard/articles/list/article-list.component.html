@@ -1,0 +1,117 @@
+<div class="row">
+  <div class="col-sm-12">
+    <app-card [cardTitle]="'Liste des Articles'">
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <nz-input-group [nzSuffix]="suffixIconSearch" class="search-input">
+            <input type="text" nz-input placeholder="Rechercher articles..." [(ngModel)]="searchTerm" />
+          </nz-input-group>
+          <ng-template #suffixIconSearch>
+            <span nz-icon nzType="search"></span>
+          </ng-template>
+        </div>
+        <div class="col-md-6 text-end">
+          <div class="button-group">
+            <button 
+              nz-button 
+              nzType="primary" 
+              (click)="createArticle()"
+            >
+              <span nz-icon nzType="plus"></span> Ajouter un Article
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div class="text-center py-4" *ngIf="isLoading">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+        <p class="mt-2">Chargement des articles...</p>
+      </div>
+
+      <!-- Table -->
+      <div *ngIf="!isLoading">
+        <nz-table 
+          #articleTable 
+          [nzData]="filteredArticles" 
+          [nzFrontPagination]="true"
+          [nzShowPagination]="true"
+          [nzPageSize]="pageSize"
+          [nzPageIndex]="currentPage"
+          [nzTotal]="filteredArticles.length"
+          [nzPageSizeOptions]="pageSizeOptions"
+          [nzShowSizeChanger]="true"
+          (nzPageIndexChange)="changePage($event)"
+          (nzPageSizeChange)="onPageSizeChange($event)"
+          [nzLoading]="isLoading"
+          [nzShowTotal]="rangeTemplate"
+          nzTableLayout="fixed"
+        >
+          <thead>
+            <tr>
+              <th>Famille</th>
+              <th>Marque</th>
+              <th>Modèle</th>
+              <th>Libellé</th>
+              <th>Prix HT</th>
+              <th>Prix TTC</th>
+              <th>Prix Entreprise</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let article of articleTable.data">
+              <td>{{ article.famille }}</td>
+              <td>{{ article.marque }}</td>
+              <td>{{ article.model }}</td>
+              <td>{{ article.libelle }}</td>
+              <td>{{ article.prixHT | number: '1.2-2' }} €</td>
+              <td>{{ article.prixTTC | number: '1.2-2' }} €</td>
+              <td>{{ article.prixEntreprise | number: '1.2-2' }} €</td>
+              <td class="actions">
+                <button nz-button nzType="primary" nzSize="small" (click)="editArticle(article.idArticle)" class="me-1">
+                  <span nz-icon nzType="edit"></span> Modifier
+                </button>
+                <button nz-button nzDanger nzSize="small" (click)="openDeleteModal(article.idArticle)">
+                  <span nz-icon nzType="delete"></span> Supprimer
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+
+        <ng-template #rangeTemplate let-range="range" let-total>
+          {{ range[0] }}-{{ range[1] }} sur {{ total }} articles
+        </ng-template>
+      </div>
+
+      <!-- Delete Confirmation Modal -->
+      <div *ngIf="showDeleteModal" class="ant-modal-container">
+        <div class="ant-modal-mask"></div>
+        <div class="ant-modal-wrapper">
+          <div class="ant-modal">
+            <div class="ant-modal-content">
+              <div class="ant-modal-header">
+                <div class="ant-modal-title">Confirmer la suppression</div>
+                <button class="ant-modal-close" (click)="closeDeleteModal()">
+                  <span nz-icon nzType="close"></span>
+                </button>
+              </div>
+              <div class="ant-modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer cet article ? Cette action est irréversible.</p>
+              </div>
+              <div class="ant-modal-footer">
+                <button nz-button (click)="closeDeleteModal()">Annuler</button>
+                <button nz-button nzType="primary" nzDanger (click)="confirmDelete()">
+                  <span nz-icon nzType="delete"></span> Supprimer
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </app-card>
+  </div>
+</div>

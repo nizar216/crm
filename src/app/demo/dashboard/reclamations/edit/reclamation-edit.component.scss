@@ -1,0 +1,21 @@
+:host ::ng-deep {
+  .ant-form-item-label {
+    font-weight: 500;
+  }
+
+  .ant-input-number {
+    width: 100%;
+  }
+
+  .ant-select {
+    width: 100%;
+  }
+
+  .ant-picker {
+    width: 100%;
+  }
+
+  textarea.ant-input {
+    resize: none;
+  }
+} 

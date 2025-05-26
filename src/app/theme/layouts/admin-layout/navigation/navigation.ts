@@ -26,102 +26,67 @@ export const NavigationItems: NavigationItem[] = [
     icon: 'icon-navigation',
     children: [
       {
-        id: 'default',
-        title: 'Default',
+        id: 'dashboard',
+        title: 'Dashboard',
         type: 'item',
         classes: 'nav-item',
         url: '/dashboard/default',
         icon: 'dashboard',
         breadcrumbs: false
-      }
-    ]
-  },
-  {
-    id: 'authentication',
-    title: 'Authentication',
-    type: 'group',
-    icon: 'icon-navigation',
-    children: [
+      },
       {
-        id: 'login',
-        title: 'Login',
+        id: 'clients',
+        title: 'Clients',
         type: 'item',
         classes: 'nav-item',
-        url: '/login',
-        icon: 'login',
-        target: true,
+        url: '/dashboard/clients',
+        icon: 'user',
         breadcrumbs: false
       },
       {
-        id: 'register',
-        title: 'Register',
+        id: 'articles',
+        title: 'Articles',
         type: 'item',
         classes: 'nav-item',
-        url: '/register',
-        icon: 'profile',
-        target: true,
+        url: '/dashboard/articles',
+        icon: 'shopping',
         breadcrumbs: false
-      }
-    ]
-  },
-  {
-    id: 'utilities',
-    title: 'UI Components',
-    type: 'group',
-    icon: 'icon-navigation',
-    children: [
-      {
-        id: 'typography',
-        title: 'Typography',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/typography',
-        icon: 'font-size'
       },
       {
-        id: 'color',
-        title: 'Colors',
+        id: 'services',
+        title: 'Services',
         type: 'item',
         classes: 'nav-item',
-        url: '/color',
-        icon: 'bg-colors'
+        url: '/dashboard/services',
+        icon: 'tool',
+        breadcrumbs: false
       },
       {
-        id: 'tabler',
-        title: 'Tabler',
+        id: 'revendeurs',
+        title: 'Revendeurs',
         type: 'item',
         classes: 'nav-item',
-        url: 'https://ant.design/components/icon',
-        icon: 'ant-design',
-        target: true,
-        external: true
-      }
-    ]
-  },
-
-  {
-    id: 'other',
-    title: 'Other',
-    type: 'group',
-    icon: 'icon-navigation',
-    children: [
-      {
-        id: 'sample-page',
-        title: 'Sample Page',
-        type: 'item',
-        url: '/sample-page',
-        classes: 'nav-item',
-        icon: 'chrome'
+        url: '/dashboard/revendeurs',
+        icon: 'user',
+        breadcrumbs: false
       },
       {
-        id: 'document',
-        title: 'Document',
+        id: 'techniciens',
+        title: 'Techniciens',
         type: 'item',
         classes: 'nav-item',
-        url: 'https://codedthemes.gitbook.io/mantis-angular/',
-        icon: 'question',
-        target: true,
-        external: true
+        url: '/dashboard/techniciens',
+        icon: 'tool',
+        breadcrumbs: false
+      },
+      {
+        id: 'reclamations',
+        title: 'Réclamations',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/dashboard/reclamations',
+        icon: 'warning',
+        breadcrumbs: false
       }
     ]
   }

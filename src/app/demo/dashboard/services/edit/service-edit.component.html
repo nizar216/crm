@@ -1,0 +1,107 @@
+<div class="container-fluid">
+  <app-card [title]="'Modifier le service'">
+    <div *ngIf="isLoading" class="text-center py-5">
+      <nz-spin nzSimple></nz-spin>
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-danger mb-3">
+      {{ errorMessage }}
+    </div>
+
+    <form nz-form [formGroup]="serviceForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
+      <div class="row">
+        <!-- Nom du service -->
+        <div class="col-12 mb-3">
+          <nz-form-item>
+            <nz-form-label [nzRequired]="true">Nom du service</nz-form-label>
+            <nz-form-control nzErrorTip="Le nom doit contenir au moins 3 caractères">
+              <input nz-input formControlName="nom" placeholder="Entrez le nom du service" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <!-- Prix -->
+        <div class="col-md-6 mb-3">
+          <nz-form-item>
+            <nz-form-label [nzRequired]="true">Prix</nz-form-label>
+            <nz-form-control nzErrorTip="Veuillez saisir un prix valide">
+              <nz-input-number
+                formControlName="prix"
+                [nzMin]="0"
+                [nzStep]="0.01"
+                [nzPrecision]="2"
+                style="width: 100%"
+                placeholder="0.00"
+              ></nz-input-number>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <!-- TVA -->
+        <div class="col-md-6 mb-3">
+          <nz-form-item>
+            <nz-form-label [nzRequired]="true">TVA (%)</nz-form-label>
+            <nz-form-control nzErrorTip="Veuillez saisir un taux de TVA valide">
+              <nz-input-number
+                formControlName="tva"
+                [nzMin]="0"
+                [nzStep]="0.01"
+                [nzPrecision]="2"
+                style="width: 100%"
+                placeholder="0.00"
+              ></nz-input-number>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <!-- Part Technique -->
+        <div class="col-md-6 mb-3">
+          <nz-form-item>
+            <nz-form-label [nzRequired]="true">Part Technique</nz-form-label>
+            <nz-form-control nzErrorTip="Veuillez saisir une part technique valide">
+              <nz-input-number
+                formControlName="partTech"
+                [nzMin]="0"
+                [nzStep]="0.01"
+                [nzPrecision]="2"
+                style="width: 100%"
+                placeholder="0.00"
+              ></nz-input-number>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <!-- Part Entreprise -->
+        <div class="col-md-6 mb-3">
+          <nz-form-item>
+            <nz-form-label [nzRequired]="true">Part Entreprise</nz-form-label>
+            <nz-form-control nzErrorTip="Veuillez saisir une part entreprise valide">
+              <nz-input-number
+                formControlName="partEnts"
+                [nzMin]="0"
+                [nzStep]="0.01"
+                [nzPrecision]="2"
+                style="width: 100%"
+                placeholder="0.00"
+              ></nz-input-number>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="row mt-4">
+        <div class="col-12 d-flex justify-content-end gap-2">
+          <button nz-button (click)="cancel()">
+            <span nz-icon nzType="arrow-left"></span>
+            Retour
+          </button>
+          <button nz-button nzType="primary" type="submit" [nzLoading]="isSubmitting">
+            <span nz-icon nzType="save"></span>
+            Enregistrer
+          </button>
+        </div>
+      </div>
+    </form>
+  </app-card>
+</div> 

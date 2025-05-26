@@ -1,0 +1,129 @@
+// Client edit component styles
+
+.form-control:focus {
+  box-shadow: none;
+  border-color: #7267EF;
+}
+
+.btn-primary {
+  background-color: #7267EF;
+  border-color: #7267EF;
+}
+
+.btn-secondary {
+  background-color: #f4f7fa;
+  border-color: #f4f7fa;
+  color: #333;
+}
+
+// Required field indicator
+.text-danger {
+  color: #FF5370 !important;
+}
+
+// Form group spacing
+.mb-3 {
+  margin-bottom: 1rem !important;
+}
+
+// Common section styles
+.personal-section,
+.contact-section,
+.address-section {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  border: 1px solid #e9ecef;
+
+  .section-title {
+    color: #2c3e50;
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #7267EF;
+  }
+
+  .form-control {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: #7267EF;
+    }
+  }
+}
+
+// Specific section styles
+.address-section {
+  textarea.form-control {
+    min-height: 100px;
+  }
+}
+
+// Remove margin from first section
+.personal-section {
+  margin-top: 0;
+}
+
+::ng-deep {
+  .ant-select {
+    width: 100%;
+    
+    .ant-select-selector {
+      height: 38px !important;
+      padding: 4px 11px !important;
+      border: 1px solid #dee2e6;
+      border-radius: 4px;
+      background-color: #ffffff;
+      transition: all 0.3s ease;
+
+      &:hover {
+        border-color: #7267EF;
+      }
+
+      .ant-select-selection-item {
+        line-height: 28px;
+        
+        .fi {
+          margin-right: 8px;
+          vertical-align: middle;
+        }
+      }
+    }
+
+    &.ant-select-focused {
+      .ant-select-selector {
+        border-color: #7267EF;
+        box-shadow: none;
+      }
+    }
+  }
+
+  .ant-select-dropdown {
+    .ant-select-item {
+      padding: 8px 12px;
+      
+      .fi {
+        margin-right: 8px;
+        vertical-align: middle;
+      }
+    }
+
+    .ant-select-item-option-selected {
+      background-color: #f0f0ff;
+      color: #7267EF;
+    }
+
+    .ant-select-item-option-active {
+      background-color: #f8f9fa;
+    }
+  }
+}
+
+// Loading indicator
+.spinner-border {
+  width: 1.5rem;
+  height: 1.5rem;
+}

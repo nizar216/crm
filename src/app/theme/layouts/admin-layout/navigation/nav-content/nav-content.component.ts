@@ -20,7 +20,8 @@ import {
   FontSizeOutline,
   ProfileOutline,
   BgColorsOutline,
-  AntDesignOutline
+  AntDesignOutline,
+  UserOutline
 } from '@ant-design/icons-angular/icons';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 
@@ -59,7 +60,8 @@ export class NavContentComponent implements OnInit {
         BgColorsOutline,
         AntDesignOutline,
         ChromeOutline,
-        QuestionOutline
+        QuestionOutline,
+        UserOutline
       ]
     );
     this.navigations = NavigationItems;
@@ -68,7 +70,10 @@ export class NavContentComponent implements OnInit {
   // Life cycle events
   ngOnInit() {
     if (this.windowWidth < 1025) {
-      (document.querySelector('.coded-navbar') as HTMLDivElement).classList.add('menupos-static');
+      const navbarElement = document.querySelector('.coded-navbar');
+      if (navbarElement) {
+        navbarElement.classList.add('menupos-static');
+      }
     }
   }
 

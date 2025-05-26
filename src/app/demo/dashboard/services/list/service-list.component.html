@@ -1,0 +1,86 @@
+<div class="row">
+  <div class="col-sm-12">
+    <app-card [cardTitle]="'Liste des services'">
+      
+      <!-- Header Actions -->
+      <div class="row mb-4">
+        <div class="col-md-6"></div>
+        <div class="col-md-6 text-end">
+          <div class="button-group">
+            <button 
+              nz-button 
+              nzType="primary" 
+              (click)="createService()"
+            >
+              <span nz-icon nzType="plus"></span> Ajouter un service
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div class="text-center py-4" *ngIf="loading">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+        <p class="mt-2">Chargement des services...</p>
+      </div>
+
+      <!-- Services Table -->
+      <div *ngIf="!loading">
+        <nz-table
+          #basicTable
+          [nzData]="services"
+          [nzPageSize]="pageSize"
+          [nzPageIndex]="pageIndex"
+          [nzTotal]="totalItems"
+          [nzFrontPagination]="false"
+          [nzLoading]="loading"
+          (nzPageIndexChange)="onPageIndexChange($event)"
+          (nzPageSizeChange)="onPageSizeChange($event)"
+          [nzShowPagination]="true"
+          [nzShowSizeChanger]="true"
+          [nzPageSizeOptions]="[5, 10, 20, 50]"
+          [nzShowTotal]="rangeTemplate"
+          nzTableLayout="fixed"
+        >
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>Prix HT</th>
+              <th>TVA</th>
+              <th>Prix TTC</th>
+              <th>Part Technique</th>
+              <th>Part Entreprise</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let service of basicTable.data">
+              <td>{{ service.nom }}</td>
+              <td>{{ service.prix | number:'1.2-2' }} DT</td>
+              <td>{{ service.tva | number:'1.2-2' }}%</td>
+              <td>{{ service.prixTot | number:'1.2-2' }} DT</td>
+              <td>{{ service.partTech | number:'1.2-2' }} DT</td>
+              <td>{{ service.partEnts | number:'1.2-2' }} DT</td>
+              <td>
+                <div class="d-flex gap-2">
+                  <button nz-button nzType="default" nzSize="small" (click)="editService(service.idService)">
+                    <span nz-icon nzType="edit"></span> Modifier
+                  </button>
+                  <button nz-button nzType="default" nzDanger nzSize="small" (click)="deleteService(service.idService)">
+                    <span nz-icon nzType="delete"></span> Supprimer
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+
+        <ng-template #rangeTemplate let-range="range" let-total>
+          {{ range[0] }}-{{ range[1] }} sur {{ total }} services
+        </ng-template>
+      </div>
+    </app-card>
+  </div>
+</div>
