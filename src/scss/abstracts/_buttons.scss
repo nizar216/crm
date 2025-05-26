@@ -1,0 +1,87 @@
+.modern-btn {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: var(--transition);
+    border: none;
+    cursor: pointer;
+
+    &--primary {
+        background: var(--primary-gradient);
+        color: white;
+        padding: 12px 24px;
+
+        @include button-hover-effect;
+
+        &:hover {
+            background: var(--primary-gradient);
+            color: white;
+        }
+    }
+
+    &--secondary {
+        background: var(--secondary-gradient);
+        color: white;
+        padding: 12px 24px;
+
+        @include button-hover-effect;
+    }
+
+    &--glass {
+        @include glass-effect(0.2);
+        color: var(--text-primary);
+        padding: 8px 16px;
+
+        @include button-hover-effect;
+
+        &:hover {
+            @include glass-effect(0.3);
+        }
+    }
+
+    &--rounded {
+        border-radius: 22px;
+        height: 44px;
+        padding: 0 24px;
+        font-weight: 600;
+
+        &.modern-btn--primary {
+            @include button-hover-effect;
+
+            &:hover {
+                box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            }
+        }
+    }
+
+    &--icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+
+        &.edit {
+            background: rgba(24, 144, 255, 0.1);
+            color: #1890ff;
+
+            &:hover {
+                background: #1890ff;
+                color: white;
+                transform: scale(1.1);
+            }
+        }
+
+        &.delete {
+            background: rgba(255, 77, 79, 0.1);
+            color: #ff4d4f;
+
+            &:hover {
+                background: #ff4d4f;
+                color: white;
+                transform: scale(1.1);
+            }
+        }
+    }
+}

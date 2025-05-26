@@ -1,132 +1,131 @@
-<div class="row">
-  <div class="col-sm-12">
-    <app-card [cardTitle]="'Ajouter un Client'">
-      <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
-        <!-- Alert for errors -->
-        <div *ngIf="errorMessage" class="alert alert-danger mb-3">
-          {{ errorMessage }}
-        </div>
-        
-        <div class="card-body">
-          <!-- Personal Information Section -->
-          <div class="personal-section">
-            <h4 class="section-title">Informations personnelles</h4>
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Nom <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" formControlName="nom" placeholder="Entrez le nom du client">
-                <div *ngIf="clientForm.get('nom')?.invalid && clientForm.get('nom')?.touched" class="text-danger small">
-                  Nom est requis
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Prénom</label>
-                <input type="text" class="form-control" formControlName="prenom" placeholder="Entrez le prénom du client">
+<div class="client-create-container">
+  <div class="modern-card">
+    <div class="header-section">
+      <div class="header-content">
+        <h2 class="section-title">Ajouter un Client</h2>
+      </div>
+    </div>
+    <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
+      <div *ngIf="errorMessage" class="modern-empty alert modern-alert mb-3">
+        {{ errorMessage }}
+      </div>
+      <div class="card-body">
+        <!-- Personal Information Section -->
+        <div class="modern-section personal-section">
+          <h4 class="section-title">Informations personnelles</h4>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Nom <span class="text-danger">*</span></label>
+              <input type="text" class="form-control modern-input" formControlName="nom" placeholder="Entrez le nom du client">
+              <div *ngIf="clientForm.get('nom')?.invalid && clientForm.get('nom')?.touched" class="text-danger small">
+                Nom est requis
               </div>
             </div>
-          </div>
-
-          <!-- Contact Information Section -->
-          <div class="contact-section">
-            <h4 class="section-title">Coordonnées</h4>
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Personne à contacter <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" formControlName="personneAcontacter" placeholder="Entrez le nom de la personne à contacter">
-                <div *ngIf="clientForm.get('personneAcontacter')?.invalid && clientForm.get('personneAcontacter')?.touched" class="text-danger small">
-                  Personne à contacter est requise
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Email <span class="text-danger">*</span></label>
-                <input type="email" class="form-control" formControlName="email" placeholder="exemple@domaine.com">
-                <div *ngIf="clientForm.get('email')?.invalid && clientForm.get('email')?.touched" class="text-danger small">
-                  Email valide est requis
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Téléphone 1 <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" formControlName="telephone1" placeholder="+216 12345678">
-                <div *ngIf="clientForm.get('telephone1')?.invalid && clientForm.get('telephone1')?.touched" class="text-danger small">
-                  Téléphone est requis
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Téléphone 2</label>
-                <input type="text" class="form-control" formControlName="telephone2" placeholder="+216 12345678">
-              </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Téléphone personne à contacter <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" formControlName="telephonePersonneaContacter" placeholder="+216 12345678">
-                <div *ngIf="clientForm.get('telephonePersonneaContacter')?.invalid && clientForm.get('telephonePersonneaContacter')?.touched" class="text-danger small">
-                  Téléphone personne à contacter est requis
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label">MF <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" formControlName="MF" placeholder="Entrez le numéro MF">
-                <div *ngIf="clientForm.get('MF')?.invalid && clientForm.get('MF')?.touched" class="text-danger small">
-                  MF est requis
-                </div>
-              </div>
-              <div class="col-md-12 mb-3">
-                <label class="form-label">Note</label>
-                <textarea class="form-control" formControlName="note" rows="2" placeholder="Ajoutez des notes ou commentaires sur le client"></textarea>
-              </div>
-            </div>
-          </div>
-
-          <!-- Address Section -->
-          <div class="address-section">
-            <h4 class="section-title">Informations d'adresse</h4>
-            <div class="row">
-              <div class="col-md-12 mb-3">
-                <label class="form-label">Adresse</label>
-                <textarea class="form-control" formControlName="adresse" rows="2" placeholder="Entrez l'adresse complète"></textarea>
-              </div>
-              <div class="col-md-3 mb-3">
-                <label class="form-label">Municipalité</label>
-                <input type="text" class="form-control" formControlName="municipalite" placeholder="Entrez la municipalité">
-              </div>
-              <div class="col-md-3 mb-3">
-                <label class="form-label">Ville</label>
-                <input type="text" class="form-control" formControlName="ville" placeholder="Entrez la ville">
-              </div>
-              <div class="col-md-3 mb-3">
-                <label class="form-label">Pays</label>
-                <nz-select
-                  formControlName="pays"
-                  nzPlaceHolder="Sélectionnez un pays"
-                  nzShowSearch
-                  [nzAllowClear]="false">
-                  <nz-option
-                    *ngFor="let country of countries"
-                    [nzValue]="country.code"
-                    [nzLabel]="country.name"
-                    nzCustomContent>
-                    <span class="fi" [class]="'fi-' + country.code.toLowerCase()"></span>
-                    {{country.name}}
-                  </nz-option>
-                </nz-select>
-              </div>
-              <div class="col-md-3 mb-3">
-                <label class="form-label">Zone</label>
-                <input type="text" class="form-control" formControlName="zone" placeholder="Entrez la zone">
-              </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Prénom</label>
+              <input type="text" class="form-control modern-input" formControlName="prenom" placeholder="Entrez le prénom du client">
             </div>
           </div>
         </div>
-        
-        <div class="card-footer text-end">
-          <button type="button" class="btn btn-secondary me-2" (click)="cancel()">
-            <i ant-icon type="close"></i> Annuler
-          </button>
-          <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
-            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-            <i *ngIf="!isSubmitting" ant-icon type="save"></i> Enregistrer
-          </button>
+        <!-- Contact Information Section -->
+        <div class="modern-section contact-section">
+          <h4 class="section-title">Coordonnées</h4>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Personne à contacter <span class="text-danger">*</span></label>
+              <input type="text" class="form-control modern-input" formControlName="personneAcontacter" placeholder="Entrez le nom de la personne à contacter">
+              <div *ngIf="clientForm.get('personneAcontacter')?.invalid && clientForm.get('personneAcontacter')?.touched" class="text-danger small">
+                Personne à contacter est requise
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Email <span class="text-danger">*</span></label>
+              <input type="email" class="form-control modern-input" formControlName="email" placeholder="exemple@domaine.com">
+              <div *ngIf="clientForm.get('email')?.invalid && clientForm.get('email')?.touched" class="text-danger small">
+                Email valide est requis
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Téléphone 1 <span class="text-danger">*</span></label>
+              <input type="text" class="form-control modern-input" formControlName="telephone1" placeholder="+216 12345678">
+              <div *ngIf="clientForm.get('telephone1')?.invalid && clientForm.get('telephone1')?.touched" class="text-danger small">
+                Téléphone est requis
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Téléphone 2</label>
+              <input type="text" class="form-control modern-input" formControlName="telephone2" placeholder="+216 12345678">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Téléphone personne à contacter <span class="text-danger">*</span></label>
+              <input type="text" class="form-control modern-input" formControlName="telephonePersonneaContacter" placeholder="+216 12345678">
+              <div *ngIf="clientForm.get('telephonePersonneaContacter')?.invalid && clientForm.get('telephonePersonneaContacter')?.touched" class="text-danger small">
+                Téléphone personne à contacter est requis
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">MF <span class="text-danger">*</span></label>
+              <input type="text" class="form-control modern-input" formControlName="MF" placeholder="Entrez le numéro MF">
+              <div *ngIf="clientForm.get('MF')?.invalid && clientForm.get('MF')?.touched" class="text-danger small">
+                MF est requis
+              </div>
+            </div>
+            <div class="col-md-12 mb-3">
+              <label class="form-label">Note</label>
+              <textarea class="form-control modern-input" formControlName="note" rows="2" placeholder="Ajoutez des notes ou commentaires sur le client"></textarea>
+            </div>
+          </div>
         </div>
-      </form>
-    </app-card>
+        <!-- Address Section -->
+        <div class="modern-section address-section">
+          <h4 class="section-title">Informations d'adresse</h4>
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <label class="form-label">Adresse</label>
+              <textarea class="form-control modern-input" formControlName="adresse" rows="2" placeholder="Entrez l'adresse complète"></textarea>
+            </div>
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Municipalité</label>
+              <input type="text" class="form-control modern-input" formControlName="municipalite" placeholder="Entrez la municipalité">
+            </div>
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Ville</label>
+              <input type="text" class="form-control modern-input" formControlName="ville" placeholder="Entrez la ville">
+            </div>
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Pays</label>
+              <nz-select
+                formControlName="pays"
+                nzPlaceHolder="Sélectionnez un pays"
+                nzShowSearch
+                [nzAllowClear]="false"
+                class="modern-input">
+                <nz-option
+                  *ngFor="let country of countries"
+                  [nzValue]="country.code"
+                  [nzLabel]="country.name"
+                  nzCustomContent>
+                  <span class="fi" [class]="'fi-' + country.code.toLowerCase()"></span>
+                  {{country.name}}
+                </nz-option>
+              </nz-select>
+            </div>
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Zone</label>
+              <input type="text" class="form-control modern-input" formControlName="zone" placeholder="Entrez la zone">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer text-end">
+        <button type="button" class="glass-btn btn me-2" (click)="cancel()">
+          <i ant-icon type="close"></i> Annuler
+        </button>
+        <button type="submit" class="modern-primary-btn btn" [disabled]="isSubmitting">
+          <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+          <i *ngIf="!isSubmitting" ant-icon type="save"></i> Enregistrer
+        </button>
+      </div>
+    </form>
   </div>
 </div>

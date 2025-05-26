@@ -1,0 +1,41 @@
+@mixin glass-effect($opacity: 0.1) {
+    background: rgba(255, 255, 255, $opacity);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+}
+
+@mixin modern-card {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-light);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    overflow: hidden;
+
+    @media (prefers-color-scheme: dark) {
+        background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+    }
+}
+
+@mixin button-hover-effect {
+    transition: var(--transition);
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-medium);
+    }
+}
+
+@mixin gradient-avatar($size: 40px) {
+    width: $size;
+    height: $size;
+    border-radius: 50%;
+    background: var(--primary-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: #{$size * 0.35};
+    box-shadow: var(--shadow-medium);
+}

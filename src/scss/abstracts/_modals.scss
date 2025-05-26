@@ -1,0 +1,188 @@
+.modern-modal {
+    .modal-content {
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        box-shadow: var(--shadow-light);
+    }
+
+    .modal-header {
+        @include glass-effect;
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--glass-border);
+
+        .modal-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+    }
+
+    .modal-body {
+        padding: 24px;
+    }
+
+    .modal-footer {
+        border-top: 1px solid var(--glass-border);
+        @include glass-effect;
+        padding: 16px 24px;
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+    }
+
+    &--warning {
+        .warning-section {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+
+            .warning-icon {
+                position: relative;
+
+                .icon {
+                    font-size: 48px;
+                    color: #ff4d4f;
+                }
+
+                .warning-pulse {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    width: 70px;
+                    height: 70px;
+                    border: 2px solid #ff4d4f;
+                    border-radius: 50%;
+                    opacity: 0.3;
+                    animation: warning-pulse 2s infinite;
+                }
+            }
+
+            .warning-content {
+                flex: 1;
+
+                .warning-title {
+                    font-size: 20px;
+                    font-weight: 600;
+                    color: var(--text-primary);
+                    margin-bottom: 12px;
+                }
+
+                .warning-text {
+                    font-size: 16px;
+                    color: var(--text-secondary);
+                    margin-bottom: 16px;
+                    line-height: 1.6;
+                }
+
+                .warning-highlight {
+                    background: rgba(255, 77, 79, 0.1);
+                    padding: 12px 16px;
+                    border-radius: 8px;
+                    border-left: 4px solid #ff4d4f;
+                    color: #ff4d4f;
+                    font-size: 14px;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+            }
+        }
+    }
+}
+
+@keyframes warning-pulse {
+    0% {
+        opacity: 0.3;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    50% {
+        opacity: 0.1;
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+
+    100% {
+        opacity: 0.3;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+// ================================================================
+// styles/components/_user-info.scss
+
+.modern-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    &__avatar {
+        @include gradient-avatar;
+
+        &--sm {
+            @include gradient-avatar(32px);
+        }
+
+        &--lg {
+            @include gradient-avatar(48px);
+        }
+    }
+
+    &__info {
+        position: relative;
+
+        .name {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .email {
+            position: relative;
+            display: inline-block;
+
+            .email-text {
+                color: #667eea;
+                font-weight: 500;
+                transition: var(--transition);
+                text-decoration: none;
+
+                &:hover {
+                    color: #764ba2;
+                }
+            }
+
+            .email-underline {
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 0;
+                height: 2px;
+                background: var(--primary-gradient);
+                transition: width 0.3s ease;
+            }
+
+            &:hover .email-underline {
+                width: 100%;
+            }
+        }
+
+        .status-indicator {
+            width: 4px;
+            height: 4px;
+            background: #52c41a;
+            border-radius: 50%;
+            position: absolute;
+            top: -2px;
+            right: -8px;
+
+            &--offline {
+                background: #ff4d4f;
+            }
+
+            &--away {
+                background: #faad14;
+            }
+        }
+    }
+}

@@ -1,0 +1,48 @@
+.modern-form {
+    &__search {
+        position: relative;
+
+        &-input {
+            height: 44px;
+            border-radius: 22px;
+            border: 2px solid transparent;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+            font-size: 14px;
+            padding: 0 20px 0 50px;
+            width: 100%;
+
+            &:focus {
+                border-color: #667eea;
+                box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+                background: rgba(255, 255, 255, 1);
+                outline: none;
+            }
+
+            &::placeholder {
+                color: var(--text-secondary);
+                font-weight: 400;
+            }
+
+            @media (prefers-color-scheme: dark) {
+                background: rgba(0, 0, 0, 0.5);
+                color: white;
+
+                &::placeholder {
+                    color: #a0aec0;
+                }
+            }
+        }
+
+        &-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 16px;
+            z-index: 2;
+        }
+    }
+}
