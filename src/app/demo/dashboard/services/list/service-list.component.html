@@ -1,86 +1,258 @@
-<div class="row">
+<div class="client-list-container">
   <div class="col-sm-12">
-    <app-card [cardTitle]="'Liste des services'">
-      
-      <!-- Header Actions -->
-      <div class="row mb-4">
-        <div class="col-md-6"></div>
-        <div class="col-md-6 text-end">
-          <div class="button-group">
+    <app-card [cardTitle]="'Liste des Services'" class="modern-card">
+      <!-- Enhanced Header Section with Glass Effect -->
+      <div class="header-section">
+        <div class="header-content">
+          <div class="search-section">
+            <div class="search-wrapper">
+              <nz-input-group [nzSuffix]="suffixIconSearch" class="modern-search">
+                <input 
+                  type="text" 
+                  nz-input 
+                  placeholder="Rechercher services..." 
+                  [(ngModel)]="searchTerm"
+                  class="search-input-field" 
+                />
+              </nz-input-group>
+              <ng-template #suffixIconSearch>
+                <span nz-icon nzType="search" class="search-icon"></span>
+              </ng-template>
+            </div>
+          </div>
+          
+          <div class="actions-section">
+            <div class="export-buttons">
+              <nz-button-group nzSize="small" class="glass-buttons">
+                <button 
+                  nz-button 
+                  nzType="default" 
+                  nz-tooltip
+                  nzTooltipTitle="Imprimer la liste"
+                  (click)="printPdf()"
+                  class="export-btn glass-btn"
+                >
+                  <span nz-icon nzType="printer"></span>
+                </button>
+                <button 
+                  nz-button 
+                  nzType="default" 
+                  nz-tooltip
+                  nzTooltipTitle="Exporter en PDF"
+                  (click)="exportToPdf()"
+                  class="export-btn glass-btn"
+                >
+                  <span nz-icon nzType="file-pdf"></span>
+                </button>
+                <button 
+                  nz-button 
+                  nzType="default" 
+                  nz-tooltip
+                  nzTooltipTitle="Exporter en Excel"
+                  (click)="exportToExcel()"
+                  class="export-btn glass-btn"
+                >
+                  <span nz-icon nzType="file-excel"></span>
+                </button>
+              </nz-button-group>
+            </div>
+            
             <button 
               nz-button 
               nzType="primary" 
               (click)="createService()"
+              class="add-client-btn primary-gradient"
+              nzSize="small"
             >
-              <span nz-icon nzType="plus"></span> Ajouter un service
+              <span nz-icon nzType="plus"></span>
+              <span class="btn-text">Nouveau Service</span>
             </button>
           </div>
         </div>
       </div>
 
-      <!-- Loading State -->
-      <div class="text-center py-4" *ngIf="loading">
-        <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Chargement...</span>
+      <!-- Enhanced Loading State with Modern Animation -->
+      <div class="loading-state modern-loading" *ngIf="loading">
+        <div class="loading-content">
+          <div class="loading-spinner">
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+          </div>
+          <div class="loading-text">Chargement des services...</div>
         </div>
-        <p class="mt-2">Chargement des services...</p>
       </div>
 
-      <!-- Services Table -->
-      <div *ngIf="!loading">
-        <nz-table
-          #basicTable
-          [nzData]="services"
-          [nzPageSize]="pageSize"
-          [nzPageIndex]="pageIndex"
-          [nzTotal]="totalItems"
-          [nzFrontPagination]="false"
-          [nzLoading]="loading"
-          (nzPageIndexChange)="onPageIndexChange($event)"
-          (nzPageSizeChange)="onPageSizeChange($event)"
-          [nzShowPagination]="true"
-          [nzShowSizeChanger]="true"
-          [nzPageSizeOptions]="[5, 10, 20, 50]"
-          [nzShowTotal]="rangeTemplate"
-          nzTableLayout="fixed"
-        >
-          <thead>
-            <tr>
-              <th>Nom</th>
-              <th>Prix HT</th>
-              <th>TVA</th>
-              <th>Prix TTC</th>
-              <th>Part Technique</th>
-              <th>Part Entreprise</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let service of basicTable.data">
-              <td>{{ service.nom }}</td>
-              <td>{{ service.prix | number:'1.2-2' }} DT</td>
-              <td>{{ service.tva | number:'1.2-2' }}%</td>
-              <td>{{ service.prixTot | number:'1.2-2' }} DT</td>
-              <td>{{ service.partTech | number:'1.2-2' }} DT</td>
-              <td>{{ service.partEnts | number:'1.2-2' }} DT</td>
-              <td>
-                <div class="d-flex gap-2">
-                  <button nz-button nzType="default" nzSize="small" (click)="editService(service.idService)">
-                    <span nz-icon nzType="edit"></span> Modifier
-                  </button>
-                  <button nz-button nzType="default" nzDanger nzSize="small" (click)="deleteService(service.idService)">
-                    <span nz-icon nzType="delete"></span> Supprimer
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </nz-table>
+      <!-- Enhanced Table Section with Modern Design -->
+      <div class="table-section modern-table-section" *ngIf="!loading">
+        <div class="table-wrapper glass-table">
+          <nz-table 
+            #serviceTable 
+            [nzData]="filteredServices" 
+            [nzFrontPagination]="true"
+            [nzShowPagination]="true"
+            [nzPageSize]="pageSize"
+            [nzPageIndex]="pageIndex"
+            [nzTotal]="filteredServices.length"
+            [nzPageSizeOptions]="[5, 10, 20, 50]"
+            [nzShowSizeChanger]="true"
+            (nzPageIndexChange)="onPageIndexChange($event)"
+            (nzPageSizeChange)="onPageSizeChange($event)"
+            [nzLoading]="loading"
+            [nzShowTotal]="rangeTemplate"
+            nzTableLayout="fixed"
+            class="enhanced-table modern-table"
+            [nzScroll]="{ x: '800px' }"
+          >
+            <thead>
+              <tr class="table-header">
+                <th nzWidth="200px" class="header-cell">
+                  <div class="header-content">
+                    <span nz-icon nzType="appstore" class="header-icon"></span>
+                    Nom
+                  </div>
+                </th>
+                <th nzWidth="120px" class="header-cell">
+                  <div class="header-content">Prix HT</div>
+                </th>
+                <th nzWidth="80px" class="header-cell">
+                  <div class="header-content">TVA</div>
+                </th>
+                <th nzWidth="120px" class="header-cell">
+                  <div class="header-content">Prix TTC</div>
+                </th>
+                <th nzWidth="140px" class="header-cell">
+                  <div class="header-content">Part Technique</div>
+                </th>
+                <th nzWidth="140px" class="header-cell">
+                  <div class="header-content">Part Entreprise</div>
+                </th>
+                <th nzWidth="160px" nzAlign="center" class="header-cell">
+                  <div class="header-content">
+                    <span nz-icon nzType="setting" class="header-icon"></span>
+                    Actions
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let service of serviceTable.data" class="table-row">
+                <td class="data-cell">
+                  <span class="secondary-text modern-text">{{ service.nom }}</span>
+                </td>
+                <td class="data-cell">
+                  <span class="secondary-text modern-text">{{ service.prix | number: '1.2-2' }} DT</span>
+                </td>
+                <td class="data-cell">
+                  <span class="secondary-text modern-text">{{ service.tva | number: '1.2-2' }}%</span>
+                </td>
+                <td class="data-cell">
+                  <span class="secondary-text modern-text">{{ service.prixTot | number: '1.2-2' }} DT</span>
+                </td>
+                <td class="data-cell">
+                  <span class="secondary-text modern-text">{{ service.partTech | number: '1.2-2' }} DT</span>
+                </td>
+                <td class="data-cell">
+                  <span class="secondary-text modern-text">{{ service.partEnts | number: '1.2-2' }} DT</span>
+                </td>
+                <td class="actions-cell data-cell">
+                  <div class="table-actions modern-actions">
+                    <button 
+                      nz-button 
+                      nzType="default" 
+                      nzSize="small" 
+                      (click)="editService(service.idService)" 
+                      class="action-button edit-btn"
+                      nz-tooltip
+                      nzTooltipTitle="Modifier le service"
+                    >
+                      <span nz-icon nzType="edit"></span>
+                    </button>
+                    <button 
+                      nz-button 
+                      nzDanger 
+                      nzSize="small" 
+                      (click)="openDeleteModal(service.idService)"
+                      class="action-button delete-btn"
+                      nz-tooltip
+                      nzTooltipTitle="Supprimer le service"
+                    >
+                      <span nz-icon nzType="delete"></span>
+                    </button>
+                  </div>
+                </td>                
+              </tr>
+            </tbody>
+          </nz-table>
+          
+          <ng-template #rangeTemplate let-range="range" let-total>
+            <div class="pagination-info modern-pagination">
+              <div class="pagination-content">
+                <span class="range-text">{{ range[0] }}-{{ range[1] }} sur {{ total }} services</span>
+                <div class="pagination-indicator"></div>
+              </div>
+            </div>
+          </ng-template>
+        </div>
 
-        <ng-template #rangeTemplate let-range="range" let-total>
-          {{ range[0] }}-{{ range[1] }} sur {{ total }} services
-        </ng-template>
+        <!-- Enhanced Empty State -->
+        <div class="empty-state modern-empty" *ngIf="filteredServices.length === 0 && !loading">
+          <div class="empty-content">
+            <div class="empty-icon-container">
+              <span nz-icon nzType="appstore-add" class="empty-icon"></span>
+              <div class="icon-bg-effect"></div>
+            </div>
+            <h3 class="empty-title">
+              {{ searchTerm ? 'Aucun service trouvé' : 'Aucun service enregistré' }}
+            </h3>
+            <p class="empty-description">
+              {{ searchTerm ? 'Essayez de modifier vos critères de recherche' : 'Commencez par ajouter votre premier service' }}
+            </p>
+            <button 
+              *ngIf="!searchTerm"
+              nz-button 
+              nzType="primary" 
+              (click)="createService()"
+              class="empty-action-btn modern-primary-btn"
+            >
+              <span nz-icon nzType="plus"></span>
+              <span>Ajouter un Service</span>
+            </button>
+          </div>
+        </div>
       </div>
+      
+      <!-- Enhanced Delete Modal with Modern Design -->
+      <nz-modal
+        [(nzVisible)]="showDeleteModal"
+        nzTitle="Confirmer la suppression"
+        (nzOnCancel)="closeDeleteModal()"
+        (nzOnOk)="confirmDelete()"
+        nzOkText="Supprimer"
+        nzCancelText="Annuler"
+        nzOkDanger="true"
+        nzWidth="450px"
+        class="delete-modal modern-modal"
+      >
+        <div class="modal-content modern-modal-content">
+          <div class="warning-section">
+            <div class="warning-icon modern-warning-icon">
+              <span nz-icon nzType="exclamation-circle" nzTheme="fill"></span>
+              <div class="warning-pulse"></div>
+            </div>
+            <div class="modal-text">
+              <h4 class="warning-title">Supprimer ce service ?</h4>
+              <p class="warning-text">
+                Cette action est irréversible et supprimera toutes les données associées à ce service.
+              </p>
+              <div class="warning-highlight">
+                <span nz-icon nzType="info-circle"></span>
+                Assurez-vous que ce service n'est pas utilisé dans des documents en cours.
+              </div>
+            </div>
+          </div>
+        </div>
+      </nz-modal>
     </app-card>
   </div>
 </div>

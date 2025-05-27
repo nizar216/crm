@@ -29,7 +29,6 @@ import { FormsModule } from '@angular/forms';
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    CardComponent,
     NzFormModule,
     NzInputModule,
     NzButtonModule,
@@ -53,6 +52,7 @@ export class ReclamationEditComponent implements OnInit {
   etat_visite: string = '';
   selectedServices: any[] = [];
   selectedArticles: any[] = [];
+  errorMessage: string = '';
 
   constructor(
     private fb: FormBuilder,

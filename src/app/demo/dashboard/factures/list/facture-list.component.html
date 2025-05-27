@@ -1,0 +1,153 @@
+<div class="client-list-container">
+  <div class="col-sm-12">
+    <app-card [cardTitle]="'Liste des Factures'" class="modern-card">
+      <div class="header-section">
+        <div class="header-content">
+          <div class="search-section">
+            <div class="search-wrapper">
+              <nz-input-group [nzSuffix]="suffixIconSearch" class="modern-search">
+                <input type="text" nz-input placeholder="Rechercher par client, date, total..." [(ngModel)]="searchTerm"
+                  class="search-input-field" />
+              </nz-input-group>
+              <ng-template #suffixIconSearch>
+                <span nz-icon nzType="search" class="search-icon"></span>
+              </ng-template>
+            </div>
+          </div>
+          <div class="actions-section">
+            <div class="export-buttons">
+              <nz-button-group nzSize="small" class="glass-buttons">
+                <button nz-button nzType="default" nz-tooltip nzTooltipTitle="Exporter en PDF" (click)="exportToPdf()"
+                  class="export-btn glass-btn">
+                  <span nz-icon nzType="file-pdf"></span>
+                </button>
+                <button nz-button nzType="default" nz-tooltip nzTooltipTitle="Exporter en Excel"
+                  (click)="exportToExcel()" class="export-btn glass-btn">
+                  <span nz-icon nzType="file-excel"></span>
+                </button>
+              </nz-button-group>
+            </div>
+            <button nz-button nzType="primary" (click)="createFacture()" class="add-client-btn primary-gradient"
+              nzSize="small">
+              <span nz-icon nzType="plus"></span>
+              <span class="btn-text">Nouvelle Facture</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="loading-state modern-loading" *ngIf="isLoading">
+        <div class="loading-content">
+          <div class="loading-spinner">
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+          </div>
+          <div class="loading-text">Chargement des factures...</div>
+        </div>
+      </div>
+
+      <div class="table-section modern-table-section" *ngIf="!isLoading">
+        <div class="table-wrapper glass-table">
+          <nz-table #factureTable [nzData]="filteredFactures" [nzFrontPagination]="true" [nzShowPagination]="true"
+            [nzPageSize]="pageSize" [nzPageIndex]="currentPage" [nzTotal]="filteredFactures.length"
+            [nzPageSizeOptions]="pageSizeOptions" [nzShowSizeChanger]="true" (nzPageIndexChange)="changePage($event)"
+            (nzPageSizeChange)="onPageSizeChange($event)" [nzLoading]="isLoading" nzTableLayout="fixed"
+            class="enhanced-table modern-table" [nzScroll]="{ x: '800px' }">
+            <thead>
+              <tr class="table-header">
+                <th nzWidth="100px" class="header-cell">
+                  <div class="header-content">
+                    <span nz-icon nzType="number" class="header-icon"></span>
+                    Code
+                  </div>
+                </th>
+                <th nzWidth="140px" class="header-cell">
+                  <div class="header-content">
+                    <span nz-icon nzType="calendar" class="header-icon"></span>
+                    Date
+                  </div>
+                </th>
+                <th nzWidth="140px" class="header-cell">
+                  <div class="header-content">
+                    <span nz-icon nzType="dollar" class="header-icon"></span>
+                    Prix Total
+                  </div>
+                </th>
+                <th nzWidth="120px" class="header-cell">
+                  <div class="header-content">
+                    <span nz-icon nzType="shopping-cart" class="header-icon"></span>
+                    Total Article
+                  </div>
+                </th>
+                <th nzWidth="120px" class="header-cell">
+                  <div class="header-content">
+                    <span nz-icon nzType="appstore" class="header-icon"></span>
+                    Total Service
+                  </div>
+                </th>
+                <th nzWidth="120px" class="header-cell">
+                  <div class="header-content">
+                    <span nz-icon nzType="calculator" class="header-icon"></span>
+                    Prix HT
+                  </div>
+                </th>
+                <th nzWidth="120px" class="header-cell">
+                  <div class="header-content">
+                    <span nz-icon nzType="percentage" class="header-icon"></span>
+                    TVA Global
+                  </div>
+                </th>
+                <th nzWidth="160px" nzAlign="center" class="header-cell">
+                  <div class="header-content">
+                    <span nz-icon nzType="setting" class="header-icon"></span>
+                    Actions
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let facture of factureTable.data" class="table-row">
+                <td class="data-cell">
+                  <span class="secondary-text modern-text">{{ facture.idFacture }}</span>
+                </td>
+                <td class="data-cell">
+                  <span class="secondary-text modern-text">{{ facture.date | date:'shortDate' }}</span>
+                </td>
+                <td class="data-cell">
+                  <span class="secondary-text modern-text">{{ facture.prixTotal | number:'1.2-2' }} TND</span>
+                </td>
+                <td class="data-cell">
+                  <span class="secondary-text modern-text">{{ facture.totalArticle }}</span>
+                </td>
+                <td class="data-cell">
+                  <span class="secondary-text modern-text">{{ facture.totalService }}</span>
+                </td>
+                <td class="data-cell">
+                  <span class="secondary-text modern-text">{{ facture.prixHT }}</span>
+                </td>
+                <td class="data-cell">
+                  <span class="secondary-text modern-text">{{ facture.TVAglobal }}</span>
+                </td>
+                <td class="actions-cell data-cell">
+                  <div class="table-actions modern-actions">
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </div>
+
+      <!-- Enhanced Delete Modal with Modern Design -->
+      <nz-modal [(nzVisible)]="showDeleteModal" nzTitle="Confirmer la suppression" (nzOnCancel)="closeDeleteModal()"
+        (nzOnOk)="confirmDelete()" nzOkText="Supprimer" nzCancelText="Annuler" nzOkDanger="true" nzWidth="450px"
+        class="delete-modal modern-modal">
+        <div class="modal-content">
+          <span nz-icon nzType="warning" class="modal-warning-icon"></span>
+          <div class="modal-text">Êtes-vous sûr de vouloir supprimer cette facture ?</div>
+        </div>
+      </nz-modal>
+    </app-card>
+  </div>
+</div>

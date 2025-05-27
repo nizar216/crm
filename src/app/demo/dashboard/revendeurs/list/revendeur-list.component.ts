@@ -17,6 +17,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-revendeur-list',
@@ -27,7 +28,7 @@ import { saveAs } from 'file-saver';
     CommonModule, FormsModule, CardComponent,
     NzPaginationModule, NzTableModule, NzDividerModule,
     NzButtonModule, NzIconModule, NzInputModule,
-    NzMessageModule, NzToolTipModule
+    NzMessageModule, NzToolTipModule, NzModalModule
   ]
 })
 export class RevendeurListComponent implements OnInit {
@@ -40,11 +41,15 @@ export class RevendeurListComponent implements OnInit {
   pageSize = 10;
   pageSizeOptions = [5, 10, 20, 50];
 
+  // Modal delete logic
+  showDeleteModal = false;
+  selectedRevendeurId: any = null;
+
   constructor(
     private revendeurService: RevendeurService,
     private router: Router,
     private message: NzMessageService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadRevendeurs();
@@ -83,6 +88,23 @@ export class RevendeurListComponent implements OnInit {
         this.message.error('Erreur lors de la suppression du revendeur');
       }
     });
+  }
+
+  openDeleteModal(idRevendeur: any) {
+    this.selectedRevendeurId = idRevendeur;
+    this.showDeleteModal = true;
+  }
+
+  closeDeleteModal() {
+    this.showDeleteModal = false;
+    this.selectedRevendeurId = null;
+  }
+
+  confirmDelete() {
+    if (this.selectedRevendeurId) {
+      this.deleteRevendeur(this.selectedRevendeurId);
+    }
+    this.closeDeleteModal();
   }
 
   get filteredRevendeurs() {
@@ -207,5 +229,9 @@ export class RevendeurListComponent implements OnInit {
       saveAs(blob, `liste_revendeurs_${today}.xlsx`);
       this.message.success('Excel exporté avec succès');
     });
+  }
+
+  printPdf() {
+    window.print();
   }
 } 

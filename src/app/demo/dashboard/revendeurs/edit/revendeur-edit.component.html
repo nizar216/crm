@@ -1,63 +1,48 @@
-<div class="row">
-  <div class="col-sm-12">
-    <app-card [cardTitle]="'Modifier le Revendeur'">
-      <form [formGroup]="revendeurForm" (ngSubmit)="onSubmit()">
-        <div class="row">
-          <div class="col-md-6">
-            <nz-form-item>
-              <nz-form-label [nzRequired]="true">Nom</nz-form-label>
-              <nz-form-control nzErrorTip="Le nom est requis">
-                <input nz-input formControlName="nom" placeholder="Entrez le nom" />
-              </nz-form-control>
-            </nz-form-item>
-          </div>
-
-          <div class="col-md-6">
-            <nz-form-item>
-              <nz-form-label [nzRequired]="true">Téléphone</nz-form-label>
-              <nz-form-control nzErrorTip="Le téléphone est requis">
-                <input nz-input formControlName="Telephone" placeholder="Entrez le numéro de téléphone" />
-              </nz-form-control>
-            </nz-form-item>
-          </div>
-
-          <div class="col-md-6">
-            <nz-form-item>
-              <nz-form-label [nzRequired]="true">Email</nz-form-label>
-              <nz-form-control nzErrorTip="L'email est requis et doit être valide">
-                <input nz-input formControlName="email" placeholder="Entrez l'email" type="email" />
-              </nz-form-control>
-            </nz-form-item>
-          </div>
-
-          <div class="col-md-6">
-            <nz-form-item>
-              <nz-form-label [nzRequired]="true">Responsable</nz-form-label>
-              <nz-form-control nzErrorTip="Le responsable est requis">
-                <input nz-input formControlName="responsable" placeholder="Entrez le nom du responsable" />
-              </nz-form-control>
-            </nz-form-item>
-          </div>
-
-          <div class="col-md-6">
-            <nz-form-item>
-              <nz-form-label [nzRequired]="true">Matricule Fiscale</nz-form-label>
-              <nz-form-control nzErrorTip="Le matricule fiscale est requis">
-                <input nz-input formControlName="MF" placeholder="Entrez le matricule fiscale" />
-              </nz-form-control>
-            </nz-form-item>
+<div class="article-create-container">
+  <div class="modern-card">
+    <div class="header-section">
+      <div class="header-content">
+        <h2 class="section-title">Modifier le Revendeur</h2>
+      </div>
+    </div>
+    <form [formGroup]="revendeurForm" (ngSubmit)="onSubmit()">
+      <div class="card-body">
+        <!-- Informations générales -->
+        <div class="modern-section general-section">
+          <h4 class="section-title">Informations générales</h4>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Nom <span class="text-danger">*</span></label>
+              <input type="text" class="form-control modern-input" formControlName="nom" placeholder="Entrez le nom" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Téléphone <span class="text-danger">*</span></label>
+              <input type="text" class="form-control modern-input" formControlName="Telephone" placeholder="Entrez le numéro de téléphone" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Email <span class="text-danger">*</span></label>
+              <input type="email" class="form-control modern-input" formControlName="email" placeholder="Entrez l'email" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Responsable <span class="text-danger">*</span></label>
+              <input type="text" class="form-control modern-input" formControlName="responsable" placeholder="Entrez le nom du responsable" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Matricule Fiscale <span class="text-danger">*</span></label>
+              <input type="text" class="form-control modern-input" formControlName="MF" placeholder="Entrez le matricule fiscale" />
+            </div>
           </div>
         </div>
-
-        <div class="row mt-4">
-          <div class="col-12 text-end">
-            <button nz-button (click)="cancel()" class="me-2">Annuler</button>
-            <button nz-button nzType="primary" type="submit" [nzLoading]="isLoading">
-              Mettre à jour
-            </button>
-          </div>
-        </div>
-      </form>
-    </app-card>
+      </div>
+      <div class="card-footer text-end">
+        <button type="button" class="glass-btn btn me-2" (click)="cancel()">
+          <i ant-icon type="close"></i> Annuler
+        </button>
+        <button type="submit" class="modern-primary-btn btn" [disabled]="isLoading">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+          <i *ngIf="!isLoading" ant-icon type="save"></i> Mettre à jour
+        </button>
+      </div>
+    </form>
   </div>
 </div> 

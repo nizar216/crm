@@ -72,4 +72,8 @@ export class ReclamationService {
   getReclamationById(id: any): Observable<any> {
     return this.http.get(this.apiUrl + '/' + id, { withCredentials: true });
   }
+
+  getReclamationsByDevis(devisId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/devis/${devisId}/client-reclamations`, { withCredentials: true });
+  }
 }

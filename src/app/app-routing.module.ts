@@ -105,6 +105,30 @@ const routes: Routes = [
       {
         path: 'dashboard/reclamations/edit/:id',
         loadComponent: () => import('./demo/dashboard/reclamations/edit/reclamation-edit.component').then((c) => c.ReclamationEditComponent)
+      },
+      {
+        path: 'dashboard/devis',
+        loadComponent: () => import('./demo/dashboard/devis/list/devis-list.component').then((c) => c.DevisListComponent)
+      },
+      {
+        path: 'dashboard/devis/create',
+        loadComponent: () => import('./demo/dashboard/devis/create/devis-create.component').then((c) => c.DevisCreateComponent)
+      },
+      {
+        path: 'dashboard/devis/edit/:id',
+        loadComponent: () => import('./demo/dashboard/devis/edit/devis-edit.component').then((c) => c.DevisEditComponent)
+      },
+      {
+        path: 'dashboard/factures',
+        loadComponent: () => import('./demo/dashboard/factures/list/facture-list.component').then((c) => c.FactureListComponent)
+      },
+      {
+        path: 'dashboard/factures/create',
+        loadComponent: () => import('./demo/dashboard/factures/create/facture-create.component').then((c) => c.FactureCreateComponent)
+      },
+      {
+        path: 'dashboard/factures/view/:id',
+        loadComponent: () => import('./demo/dashboard/factures/view/facture-view.component').then((c) => c.FactureViewComponent)
       }
     ]
   },
@@ -129,4 +153,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

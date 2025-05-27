@@ -101,11 +101,11 @@ export class ClientListComponent implements OnInit {
   }
 
   get filteredClients() {
+    const term = this.searchTerm.toLowerCase();
     return this.clients.filter(client =>
-      client.nom.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      client.email.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      (client.ville && client.ville.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
-      (client.personneAcontacter && client.personneAcontacter.toLowerCase().includes(this.searchTerm.toLowerCase()))
+      Object.values(client).some(value =>
+        String(value).toLowerCase().includes(term)
+      )
     );
   }
 

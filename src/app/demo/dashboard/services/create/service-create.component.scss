@@ -1,0 +1,259 @@
+/* Styles for the service create form (copied from article create) */
+
+:host ::ng-deep {
+  /* Input styles */
+  .ant-input:hover, .ant-input:focus,
+  .ant-input-number:hover, .ant-input-number-focused,
+  .ant-select:hover .ant-select-selector, .ant-select-focused .ant-select-selector {
+    border-color: #7267EF;
+  }
+
+  /* Form label styles */
+  .ant-form-item-label > label {
+    font-weight: 500;
+  }
+
+  .ant-form-item-label > label.ant-form-item-required::before {
+    color: #ff4d4f;
+  }
+
+  /* Form item spacing */
+  .ant-form-item {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Button hover effects */
+  .ant-btn-primary {
+    background-color: #7267EF;
+    border-color: #7267EF;
+    
+    &:hover, &:focus {
+      background-color: #5a4ee4;
+      border-color: #5a4ee4;
+    }
+  }
+
+  /* Required field indicator */
+  .ant-form-item-required::after {
+    display: inline-block;
+    margin-right: 4px;
+    color: #ff4d4f;
+    font-size: 14px;
+    font-family: SimSun, sans-serif;
+    line-height: 1;
+    content: '*';
+  }
+  
+  /* Number input full width */
+  .ant-input-number {
+    width: 100%;
+  }
+  
+  /* Select dropdown styling */
+  .ant-select {
+    width: 100%;
+  }
+}
+
+/* Success modal styles */
+:host ::ng-deep .ant-modal-body {
+  padding: 24px;
+}
+
+/* Back button styles */
+.back-button {
+  margin-bottom: 1rem;
+}
+
+.form-control:focus {
+  box-shadow: none;
+  border-color: #7267EF;
+}
+
+.btn-primary {
+  background-color: #7267EF;
+  border-color: #7267EF;
+}
+
+/* Required field indicator */
+.text-danger {
+  color: #FF5370 !important;
+}
+
+/* Form group spacing */
+.mb-3 {
+  margin-bottom: 1rem !important;
+}
+
+/* Common section styles */
+general-section,
+.pricing-section {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  border: 1px solid #e9ecef;
+
+  .section-title {
+    color: #2c3e50;
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #7267EF;
+  }
+
+  .form-control {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: #7267EF;
+    }
+  }
+}
+
+::ng-deep {
+  .ant-select {
+    width: 100%;
+    .ant-select-selector {
+      height: 38px !important;
+      padding: 4px 11px !important;
+      border: 1px solid #dee2e6;
+      border-radius: 4px;
+      background-color: #ffffff;
+      transition: all 0.3s ease;
+      &:hover {
+        border-color: #7267EF;
+      }
+      .ant-select-selection-item {
+        line-height: 28px;
+      }
+    }
+    &.ant-select-focused {
+      .ant-select-selector {
+        border-color: #7267EF;
+        box-shadow: none;
+      }
+    }
+  }
+  .ant-select-dropdown {
+    .ant-select-item {
+      padding: 8px 12px;
+    }
+    .ant-select-item-option-selected {
+      background-color: #f0f0ff;
+      color: #7267EF;
+    }
+    .ant-select-item-option-active {
+      background-color: #f8f9fa;
+    }
+  }
+}
+
+.article-create-container {
+  padding: 24px 0;
+  .modern-card {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-light);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    overflow: hidden;
+    width: 100%;
+    padding: 32px 24px 24px 24px;
+    margin: 0;
+  }
+}
+
+.header-section {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  padding: 24px;
+  border-bottom: 1px solid var(--glass-border);
+  margin: -24px -24px 24px -24px;
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .section-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+  }
+}
+
+.modern-section {
+  background: rgba(255,255,255,0.7);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-light);
+  border: 1px solid var(--glass-border);
+  .section-title {
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #667eea;
+    font-weight: 600;
+  }
+}
+
+.modern-input, .ant-select, .ant-select-selector {
+  background: rgba(255,255,255,0.9) !important;
+  border-radius: 12px !important;
+  border: 1.5px solid var(--glass-border) !important;
+  box-shadow: none !important;
+  transition: var(--transition);
+  font-size: 15px;
+  padding: 10px 16px !important;
+  &:focus, &.ant-select-focused {
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+    background: rgba(255,255,255,1) !important;
+  }
+  &::placeholder {
+    color: var(--text-secondary);
+    font-weight: 400;
+  }
+}
+
+.glass-btn {
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 8px;
+  transition: var(--transition);
+  color: var(--text-primary);
+  &:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+  }
+}
+
+.modern-primary-btn {
+  background: var(--primary-gradient) !important;
+  border: none !important;
+  border-radius: 22px;
+  height: 44px;
+  padding: 0 24px;
+  font-weight: 600;
+  box-shadow: var(--shadow-medium);
+  transition: var(--transition);
+  color: white !important;
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    background: var(--primary-gradient) !important;
+    color: white !important;
+  }
+  &:focus {
+    background: var(--primary-gradient) !important;
+    color: white !important;
+  }
+}

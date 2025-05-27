@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ArticleService } from 'src/app/core/services/article.service';
-import { CardComponent } from 'src/app/theme/shared/components/card/card.component';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -21,7 +20,6 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    CardComponent,
     NzButtonModule,
     NzFormModule,
     NzInputModule,
@@ -52,30 +50,37 @@ export class ArticleCreateComponent implements OnInit {
       libelle: ['', [Validators.required, Validators.minLength(3)]],
       prixHT: [0, [Validators.required, Validators.min(0)]],
       tva: [0, [Validators.required, Validators.min(0)]],
-      prixEntreprise: [0, [Validators.required, Validators.min(0)]]
+      prixTTC: [0]
     });
   }
 
   ngOnInit() {
-    // Initialization if needed
+    this.articleForm.get('prixHT')?.valueChanges.subscribe(() => this.calculePrixTotal());
+    this.articleForm.get('tva')?.valueChanges.subscribe(() => this.calculePrixTotal());
+  }
+
+  calculePrixTotal() {
+    const prix = parseFloat(this.articleForm.get('prixHT')?.value) || 0;
+    const tva = parseFloat(this.articleForm.get('tva')?.value) || 0;
+    const prixTot = prix + (prix * tva) / 100;
+    this.articleForm.get('prixTTC')?.patchValue(Number(prixTot.toFixed(2)), { emitEvent: false });
   }
 
   submitForm() {
-    // Mark all fields as dirty to trigger validation
     for (const i in this.articleForm.controls) {
       this.articleForm.controls[i].markAsDirty();
       this.articleForm.controls[i].updateValueAndValidity();
     }
-    
+
     if (this.articleForm.invalid) {
       this.message.error('Veuillez remplir tous les champs obligatoires du formulaire.');
       return;
     }
-  
+
     const prixHT = parseFloat(this.articleForm.value.prixHT);
     const tva = parseFloat(this.articleForm.value.tva);
     const prixTTC = prixHT + (prixHT * tva / 100);
-  
+
     const formData = new FormData();
     formData.append('famille', this.articleForm.value.famille);
     formData.append('unite', this.articleForm.value.unite);
@@ -85,8 +90,7 @@ export class ArticleCreateComponent implements OnInit {
     formData.append('prixHT', this.articleForm.value.prixHT);
     formData.append('tva', this.articleForm.value.tva);
     formData.append('prixTTC', prixTTC.toFixed(2));
-    formData.append('prixEntreprise', this.articleForm.value.prixEntreprise);
-  
+
     this.isSubmitting = true;
     this.articleService.addArticle(formData).subscribe({
       next: () => {
@@ -111,7 +115,7 @@ export class ArticleCreateComponent implements OnInit {
       libelle: '',
       prixHT: 0,
       tva: 0,
-      prixEntreprise: 0
+      prixTTC: 0
     });
   }
 

@@ -20,7 +20,6 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    CardComponent,
     NzButtonModule,
     NzFormModule,
     NzInputModule,

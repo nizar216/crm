@@ -1,107 +1,64 @@
-<div class="container-fluid">
-  <app-card [title]="'Modifier le service'">
+<div class="article-create-container">
+  <div class="modern-card">
+    <div class="header-section">
+      <div class="header-content">
+        <h2 class="section-title">Modifier le Service</h2>
+      </div>
+    </div>
     <div *ngIf="isLoading" class="text-center py-5">
       <nz-spin nzSimple></nz-spin>
     </div>
-
     <div *ngIf="errorMessage" class="alert alert-danger mb-3">
       {{ errorMessage }}
     </div>
-
-    <form nz-form [formGroup]="serviceForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
-      <div class="row">
-        <!-- Nom du service -->
-        <div class="col-12 mb-3">
-          <nz-form-item>
-            <nz-form-label [nzRequired]="true">Nom du service</nz-form-label>
-            <nz-form-control nzErrorTip="Le nom doit contenir au moins 3 caractères">
-              <input nz-input formControlName="nom" placeholder="Entrez le nom du service" />
-            </nz-form-control>
-          </nz-form-item>
+    <form [formGroup]="serviceForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
+      <div class="card-body">
+        <!-- Informations générales -->
+        <div class="modern-section general-section">
+          <h4 class="section-title">Informations générales</h4>
+          <div class="row">
+            <div class="col-12 mb-3">
+              <label class="form-label">Nom du service <span class="text-danger">*</span></label>
+              <input type="text" class="form-control modern-input" formControlName="nom" placeholder="Entrez le nom du service" />
+            </div>
+          </div>
         </div>
-
-        <!-- Prix -->
-        <div class="col-md-6 mb-3">
-          <nz-form-item>
-            <nz-form-label [nzRequired]="true">Prix</nz-form-label>
-            <nz-form-control nzErrorTip="Veuillez saisir un prix valide">
-              <nz-input-number
-                formControlName="prix"
-                [nzMin]="0"
-                [nzStep]="0.01"
-                [nzPrecision]="2"
-                style="width: 100%"
-                placeholder="0.00"
-              ></nz-input-number>
-            </nz-form-control>
-          </nz-form-item>
-        </div>
-
-        <!-- TVA -->
-        <div class="col-md-6 mb-3">
-          <nz-form-item>
-            <nz-form-label [nzRequired]="true">TVA (%)</nz-form-label>
-            <nz-form-control nzErrorTip="Veuillez saisir un taux de TVA valide">
-              <nz-input-number
-                formControlName="tva"
-                [nzMin]="0"
-                [nzStep]="0.01"
-                [nzPrecision]="2"
-                style="width: 100%"
-                placeholder="0.00"
-              ></nz-input-number>
-            </nz-form-control>
-          </nz-form-item>
-        </div>
-
-        <!-- Part Technique -->
-        <div class="col-md-6 mb-3">
-          <nz-form-item>
-            <nz-form-label [nzRequired]="true">Part Technique</nz-form-label>
-            <nz-form-control nzErrorTip="Veuillez saisir une part technique valide">
-              <nz-input-number
-                formControlName="partTech"
-                [nzMin]="0"
-                [nzStep]="0.01"
-                [nzPrecision]="2"
-                style="width: 100%"
-                placeholder="0.00"
-              ></nz-input-number>
-            </nz-form-control>
-          </nz-form-item>
-        </div>
-
-        <!-- Part Entreprise -->
-        <div class="col-md-6 mb-3">
-          <nz-form-item>
-            <nz-form-label [nzRequired]="true">Part Entreprise</nz-form-label>
-            <nz-form-control nzErrorTip="Veuillez saisir une part entreprise valide">
-              <nz-input-number
-                formControlName="partEnts"
-                [nzMin]="0"
-                [nzStep]="0.01"
-                [nzPrecision]="2"
-                style="width: 100%"
-                placeholder="0.00"
-              ></nz-input-number>
-            </nz-form-control>
-          </nz-form-item>
+        <!-- Tarification -->
+        <div class="modern-section pricing-section">
+          <h4 class="section-title">Tarification</h4>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Prix <span class="text-danger">*</span></label>
+              <nz-input-number formControlName="prix" [nzMin]="0" [nzStep]="0.01" [nzPrecision]="2" class="modern-input" style="width: 100%" placeholder="0.00"></nz-input-number>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">TVA (%) <span class="text-danger">*</span></label>
+              <nz-input-number formControlName="tva" [nzMin]="0" [nzStep]="0.01" [nzPrecision]="2" class="modern-input" style="width: 100%" placeholder="0.00"></nz-input-number>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Prix Total (TTC) <span class="text-danger">*</span></label>
+              <nz-input-number formControlName="prixTot" [nzMin]="0" [nzStep]="0.01" [nzPrecision]="2" class="modern-input" style="width: 100%" placeholder="0.00" [nzReadOnly]="true"></nz-input-number>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Part Technique <span class="text-danger">*</span></label>
+              <nz-input-number formControlName="partTech" [nzMin]="0" [nzStep]="0.01" [nzPrecision]="2" class="modern-input" style="width: 100%" placeholder="0.00"></nz-input-number>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Part Entreprise <span class="text-danger">*</span></label>
+              <nz-input-number formControlName="partEnts" [nzMin]="0" [nzStep]="0.01" [nzPrecision]="2" class="modern-input" style="width: 100%" placeholder="0.00"></nz-input-number>
+            </div>
+          </div>
         </div>
       </div>
-
-      <!-- Form Actions -->
-      <div class="row mt-4">
-        <div class="col-12 d-flex justify-content-end gap-2">
-          <button nz-button (click)="cancel()">
-            <span nz-icon nzType="arrow-left"></span>
-            Retour
-          </button>
-          <button nz-button nzType="primary" type="submit" [nzLoading]="isSubmitting">
-            <span nz-icon nzType="save"></span>
-            Enregistrer
-          </button>
-        </div>
+      <div class="card-footer text-end">
+        <button type="button" class="glass-btn btn me-2" (click)="cancel()">
+          <i ant-icon type="close"></i> Annuler
+        </button>
+        <button type="submit" class="modern-primary-btn btn" [disabled]="isSubmitting">
+          <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+          <i *ngIf="!isSubmitting" ant-icon type="save"></i> Enregistrer
+        </button>
       </div>
     </form>
-  </app-card>
+  </div>
 </div> 

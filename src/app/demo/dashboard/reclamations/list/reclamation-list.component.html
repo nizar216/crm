@@ -1,109 +1,256 @@
-<app-card>
-  <div class="flex flex-col sm:flex-row flex-wrap sm:items-center justify-between p-6 pb-0 sm:pb-6">
-    <h2 class="text-3xl font-semibold leading-tight">Réclamations</h2>
-    <div class="flex items-center space-x-3 mt-3 sm:mt-0">
-      <button nz-button nzType="primary" (click)="createReclamation()">
-        <span nz-icon nzType="plus" nzTheme="outline"></span>
-        Nouvelle Réclamation
-      </button>
-      <button nz-button (click)="exportToPdf()">
-        <span nz-icon nzType="file-pdf" nzTheme="outline"></span>
-        PDF
-      </button>
-      <button nz-button (click)="exportToExcel()">
-        <span nz-icon nzType="file-excel" nzTheme="outline"></span>
-        Excel
-      </button>
-    </div>
-  </div>
-
-  <div class="p-6">
-    <div class="mb-4">
-      <nz-input-group nzPrefixIcon="search">
-        <input
-          type="text"
-          nz-input
-          placeholder="Rechercher..."
-          [(ngModel)]="searchTerm"
-        />
-      </nz-input-group>
-    </div>
-
-    <nz-table
-      #basicTable
-      [nzData]="filteredReclamations"
-      [nzLoading]="isLoading"
-      [nzPageSize]="pageSize"
-      [nzPageIndex]="currentPage"
-      [nzTotal]="filteredReclamations.length"
-      [nzFrontPagination]="false"
-      [nzShowSizeChanger]="true"
-      [nzPageSizeOptions]="pageSizeOptions"
-      (nzPageIndexChange)="changePage($event)"
-      (nzPageSizeChange)="onPageSizeChange($event)"
-    >
-      <thead>
-        <tr>
-          <th>Client</th>
-          <th>Date Saisie</th>
-          <th>Date RDV</th>
-          <th>Type Intervention</th>
-          <th>Actions</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let reclamation of basicTable.data">
-          <td>{{ reclamation.Client?.nom }}</td>
-          <td>{{ reclamation.dateSaisie | date:'dd/MM/yyyy' }}</td>
-          <td>{{ reclamation.dateDeRandezVous | date:'dd/MM/yyyy' }}</td>
-          <td>{{ reclamation.typeIntervention }}</td>
-          <td>
-            <div class="flex items-center space-x-2">
-              <button
-                nz-button
-                nzType="primary"
-                nzShape="circle"
-                nz-tooltip
-                nzTooltipTitle="Modifier"
-                (click)="editReclamation(reclamation.idReclamation)"
-              >
-                <span nz-icon nzType="edit" nzTheme="outline"></span>
-              </button>
-              <button
-                nz-button
-                nzType="primary"
-                nzDanger
-                nzShape="circle"
-                nz-tooltip
-                nzTooltipTitle="Supprimer"
-                (click)="openDeleteModal(reclamation.idReclamation)"
-              >
-                <span nz-icon nzType="delete" nzTheme="outline"></span>
-              </button>
+<div class="reclamation-list-container">
+  <div class="col-sm-12">
+    <app-card [cardTitle]="'Liste des Réclamations'" class="modern-card">
+      <!-- Enhanced Header Section with Glass Effect -->
+      <div class="header-section">
+        <div class="header-content">
+          <div class="search-section">
+            <div class="search-wrapper">
+              <nz-input-group [nzSuffix]="suffixIconSearch" class="modern-search">
+                <input 
+                  type="text" 
+                  nz-input 
+                  placeholder="Rechercher par client, status, type..." 
+                  [(ngModel)]="searchTerm"
+                  class="search-input-field" 
+                />
+              </nz-input-group>
+              <ng-template #suffixIconSearch>
+                <span nz-icon nzType="search" class="search-icon"></span>
+              </ng-template>
             </div>
-          </td>
-          <td>
-            <nz-tag [nzColor]="getStatusColor(reclamation.status)">
-              {{ reclamation.status }}
-            </nz-tag>
-          </td>
-        </tr>
-      </tbody>
-    </nz-table>
+          </div>
+          <div class="actions-section">
+            <div class="export-buttons">
+              <nz-button-group nzSize="small" class="glass-buttons">
+                <button 
+                  nz-button 
+                  nzType="default" 
+                  nz-tooltip
+                  nzTooltipTitle="Exporter en PDF"
+                  (click)="exportToPdf()"
+                  class="export-btn glass-btn"
+                >
+                  <span nz-icon nzType="file-pdf"></span>
+                </button>
+                <button 
+                  nz-button 
+                  nzType="default" 
+                  nz-tooltip
+                  nzTooltipTitle="Exporter en Excel"
+                  (click)="exportToExcel()"
+                  class="export-btn glass-btn"
+                >
+                  <span nz-icon nzType="file-excel"></span>
+                </button>
+              </nz-button-group>
+            </div>
+            <button 
+              nz-button 
+              nzType="primary" 
+              (click)="createReclamation()"
+              class="add-reclamation-btn primary-gradient"
+              nzSize="small"
+            >
+              <span nz-icon nzType="plus"></span>
+              <span class="btn-text">Nouvelle Réclamation</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Enhanced Loading State with Modern Animation -->
+      <div class="loading-state modern-loading" *ngIf="isLoading">
+        <div class="loading-content">
+          <div class="loading-spinner">
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+          </div>
+          <div class="loading-text">Chargement des réclamations...</div>
+        </div>
+      </div>
+      <!-- Enhanced Table Section with Modern Design -->
+      <div class="table-section modern-table-section" *ngIf="!isLoading">
+        <div class="table-wrapper glass-table">
+          <nz-table 
+            #reclamationTable 
+            [nzData]="filteredReclamations" 
+            [nzFrontPagination]="true"
+            [nzShowPagination]="true"
+            [nzPageSize]="pageSize"
+            [nzPageIndex]="currentPage"
+            [nzTotal]="filteredReclamations.length"
+            [nzPageSizeOptions]="pageSizeOptions"
+            [nzShowSizeChanger]="true"
+            (nzPageIndexChange)="changePage($event)"
+            (nzPageSizeChange)="onPageSizeChange($event)"
+            [nzLoading]="isLoading"
+            [nzShowTotal]="rangeTemplate"
+            nzTableLayout="fixed"
+            class="enhanced-table modern-table"
+            [nzScroll]="{ x: '800px' }"
+          >
+            <thead>
+              <tr class="table-header">
+                <th nzWidth="180px" class="header-cell">
+                  <div class="header-content">
+                    <span nz-icon nzType="user" class="header-icon"></span>
+                    Client
+                  </div>
+                </th>
+                <th nzWidth="140px" class="header-cell">
+                  <div class="header-content">
+                    <span nz-icon nzType="calendar" class="header-icon"></span>
+                    Date Saisie
+                  </div>
+                </th>
+                <th nzWidth="140px" class="header-cell">
+                  <div class="header-content">
+                    <span nz-icon nzType="calendar" class="header-icon"></span>
+                    Date RDV
+                  </div>
+                </th>
+                <th nzWidth="180px" class="header-cell">
+                  <div class="header-content">
+                    <span nz-icon nzType="tool" class="header-icon"></span>
+                    Type Intervention
+                  </div>
+                </th>
+                <th nzWidth="120px" class="header-cell">
+                  <div class="header-content">
+                    <span nz-icon nzType="setting" class="header-icon"></span>
+                    Actions
+                  </div>
+                </th>
+                <th nzWidth="120px" class="header-cell">
+                  <div class="header-content">
+                    <span nz-icon nzType="info-circle" class="header-icon"></span>
+                    Status
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let reclamation of reclamationTable.data" class="table-row">
+                <td class="data-cell">
+                  <div class="client-name modern-client-name">
+                    <div class="name-avatar gradient-avatar">
+                      {{ reclamation.Client?.nom ? reclamation.Client.nom.charAt(0) : '?' }}
+                    </div>
+                    <div class="name-info">
+                      <span class="name-text">{{ reclamation.Client?.nom || '-' }}</span>
+                    </div>
+                  </div>
+                </td>
+                <td class="data-cell">
+                  <span class="secondary-text modern-text">{{ reclamation.dateSaisie | date:'dd/MM/yyyy' }}</span>
+                </td>
+                <td class="data-cell">
+                  <span class="secondary-text modern-text">{{ reclamation.dateDeRandezVous | date:'dd/MM/yyyy' }}</span>
+                </td>
+                <td class="data-cell">
+                  <span class="secondary-text modern-text">{{ reclamation.typeIntervention }}</span>
+                </td>
+                <td class="actions-cell data-cell">
+                  <div class="table-actions modern-actions">
+                    <button 
+                      nz-button 
+                      nzType="default" 
+                      nzSize="small" 
+                      (click)="editReclamation(reclamation.idReclamation)" 
+                      class="action-button edit-btn"
+                      nz-tooltip
+                      nzTooltipTitle="Modifier la réclamation"
+                    >
+                      <span nz-icon nzType="edit"></span>
+                    </button>
+                    <button 
+                      nz-button 
+                      nzDanger 
+                      nzSize="small" 
+                      (click)="openDeleteModal(reclamation.idReclamation)"
+                      class="action-button delete-btn"
+                      nz-tooltip
+                      nzTooltipTitle="Supprimer la réclamation"
+                    >
+                      <span nz-icon nzType="delete"></span>
+                    </button>
+                  </div>
+                </td>
+                <td class="data-cell">
+                  <nz-tag [nzColor]="getStatusColor(reclamation.status)">
+                    {{ reclamation.status }}
+                  </nz-tag>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+          <ng-template #rangeTemplate let-range="range" let-total>
+            <div class="pagination-info modern-pagination">
+              <div class="pagination-content">
+                <span class="range-text">{{ range[0] }}-{{ range[1] }} sur {{ total }} réclamations</span>
+                <div class="pagination-indicator"></div>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+        <!-- Enhanced Empty State -->
+        <div class="empty-state modern-empty" *ngIf="filteredReclamations.length === 0 && !isLoading">
+          <div class="empty-content">
+            <div class="empty-icon-container">
+              <span nz-icon nzType="file-exclamation" class="empty-icon"></span>
+              <div class="icon-bg-effect"></div>
+            </div>
+            <h3 class="empty-title">
+              {{ searchTerm ? 'Aucune réclamation trouvée' : 'Aucune réclamation enregistrée' }}
+            </h3>
+            <p class="empty-description">
+              {{ searchTerm ? 'Essayez de modifier vos critères de recherche' : 'Commencez par ajouter votre première réclamation' }}
+            </p>
+            <button 
+              *ngIf="!searchTerm"
+              nz-button 
+              nzType="primary" 
+              (click)="createReclamation()"
+              class="empty-action-btn modern-primary-btn"
+            >
+              <span nz-icon nzType="plus"></span>
+              <span>Ajouter une Réclamation</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Enhanced Delete Modal with Modern Design -->
+      <nz-modal
+        [(nzVisible)]="showDeleteModal"
+        nzTitle="Confirmer la suppression"
+        (nzOnCancel)="closeDeleteModal()"
+        (nzOnOk)="confirmDelete()"
+        nzOkText="Supprimer"
+        nzCancelText="Annuler"
+        nzOkDanger="true"
+        nzWidth="450px"
+        class="delete-modal modern-modal"
+      >
+        <div class="modal-content modern-modal-content">
+          <div class="warning-section">
+            <div class="warning-icon modern-warning-icon">
+              <span nz-icon nzType="exclamation-circle" nzTheme="fill"></span>
+              <div class="warning-pulse"></div>
+            </div>
+            <div class="modal-text">
+              <h4 class="warning-title">Supprimer cette réclamation ?</h4>
+              <p class="warning-text">
+                Cette action est irréversible et supprimera toutes les données associées à cette réclamation.
+              </p>
+              <div class="warning-highlight">
+                <span nz-icon nzType="info-circle"></span>
+                Assurez-vous que cette réclamation n'est pas critique.
+              </div>
+            </div>
+          </div>
+        </div>
+      </nz-modal>
+    </app-card>
   </div>
-</app-card>
-
-<!-- Delete Confirmation Modal -->
-<nz-modal
-  [(nzVisible)]="showDeleteModal"
-  nzTitle="Confirmer la suppression"
-  (nzOnCancel)="closeDeleteModal()"
-  [nzOkText]="'Supprimer'"
-  [nzCancelText]="'Annuler'"
-  (nzOnOk)="confirmDelete()"
->
-  <ng-container *nzModalContent>
-    <p>Êtes-vous sûr de vouloir supprimer cette réclamation ?</p>
-  </ng-container>
-</nz-modal> 
+</div> 

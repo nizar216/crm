@@ -87,6 +87,23 @@ export const NavigationItems: NavigationItem[] = [
         url: '/dashboard/reclamations',
         icon: 'warning',
         breadcrumbs: false
+      },
+      {
+        id: 'devis',
+        title: 'Devis',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/dashboard/devis',
+        icon: 'file-text',
+        breadcrumbs: false
+      }, {
+        id: 'factures',
+        title: 'Factures',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/dashboard/factures',
+        icon: 'file-done',
+        breadcrumbs: false
       }
     ]
   }

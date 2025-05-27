@@ -1,0 +1,164 @@
+<div class="devis-create-container">
+  <div class="modern-card">
+    <div class="header-section">
+      <div class="header-content">
+        <h2 class="section-title">Modifier un Devis</h2>
+      </div>
+    </div>
+    <form [formGroup]="devisForm" (ngSubmit)="onSubmit()">
+      <div *ngIf="errorMessage" class="modern-empty alert modern-alert mb-3">
+        {{ errorMessage }}
+      </div>
+      <div class="card-body">
+        <!-- Client Selection -->
+        <div class="modern-section">
+          <h4 class="section-title">Client</h4>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Sélectionner un client <span class="text-danger">*</span></label>
+              <nz-select
+                formControlName="client"
+                nzPlaceHolder="Choisir un client"
+                nzShowSearch
+                [nzAllowClear]="false"
+                class="modern-input"
+                [nzLoading]="isLoading"
+                [nzBorderless]="true"
+              >
+                <nz-option
+                  *ngFor="let client of clients"
+                  [nzValue]="client.idClient"
+                  [nzLabel]="client.nom + ' ' + (client.prenom || '')"
+                >
+                  {{ client.nom }} {{ client.prenom }}
+                </nz-option>
+              </nz-select>
+              <div *ngIf="devisForm.get('client')?.invalid && devisForm.get('client')?.touched" class="text-danger small">
+                Le client est requis
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Articles Section -->
+        <div class="modern-section">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h4 class="section-title mb-0">Articles</h4>
+            <button type="button" class="glass-btn btn" (click)="addArticle()">
+              <span nz-icon nzType="plus"></span> Ajouter un article
+            </button>
+          </div>
+          <div formArrayName="articles">
+            <div *ngFor="let article of articlesArray.controls; let i = index" [formGroupName]="i" class="row d-flex align-items-end mb-3 g-2">
+              <div class="col">
+                <label class="form-label">Article <span class="text-danger">*</span></label>
+                <nz-select formControlName="idArticle" nzPlaceHolder="Choisir un article" nzShowSearch [nzBorderless]="true">
+                  <nz-option *ngFor="let art of articles" [nzValue]="art.idArticle" [nzLabel]="art.libelle"></nz-option>
+                </nz-select>
+              </div>
+              <div class="col">
+                <label class="form-label">Quantité</label>
+                <input type="number" class="form-control modern-input" formControlName="quantite" min="1">
+              </div>
+              <div class="col">
+                <label class="form-label">Prix HT</label>
+                <input type="number" class="form-control modern-input" formControlName="prixHT" min="0">
+              </div>
+              <div class="col">
+                <label class="form-label">TVA (%)</label>
+                <input type="number" class="form-control modern-input" formControlName="tva" min="0">
+              </div>
+              <div class="col">
+                <label class="form-label">Remise (%)</label>
+                <input type="number" class="form-control modern-input" formControlName="remise" min="0" max="100">
+              </div>
+              <div class="col-auto d-flex align-items-end">
+                <button type="button" class="btn btn-danger glass-btn ms-2" (click)="removeArticle(i)" nz-tooltip nzTooltipTitle="Supprimer" style="min-width:36px;">
+                  <span nz-icon nzType="delete"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Services Section -->
+        <div class="modern-section">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h4 class="section-title mb-0">Services</h4>
+            <button type="button" class="glass-btn btn" (click)="addService()">
+              <span nz-icon nzType="plus"></span> Ajouter un service
+            </button>
+          </div>
+          <div formArrayName="services">
+            <div *ngFor="let service of servicesArray.controls; let i = index" [formGroupName]="i" class="row d-flex align-items-end mb-3 g-2">
+              <div class="col">
+                <label class="form-label">Service <span class="text-danger">*</span></label>
+                <nz-select formControlName="idService" nzPlaceHolder="Choisir un service" nzShowSearch [nzBorderless]="true">
+                  <nz-option *ngFor="let srv of services" [nzValue]="srv.idService" [nzLabel]="srv.nom"></nz-option>
+                </nz-select>
+              </div>
+              <div class="col">
+                <label class="form-label">Quantité</label>
+                <input type="number" class="form-control modern-input" formControlName="quantite" min="1">
+              </div>
+              <div class="col">
+                <label class="form-label">Prix</label>
+                <input type="number" class="form-control modern-input" formControlName="prix" min="0">
+              </div>
+              <div class="col">
+                <label class="form-label">TVA (%)</label>
+                <input type="number" class="form-control modern-input" formControlName="tva" min="0">
+              </div>
+              <div class="col">
+                <label class="form-label">Remise (%)</label>
+                <input type="number" class="form-control modern-input" formControlName="remise" min="0" max="100">
+              </div>
+              <div class="col">
+                <label class="form-label">Part Tech</label>
+                <input type="number" class="form-control modern-input" formControlName="partTech" min="0">
+              </div>
+              <div class="col">
+                <label class="form-label">Part Ents</label>
+                <input type="number" class="form-control modern-input" formControlName="partEnts" min="0">
+              </div>
+              <div class="col-auto d-flex align-items-end">
+                <button type="button" class="btn btn-danger glass-btn ms-2" (click)="removeService(i)" nz-tooltip nzTooltipTitle="Supprimer" style="min-width:36px;">
+                  <span nz-icon nzType="delete"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Recap/Summary Section -->
+        <div class="modern-section">
+          <h4 class="section-title">Récapitulatif</h4>
+          <div class="row">
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Total HT</label>
+              <input type="number" class="form-control modern-input" formControlName="prixTotal">
+            </div>
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Remise Totale</label>
+              <input type="number" class="form-control modern-input" formControlName="remiseTotale">
+            </div>
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Total TVA</label>
+              <input type="number" class="form-control modern-input" formControlName="totalTva">
+            </div>
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Total TTC</label>
+              <input type="number" class="form-control modern-input" formControlName="prixFinalTTC">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer text-end">
+        <button type="button" class="glass-btn btn me-2" (click)="cancel()">
+          <i ant-icon type="close"></i> Annuler
+        </button>
+        <button type="submit" class="modern-primary-btn btn" [disabled]="isSubmitting">
+          <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+          <i *ngIf="!isSubmitting" ant-icon type="save"></i> Enregistrer
+        </button>
+      </div>
+    </form>
+  </div>
+</div> 

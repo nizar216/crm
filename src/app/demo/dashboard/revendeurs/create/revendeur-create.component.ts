@@ -18,7 +18,6 @@ import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    CardComponent,
     NzFormModule,
     NzInputModule,
     NzButtonModule,

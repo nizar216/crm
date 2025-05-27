@@ -1,0 +1,134 @@
+<div class="client-list-container">
+    <div class="col-sm-12">
+        <app-card [cardTitle]="'Liste des Devis'" class="modern-card">
+            <div class="header-section">
+                <div class="header-content">
+                    <div class="search-section">
+                        <div class="search-wrapper">
+                            <nz-input-group [nzSuffix]="suffixIconSearch" class="modern-search">
+                                <input type="text" nz-input placeholder="Rechercher par client, date, total..."
+                                    [(ngModel)]="searchTerm" class="search-input-field" />
+                            </nz-input-group>
+                            <ng-template #suffixIconSearch>
+                                <span nz-icon nzType="search" class="search-icon"></span>
+                            </ng-template>
+                        </div>
+                    </div>
+                    <div class="actions-section">
+                        <button nz-button nzType="primary" (click)="createDevis()"
+                            class="add-client-btn primary-gradient" nzSize="small">
+                            <span nz-icon nzType="plus"></span>
+                            <span class="btn-text">Nouveau Devis</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="loading-state modern-loading" *ngIf="isLoading">
+                <div class="loading-content">
+                    <div class="loading-spinner">
+                        <div class="spinner-ring"></div>
+                        <div class="spinner-ring"></div>
+                        <div class="spinner-ring"></div>
+                    </div>
+                    <div class="loading-text">Chargement des devis...</div>
+                </div>
+            </div>
+            <div class="table-section modern-table-section" *ngIf="!isLoading">
+                <div class="table-wrapper glass-table">
+                    <nz-table #devisTable [nzData]="filteredDevis" [nzFrontPagination]="true" [nzShowPagination]="true"
+                        [nzPageSize]="pageSize" [nzPageIndex]="currentPage" [nzTotal]="filteredDevis.length"
+                        [nzPageSizeOptions]="pageSizeOptions" [nzShowSizeChanger]="true"
+                        (nzPageIndexChange)="changePage($event)" (nzPageSizeChange)="onPageSizeChange($event)"
+                        [nzLoading]="isLoading" nzTableLayout="fixed" class="enhanced-table modern-table"
+                        [nzScroll]="{ x: '800px' }">
+                        <thead>
+                            <tr class="table-header">
+                                <th nzWidth="100px" class="header-cell">
+                                    <div class="header-content">
+                                        <span nz-icon nzType="number" class="header-icon"></span>
+                                        Code
+                                    </div>
+                                </th>
+                                <th nzWidth="140px" class="header-cell">
+                                    <div class="header-content">
+                                        <span nz-icon nzType="calendar" class="header-icon"></span>
+                                        Date
+                                    </div>
+                                </th>
+                                <th nzWidth="200px" class="header-cell">
+                                    <div class="header-content">
+                                        <span nz-icon nzType="user" class="header-icon"></span>
+                                        Client
+                                    </div>
+                                </th>
+                                <th nzWidth="140px" class="header-cell">
+                                    <div class="header-content">
+                                        <span nz-icon nzType="dollar" class="header-icon"></span>
+                                        Montant Total
+                                    </div>
+                                </th>
+                                <th nzWidth="160px" nzAlign="center" class="header-cell">
+                                    <div class="header-content">
+                                        <span nz-icon nzType="setting" class="header-icon"></span>
+                                        Actions
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let d of devisTable.data" class="table-row">
+                                <td class="data-cell">
+                                    <span class="secondary-text modern-text">{{ d.idDevis }}</span>
+                                </td>
+                                <td class="data-cell">
+                                    <span class="secondary-text modern-text">{{ d.date | date:'shortDate' }}</span>
+                                </td>
+                                <td class="data-cell">
+                                    <div class="client-name modern-client-name">
+                                        <div class="name-info">
+                                            <span class="name-text">{{ d.Client?.nom }} {{ d.Client?.prenom }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="data-cell">
+                                    <span class="secondary-text modern-text">{{ d.prixFinalTTC | number:'1.2-2' }}
+                                        TND</span>
+                                </td>
+                                <td class="actions-cell data-cell">
+                                    <div class="table-actions modern-actions">
+                                        <button nz-button nzType="default" nzSize="small" (click)="editDevis(d.idDevis)"
+                                            class="action-button edit-btn" nz-tooltip
+                                            nzTooltipTitle="Modifier le devis">
+                                            <span nz-icon nzType="edit"></span>
+                                        </button>
+                                        <button nz-button nzDanger nzSize="small" (click)="openDeleteModal(d.idDevis)"
+                                            class="action-button delete-btn" nz-tooltip
+                                            nzTooltipTitle="Supprimer le devis">
+                                            <span nz-icon nzType="delete"></span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </nz-table>
+                </div>
+            </div>
+            <nz-modal [(nzVisible)]="showDeleteModal" nzTitle="Confirmer la suppression"
+                (nzOnCancel)="closeDeleteModal()" (nzOnOk)="confirmDelete()" nzOkText="Supprimer" nzCancelText="Annuler"
+                nzOkDanger="true" nzWidth="450px" class="delete-modal modern-modal">
+                <div class="modal-content modern-modal-content">
+                    <div class="warning-section">
+                        <div class="warning-icon modern-warning-icon">
+                            <span nz-icon nzType="exclamation-circle" nzTheme="twotone" nzTwoToneColor="#ff4d4f"></span>
+                            <div class="warning-pulse"></div>
+                        </div>
+                        <div class="modal-text">
+                            <div class="warning-title">Êtes-vous sûr de vouloir supprimer ce devis ?</div>
+                            <div class="warning-text">Cette action est irréversible.</div>
+                        </div>
+                    </div>
+                </div>
+            </nz-modal>
+        </app-card>
+    </div>
+</div>

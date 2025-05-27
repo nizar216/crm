@@ -1,117 +1,269 @@
-<div class="row">
+<div class="client-list-container">
   <div class="col-sm-12">
-    <app-card [cardTitle]="'Liste des Articles'">
-      <div class="row mb-4">
-        <div class="col-md-6">
-          <nz-input-group [nzSuffix]="suffixIconSearch" class="search-input">
-            <input type="text" nz-input placeholder="Rechercher articles..." [(ngModel)]="searchTerm" />
-          </nz-input-group>
-          <ng-template #suffixIconSearch>
-            <span nz-icon nzType="search"></span>
-          </ng-template>
-        </div>
-        <div class="col-md-6 text-end">
-          <div class="button-group">
+    <app-card [cardTitle]="'Liste des Articles'" class="modern-card">
+      <!-- Enhanced Header Section with Glass Effect -->
+      <div class="header-section">
+        <div class="header-content">
+          <div class="search-section">
+            <div class="search-wrapper">
+              <nz-input-group [nzSuffix]="suffixIconSearch" class="modern-search">
+                <input 
+                  type="text" 
+                  nz-input 
+                  placeholder="Rechercher articles..." 
+                  [(ngModel)]="searchTerm"
+                  class="search-input-field" 
+                />
+              </nz-input-group>
+              <ng-template #suffixIconSearch>
+                <span nz-icon nzType="search" class="search-icon"></span>
+              </ng-template>
+            </div>
+          </div>
+          
+          <div class="actions-section">
+            <div class="export-buttons">
+              <nz-button-group nzSize="small" class="glass-buttons">
+                <button 
+                  nz-button 
+                  nzType="default" 
+                  nz-tooltip
+                  nzTooltipTitle="Imprimer la liste"
+                  (click)="printPdf()"
+                  class="export-btn glass-btn"
+                >
+                  <span nz-icon nzType="printer"></span>
+                </button>
+                <button 
+                  nz-button 
+                  nzType="default" 
+                  nz-tooltip
+                  nzTooltipTitle="Exporter en PDF"
+                  (click)="exportToPdf()"
+                  class="export-btn glass-btn"
+                >
+                  <span nz-icon nzType="file-pdf"></span>
+                </button>
+                <button 
+                  nz-button 
+                  nzType="default" 
+                  nz-tooltip
+                  nzTooltipTitle="Exporter en Excel"
+                  (click)="exportToExcel()"
+                  class="export-btn glass-btn"
+                >
+                  <span nz-icon nzType="file-excel"></span>
+                </button>
+              </nz-button-group>
+            </div>
+            
             <button 
               nz-button 
               nzType="primary" 
               (click)="createArticle()"
+              class="add-client-btn primary-gradient"
+              nzSize="small"
             >
-              <span nz-icon nzType="plus"></span> Ajouter un Article
+              <span nz-icon nzType="plus"></span>
+              <span class="btn-text">Nouvel Article</span>
             </button>
           </div>
         </div>
       </div>
 
-      <!-- Loading -->
-      <div class="text-center py-4" *ngIf="isLoading">
-        <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Chargement...</span>
+      <!-- Enhanced Loading State with Modern Animation -->
+      <div class="loading-state modern-loading" *ngIf="isLoading">
+        <div class="loading-content">
+          <div class="loading-spinner">
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+          </div>
+          <div class="loading-text">Chargement des articles...</div>
         </div>
-        <p class="mt-2">Chargement des articles...</p>
       </div>
 
-      <!-- Table -->
-      <div *ngIf="!isLoading">
-        <nz-table 
-          #articleTable 
-          [nzData]="filteredArticles" 
-          [nzFrontPagination]="true"
-          [nzShowPagination]="true"
-          [nzPageSize]="pageSize"
-          [nzPageIndex]="currentPage"
-          [nzTotal]="filteredArticles.length"
-          [nzPageSizeOptions]="pageSizeOptions"
-          [nzShowSizeChanger]="true"
-          (nzPageIndexChange)="changePage($event)"
-          (nzPageSizeChange)="onPageSizeChange($event)"
-          [nzLoading]="isLoading"
-          [nzShowTotal]="rangeTemplate"
-          nzTableLayout="fixed"
-        >
-          <thead>
-            <tr>
-              <th>Famille</th>
-              <th>Marque</th>
-              <th>Modèle</th>
-              <th>Libellé</th>
-              <th>Prix HT</th>
-              <th>Prix TTC</th>
-              <th>Prix Entreprise</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let article of articleTable.data">
-              <td>{{ article.famille }}</td>
-              <td>{{ article.marque }}</td>
-              <td>{{ article.model }}</td>
-              <td>{{ article.libelle }}</td>
-              <td>{{ article.prixHT | number: '1.2-2' }} €</td>
-              <td>{{ article.prixTTC | number: '1.2-2' }} €</td>
-              <td>{{ article.prixEntreprise | number: '1.2-2' }} €</td>
-              <td class="actions">
-                <button nz-button nzType="primary" nzSize="small" (click)="editArticle(article.idArticle)" class="me-1">
-                  <span nz-icon nzType="edit"></span> Modifier
-                </button>
-                <button nz-button nzDanger nzSize="small" (click)="openDeleteModal(article.idArticle)">
-                  <span nz-icon nzType="delete"></span> Supprimer
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </nz-table>
+      <!-- Enhanced Table Section with Modern Design -->
+      <div class="table-section modern-table-section" *ngIf="!isLoading">
+        <div class="table-wrapper glass-table">
+          <nz-table 
+            #articleTable 
+            [nzData]="filteredArticles" 
+            [nzFrontPagination]="true"
+            [nzShowPagination]="true"
+            [nzPageSize]="pageSize"
+            [nzPageIndex]="currentPage"
+            [nzTotal]="filteredArticles.length"
+            [nzPageSizeOptions]="pageSizeOptions"
+            [nzShowSizeChanger]="true"
+            (nzPageIndexChange)="changePage($event)"
+            (nzPageSizeChange)="onPageSizeChange($event)"
+            [nzLoading]="isLoading"
+            [nzShowTotal]="rangeTemplate"
+            nzTableLayout="fixed"
+            class="enhanced-table modern-table"
+            [nzScroll]="{ x: '800px' }"
+          >
+            <thead>
+              <tr class="table-header">
+                <th nzWidth="140px" class="header-cell">
+                  <div class="header-content">
+                    <span nz-icon nzType="appstore" class="header-icon"></span>
+                    Famille
+                  </div>
+                </th>
+                <th nzWidth="120px" class="header-cell">
+                  <div class="header-content">
+                    Marque
+                  </div>
+                </th>
+                <th nzWidth="120px" class="header-cell">
+                  <div class="header-content">
+                    Modèle
+                  </div>
+                </th>
+                <th nzWidth="200px" class="header-cell">
+                  <div class="header-content">
+                    <span nz-icon nzType="tag" class="header-icon"></span>
+                    Libellé
+                  </div>
+                </th>
+                <th nzWidth="120px" class="header-cell">
+                  <div class="header-content">
+                    Prix HT
+                  </div>
+                </th>
+                <th nzWidth="120px" class="header-cell">
+                  <div class="header-content">
+                    Prix TTC
+                  </div>
+                </th>
+                <th nzWidth="160px" nzAlign="center" class="header-cell">
+                  <div class="header-content">
+                    <span nz-icon nzType="setting" class="header-icon"></span>
+                    Actions
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let article of articleTable.data" class="table-row">
+                <td class="data-cell">
+                  <span class="secondary-text modern-text">{{ article.famille }}</span>
+                </td>
+                <td class="data-cell">
+                  <span class="secondary-text modern-text">{{ article.marque }}</span>
+                </td>
+                <td class="data-cell">
+                  <span class="secondary-text modern-text">{{ article.model }}</span>
+                </td>
+                <td class="data-cell">
+                  <span class="secondary-text modern-text">{{ article.libelle }}</span>
+                </td>
+                <td class="data-cell">
+                  <span class="secondary-text modern-text">{{ article.prixHT | number: '1.2-2' }} €</span>
+                </td>
+                <td class="data-cell">
+                  <span class="secondary-text modern-text">{{ article.prixTTC | number: '1.2-2' }} €</span>
+                </td>
+                <td class="actions-cell data-cell">
+                  <div class="table-actions modern-actions">
+                    <button 
+                      nz-button 
+                      nzType="default" 
+                      nzSize="small" 
+                      (click)="editArticle(article.idArticle)" 
+                      class="action-button edit-btn"
+                      nz-tooltip
+                      nzTooltipTitle="Modifier l'article"
+                    >
+                      <span nz-icon nzType="edit"></span>
+                    </button>
+                    <button 
+                      nz-button 
+                      nzDanger 
+                      nzSize="small" 
+                      (click)="openDeleteModal(article.idArticle)"
+                      class="action-button delete-btn"
+                      nz-tooltip
+                      nzTooltipTitle="Supprimer l'article"
+                    >
+                      <span nz-icon nzType="delete"></span>
+                    </button>
+                  </div>
+                </td>                
+              </tr>
+            </tbody>
+          </nz-table>
+          
+          <ng-template #rangeTemplate let-range="range" let-total>
+            <div class="pagination-info modern-pagination">
+              <div class="pagination-content">
+                <span class="range-text">{{ range[0] }}-{{ range[1] }} sur {{ total }} articles</span>
+                <div class="pagination-indicator"></div>
+              </div>
+            </div>
+          </ng-template>
+        </div>
 
-        <ng-template #rangeTemplate let-range="range" let-total>
-          {{ range[0] }}-{{ range[1] }} sur {{ total }} articles
-        </ng-template>
+        <!-- Enhanced Empty State -->
+        <div class="empty-state modern-empty" *ngIf="filteredArticles.length === 0 && !isLoading">
+          <div class="empty-content">
+            <div class="empty-icon-container">
+              <span nz-icon nzType="appstore-add" class="empty-icon"></span>
+              <div class="icon-bg-effect"></div>
+            </div>
+            <h3 class="empty-title">
+              {{ searchTerm ? 'Aucun article trouvé' : 'Aucun article enregistré' }}
+            </h3>
+            <p class="empty-description">
+              {{ searchTerm ? 'Essayez de modifier vos critères de recherche' : 'Commencez par ajouter votre premier article' }}
+            </p>
+            <button 
+              *ngIf="!searchTerm"
+              nz-button 
+              nzType="primary" 
+              (click)="createArticle()"
+              class="empty-action-btn modern-primary-btn"
+            >
+              <span nz-icon nzType="plus"></span>
+              <span>Ajouter un Article</span>
+            </button>
+          </div>
+        </div>
       </div>
-
-      <!-- Delete Confirmation Modal -->
-      <div *ngIf="showDeleteModal" class="ant-modal-container">
-        <div class="ant-modal-mask"></div>
-        <div class="ant-modal-wrapper">
-          <div class="ant-modal">
-            <div class="ant-modal-content">
-              <div class="ant-modal-header">
-                <div class="ant-modal-title">Confirmer la suppression</div>
-                <button class="ant-modal-close" (click)="closeDeleteModal()">
-                  <span nz-icon nzType="close"></span>
-                </button>
-              </div>
-              <div class="ant-modal-body">
-                <p>Êtes-vous sûr de vouloir supprimer cet article ? Cette action est irréversible.</p>
-              </div>
-              <div class="ant-modal-footer">
-                <button nz-button (click)="closeDeleteModal()">Annuler</button>
-                <button nz-button nzType="primary" nzDanger (click)="confirmDelete()">
-                  <span nz-icon nzType="delete"></span> Supprimer
-                </button>
+      
+      <!-- Enhanced Delete Modal with Modern Design -->
+      <nz-modal
+        [(nzVisible)]="showDeleteModal"
+        nzTitle="Confirmer la suppression"
+        (nzOnCancel)="closeDeleteModal()"
+        (nzOnOk)="confirmDelete()"
+        nzOkText="Supprimer"
+        nzCancelText="Annuler"
+        nzOkDanger="true"
+        nzWidth="450px"
+        class="delete-modal modern-modal"
+      >
+        <div class="modal-content modern-modal-content">
+          <div class="warning-section">
+            <div class="warning-icon modern-warning-icon">
+              <span nz-icon nzType="exclamation-circle" nzTheme="fill"></span>
+              <div class="warning-pulse"></div>
+            </div>
+            <div class="modal-text">
+              <h4 class="warning-title">Supprimer cet article ?</h4>
+              <p class="warning-text">
+                Cette action est irréversible et supprimera toutes les données associées à cet article.
+              </p>
+              <div class="warning-highlight">
+                <span nz-icon nzType="info-circle"></span>
+                Assurez-vous que cet article n'est pas utilisé dans des documents en cours.
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </nz-modal>
     </app-card>
   </div>
 </div>

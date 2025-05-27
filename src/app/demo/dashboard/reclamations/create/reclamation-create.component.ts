@@ -25,7 +25,6 @@ import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
     imports: [
         CommonModule,
         ReactiveFormsModule,
-        CardComponent,
         NzFormModule,
         NzInputModule,
         NzButtonModule,
@@ -43,6 +42,7 @@ export class ReclamationCreateComponent implements OnInit {
     articles: any[] = [];
     isLoading = false;
     clientsData: any[] = []; // Store full client data
+    errorMessage: string = '';
 
     constructor(
         private fb: FormBuilder,

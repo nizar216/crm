@@ -17,6 +17,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-article-list',
@@ -27,7 +28,7 @@ import { saveAs } from 'file-saver';
     CommonModule, FormsModule, CardComponent,
     NzPaginationModule, NzTableModule, NzDividerModule,
     NzButtonModule, NzIconModule, NzInputModule,
-    NzMessageModule, NzToolTipModule
+    NzMessageModule, NzToolTipModule,NzModalModule
   ]
 })
 export class ArticleListComponent implements OnInit {

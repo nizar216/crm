@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ArticleService } from 'src/app/core/services/article.service';
-import { CardComponent } from 'src/app/theme/shared/components/card/card.component';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -22,7 +21,6 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    CardComponent,
     NzButtonModule,
     NzFormModule,
     NzInputModule,
@@ -58,7 +56,7 @@ export class ArticleEditComponent implements OnInit {
       libelle: ['', [Validators.required, Validators.minLength(3)]],
       prixHT: [0, [Validators.required, Validators.min(0)]],
       tva: [0, [Validators.required, Validators.min(0)]],
-      prixEntreprise: [0, [Validators.required, Validators.min(0)]]
+      prixTTC: [0]
     });
   }
 
@@ -72,6 +70,15 @@ export class ArticleEditComponent implements OnInit {
         this.router.navigate(['/dashboard/articles']);
       }, 2000);
     }
+    this.articleForm.get('prixHT')?.valueChanges.subscribe(() => this.calculePrixTotal());
+    this.articleForm.get('tva')?.valueChanges.subscribe(() => this.calculePrixTotal());
+  }
+
+  calculePrixTotal() {
+    const prix = parseFloat(this.articleForm.get('prixHT')?.value) || 0;
+    const tva = parseFloat(this.articleForm.get('tva')?.value) || 0;
+    const prixTot = prix + (prix * tva) / 100;
+    this.articleForm.get('prixTTC')?.patchValue(Number(prixTot.toFixed(2)), { emitEvent: false });
   }
 
   loadArticle(id: any) {
@@ -99,7 +106,7 @@ export class ArticleEditComponent implements OnInit {
       libelle: article.libelle || '',
       prixHT: article.prixHT ? Number(article.prixHT) : 0,
       tva: article.tva ? Number(article.tva) : 0,
-      prixEntreprise: article.prixEntreprise ? Number(article.prixEntreprise) : 0
+      prixTTC: article.prixTTC ? Number(article.prixTTC) : 0
     };
 
     this.articleForm.patchValue(formValues);
@@ -125,8 +132,7 @@ export class ArticleEditComponent implements OnInit {
       ...this.articleForm.value,
       prixHT: Number(this.articleForm.value.prixHT),
       tva: Number(this.articleForm.value.tva),
-      prixTTC: prixTTC,
-      prixEntreprise: Number(this.articleForm.value.prixEntreprise)
+      prixTTC: Number(prixTTC)
     };
 
     this.articleService.updateArticle(formData, this.articleId).subscribe({

@@ -1,0 +1,129 @@
+<div class="facture-create-container">
+  <div class="modern-card">
+    <div class="header-section">
+      <div class="header-content">
+        <h2 class="section-title">Créer une Facture</h2>
+      </div>
+    </div>
+    <form [formGroup]="factureForm" (ngSubmit)="onSubmit()">
+      <div class="card-body">
+        <!-- Date and Devis Selection -->
+        <div class="modern-section">
+          <h4 class="section-title">Informations de base</h4>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Date <span class="text-danger">*</span></label>
+              <nz-date-picker formControlName="date" style="width: 100%"></nz-date-picker>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Devis <span class="text-danger">*</span></label>
+              <nz-select nzMode="multiple" formControlName="devis" [nzOptions]="devisOptions"
+                nzPlaceHolder="Sélectionner un ou plusieurs devis" style="width: 100%"></nz-select>
+              <div *ngIf="clientMismatch" class="modern-empty alert modern-alert mt-2">
+                Attention : Les devis sélectionnés ne sont pas tous du même client.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Client Section -->
+        <div *ngIf="client" class="modern-section">
+          <h4 class="section-title">Client</h4>
+          <div class="row">
+            <div class="col-md-6 mb-2">
+              <div>{{ client.nom }} {{ client.prenom }}</div>
+              <div>{{ client.telephone1 }}</div>
+              <div>{{ client.email }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Articles Section -->
+        <div class="modern-section">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h4 class="section-title mb-0">Articles</h4>
+          </div>
+          <div>
+            <nz-table #articlesTable [nzData]="articles" [nzScroll]="tableScroll" [nzShowPagination]="false"
+              [nzFrontPagination]="false" class="mb-8">
+              <thead>
+                <tr>
+                  <th>Désignation</th>
+                  <th>Quantité</th>
+                  <th>Prix HT</th>
+                  <th>TVA</th>
+                  <th>Remise</th>
+                  <th>Total TTC</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let a of articles">
+                  <td>{{ a.DevisArticle_Article?.libelle || a.libelle || a.designation }}</td>
+                  <td>{{ a.quantite }}</td>
+                  <td>{{ a.prixHT | number:'1.3-3' }}</td>
+                  <td>{{ a.tva }}%</td>
+                  <td>{{ a.remise || 0 }}%</td>
+                  <td>{{ (a.prixTTC * a.quantite) | number:'1.3-3' }}</td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </div>
+        </div>
+
+        <!-- Services Section -->
+        <div class="modern-section">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h4 class="section-title mb-0">Services</h4>
+          </div>
+          <div>
+            <nz-table #servicesTable [nzData]="services" [nzScroll]="tableScroll" [nzShowPagination]="false"
+              [nzFrontPagination]="false">
+              <thead>
+                <tr>
+                  <th>Désignation</th>
+                  <th>Quantité</th>
+                  <th>Prix HT</th>
+                  <th>TVA</th>
+                  <th>Remise</th>
+                  <th>Total TTC</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let s of services">
+                  <td>{{ s.DevisService_Service?.nom || s.nom || s.designation }}</td>
+                  <td>{{ s.quantite }}</td>
+                  <td>{{ s.prixHT || s.prix | number:'1.3-3' }}</td>
+                  <td>{{ s.tva }}%</td>
+                  <td>{{ s.remise || 0 }}%</td>
+                  <td>{{ (s.prixTTC * s.quantite) | number:'1.3-3' }}</td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </div>
+
+          <div class="bg-gray-50 p-4 rounded-md my-6">
+            <h3 class="text-lg font-semibold mb-4">Récapitulatif</h3>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <p>Total HT: <span class="font-medium">{{ totals.prixHT | number:'1.3-3' }} TND</span></p>
+                <p>Total TVA: <span class="font-medium">{{ totals.TVAglobal | number:'1.3-3' }} TND</span></p>
+                <p>Remise globale: <span class="font-medium">{{ totals.remiseGlobal | number:'1.3-3' }} TND</span></p>
+                <p class="text-lg font-bold mt-2">Total TTC: <span class="text-blue-600">{{ totals.prixTotal |
+                    number:'1.3-3' }} TND</span></p>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer text-end">
+            <button type="button" class="glass-btn btn me-2" (click)="cancel()">
+              <i ant-icon type="close"></i> Annuler
+            </button>
+            <button nz-button nzType="primary" type="submit" class="glass-btn btn btn-primary"
+              [disabled]="factureForm.invalid || isSubmitting">
+              <span nz-icon nzType="save"></span> Créer la facture
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

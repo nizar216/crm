@@ -18,6 +18,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-technicien-list',
@@ -35,7 +36,8 @@ import { saveAs } from 'file-saver';
     NzIconModule,
     NzInputModule,
     NzMessageModule,
-    NzToolTipModule
+    NzToolTipModule,
+    NzModalModule
   ]
 })
 export class TechnicienListComponent implements OnInit {
@@ -47,6 +49,10 @@ export class TechnicienListComponent implements OnInit {
   currentPage = 1;
   pageSize = 10;
   pageSizeOptions = [5, 10, 20, 50];
+
+  // Modal state for delete confirmation
+  showDeleteModal = false;
+  technicienToDelete: any = null;
 
   constructor(
     private technicienService: TechnicienService,
@@ -80,17 +86,34 @@ export class TechnicienListComponent implements OnInit {
     this.router.navigate(['/dashboard/techniciens/edit', idTechnicien]);
   }
 
-  deleteTechnicien(idTechnicien: any) {
-    this.technicienService.deleteTechnicien(idTechnicien).subscribe({
-      next: () => {
-        this.message.success('Technicien supprimé avec succès');
-        this.loadTechniciens();
-      },
-      error: (err) => {
-        console.error('Error deleting technicien:', err);
-        this.message.error('Erreur lors de la suppression du technicien');
-      }
-    });
+  // Open the delete confirmation modal
+  openDeleteModal(idTechnicien: any) {
+    this.technicienToDelete = idTechnicien;
+    this.showDeleteModal = true;
+  }
+
+  // Close the delete confirmation modal
+  closeDeleteModal() {
+    this.showDeleteModal = false;
+    this.technicienToDelete = null;
+  }
+
+  // Confirm deletion and delete the technicien
+  confirmDelete() {
+    if (this.technicienToDelete) {
+      this.technicienService.deleteTechnicien(this.technicienToDelete).subscribe({
+        next: () => {
+          this.loadTechniciens();
+          this.closeDeleteModal();
+          this.message.success('Technicien supprimé avec succès');
+        },
+        error: (err) => {
+          console.error('Error deleting technicien:', err);
+          this.closeDeleteModal();
+          this.message.error('Erreur lors de la suppression du technicien');
+        }
+      });
+    }
   }
 
   get filteredTechniciens() {

@@ -1,74 +1,75 @@
-<div class="row">
-  <div class="col-sm-12">
-    <app-card [cardTitle]="'Ajouter un Technicien'">
-      <form [formGroup]="technicienForm" (ngSubmit)="onSubmit()">
-        <!-- Alert for errors -->
-        <div *ngIf="errorMessage" class="alert alert-danger mb-3">
-          {{ errorMessage }}
-        </div>
-        
-        <div class="card-body">
+<div class="article-edit-container">
+  <div class="modern-card">
+    <div class="header-section">
+      <div class="header-content">
+        <h2 class="section-title">Ajouter un Technicien</h2>
+      </div>
+    </div>
+    <div *ngIf="isLoading" class="text-center py-5">
+      <nz-spin nzSimple></nz-spin>
+    </div>
+    <div *ngIf="errorMessage" class="modern-empty alert modern-alert mb-3">
+      {{ errorMessage }}
+    </div>
+    <form [formGroup]="technicienForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
+      <div class="card-body">
+        <div class="modern-section general-section">
+          <h4 class="section-title">Informations du Technicien</h4>
           <div class="row">
             <div class="col-md-6 mb-3">
               <label class="form-label">Nom <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" formControlName="nom" placeholder="Entrez le nom">
+              <input type="text" class="form-control modern-input" formControlName="nom" placeholder="Entrez le nom" />
               <div *ngIf="technicienForm.get('nom')?.invalid && technicienForm.get('nom')?.touched" class="text-danger small">
                 Le nom est requis
               </div>
             </div>
-
             <div class="col-md-6 mb-3">
               <label class="form-label">Email <span class="text-danger">*</span></label>
-              <input type="email" class="form-control" formControlName="email" placeholder="Entrez l'email">
+              <input type="email" class="form-control modern-input" formControlName="email" placeholder="Entrez l'email" />
               <div *ngIf="technicienForm.get('email')?.invalid && technicienForm.get('email')?.touched" class="text-danger small">
                 Email valide est requis
               </div>
             </div>
-
             <div class="col-md-6 mb-3">
               <label class="form-label">Téléphone <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" formControlName="Telephone" placeholder="Entrez le numéro de téléphone">
+              <input type="text" class="form-control modern-input" formControlName="Telephone" placeholder="Entrez le numéro de téléphone" />
               <div *ngIf="technicienForm.get('Telephone')?.invalid && technicienForm.get('Telephone')?.touched" class="text-danger small">
                 Téléphone est requis
               </div>
             </div>
-
             <div class="col-md-6 mb-3">
               <label class="form-label">Société <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" formControlName="nomSociete" placeholder="Entrez le nom de la société">
+              <input type="text" class="form-control modern-input" formControlName="nomSociete" placeholder="Entrez le nom de la société" />
               <div *ngIf="technicienForm.get('nomSociete')?.invalid && technicienForm.get('nomSociete')?.touched" class="text-danger small">
                 Le nom de la société est requis
               </div>
             </div>
-
             <div class="col-md-6 mb-3">
               <label class="form-label">Matricule Fiscal <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" formControlName="MF" placeholder="Entrez le matricule fiscal">
+              <input type="text" class="form-control modern-input" formControlName="MF" placeholder="Entrez le matricule fiscal" />
               <div *ngIf="technicienForm.get('MF')?.invalid && technicienForm.get('MF')?.touched" class="text-danger small">
                 Le matricule fiscal est requis
               </div>
             </div>
-
             <div class="col-md-12 mb-3">
               <label class="form-label">Adresse <span class="text-danger">*</span></label>
-              <textarea class="form-control" formControlName="adresse" rows="2" placeholder="Entrez l'adresse"></textarea>
+              <textarea class="form-control modern-input" formControlName="adresse" rows="2" placeholder="Entrez l'adresse"></textarea>
               <div *ngIf="technicienForm.get('adresse')?.invalid && technicienForm.get('adresse')?.touched" class="text-danger small">
                 L'adresse est requise
               </div>
             </div>
           </div>
         </div>
-
-        <div class="card-footer text-end">
-          <button type="button" class="btn btn-secondary me-2" (click)="cancel()">
-            <i ant-icon type="close"></i> Annuler
-          </button>
-          <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
-            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-            <i *ngIf="!isSubmitting" ant-icon type="save"></i> Enregistrer
-          </button>
-        </div>
-      </form>
-    </app-card>
+      </div>
+      <div class="card-footer text-end">
+        <button type="button" class="glass-btn btn me-2" (click)="cancel()">
+          <i ant-icon type="close"></i> Annuler
+        </button>
+        <button type="submit" class="modern-primary-btn btn" [disabled]="isSubmitting">
+          <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+          <i *ngIf="!isSubmitting" ant-icon type="save"></i> Enregistrer
+        </button>
+      </div>
+    </form>
   </div>
 </div>

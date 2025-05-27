@@ -9,6 +9,8 @@ import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { ServiceService } from 'src/app/core/services/service.service';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { FormsModule } from '@angular/forms';
 
 interface Service {
   idService: number;
@@ -35,7 +37,9 @@ interface Service {
     NzIconModule,
     NzMessageModule,
     NzModalModule,
-    NzSpinModule
+    NzSpinModule,
+    NzInputModule, 
+    FormsModule
   ]
 })
 export class ServiceListComponent implements OnInit {
@@ -44,13 +48,18 @@ export class ServiceListComponent implements OnInit {
   totalItems = 0;
   pageSize = 10;
   pageIndex = 1;
+  searchTerm = '';
+
+  // Modal
+  showDeleteModal = false;
+  serviceToDelete: any = null;
 
   constructor(
     private serviceService: ServiceService,
     private router: Router,
     private message: NzMessageService,
     private modal: NzModalService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadServices();
@@ -80,27 +89,45 @@ export class ServiceListComponent implements OnInit {
     this.router.navigate(['/dashboard/services/edit', id]);
   }
 
-  deleteService(id: number): void {
-    this.modal.confirm({
-      nzTitle: 'Êtes-vous sûr de vouloir supprimer ce service ?',
-      nzContent: 'Cette action est irréversible.',
-      nzOkText: 'Oui',
-      nzOkType: 'primary',
-      nzOkDanger: true,
-      nzOnOk: () => {
-        this.serviceService.deleteService(id).subscribe({
-          next: () => {
-            this.message.success('Service supprimé avec succès');
-            this.loadServices();
-          },
-          error: (err) => {
-            console.error('Error deleting service:', err);
-            this.message.error('Erreur lors de la suppression du service');
-          }
-        });
-      },
-      nzCancelText: 'Non'
-    });
+  openDeleteModal(idService: any) {
+    this.serviceToDelete = idService;
+    this.showDeleteModal = true;
+  }
+
+  closeDeleteModal() {
+    this.showDeleteModal = false;
+    this.serviceToDelete = null;
+  }
+
+  confirmDelete() {
+    if (this.serviceToDelete) {
+      this.serviceService.deleteService(this.serviceToDelete).subscribe({
+        next: () => {
+          this.loadServices();
+          this.closeDeleteModal();
+          this.message.success('Service supprimé avec succès');
+        },
+        error: (err) => {
+          console.error('Error deleting service:', err);
+          this.closeDeleteModal();
+        }
+      });
+    }
+  }
+
+  printPdf() {
+    // TODO: Implement print PDF for services
+    this.message.info('Fonction impression à venir');
+  }
+
+  exportToPdf() {
+    // TODO: Implement export to PDF for services
+    this.message.info('Export PDF à venir');
+  }
+
+  exportToExcel() {
+    // TODO: Implement export to Excel for services
+    this.message.info('Export Excel à venir');
   }
 
   onPageIndexChange(pageIndex: number): void {
@@ -110,5 +137,16 @@ export class ServiceListComponent implements OnInit {
   onPageSizeChange(pageSize: number): void {
     this.pageSize = pageSize;
     this.pageIndex = 1;
+  }
+
+  get filteredServices() {
+    return this.services.filter(service =>
+      (service.nom && service.nom.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
+      (service.prix && service.prix.toString().includes(this.searchTerm)) ||
+      (service.tva && service.tva.toString().includes(this.searchTerm)) ||
+      (service.prixTot && service.prixTot.toString().includes(this.searchTerm)) ||
+      (service.partTech && service.partTech.toString().includes(this.searchTerm)) ||
+      (service.partEnts && service.partEnts.toString().includes(this.searchTerm))
+    );
   }
 } 

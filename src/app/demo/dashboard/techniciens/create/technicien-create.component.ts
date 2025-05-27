@@ -8,6 +8,8 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 @Component({
   selector: 'app-technicien-create',
@@ -17,17 +19,19 @@ import { NzMessageModule } from 'ng-zorro-antd/message';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    CardComponent,
     NzFormModule,
     NzInputModule,
     NzButtonModule,
-    NzMessageModule
+    NzMessageModule,
+    NzModalModule,
+    NzSpinModule
   ]
 })
 export class TechnicienCreateComponent implements OnInit {
   technicienForm: FormGroup;
   isSubmitting = false;
   errorMessage = '';
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,

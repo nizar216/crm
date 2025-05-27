@@ -8,6 +8,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 @Component({
   selector: 'app-technicien-edit',
@@ -17,11 +18,11 @@ import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    CardComponent,
     NzFormModule,
     NzInputModule,
     NzButtonModule,
-    NzMessageModule
+    NzMessageModule,
+    NzSpinModule
   ]
 })
 export class TechnicienEditComponent implements OnInit {

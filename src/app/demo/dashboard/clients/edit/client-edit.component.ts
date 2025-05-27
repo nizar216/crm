@@ -12,7 +12,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
   templateUrl: './client-edit.component.html',
   styleUrls: ['./client-edit.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, CardComponent, NzSelectModule,NzModalModule]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, NzSelectModule,NzModalModule]
 })
 export class ClientEditComponent implements OnInit {
   clientForm: FormGroup;

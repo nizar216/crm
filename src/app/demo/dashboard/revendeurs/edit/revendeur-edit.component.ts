@@ -18,7 +18,6 @@ import { RevendeurService } from 'src/app/core/services/revendeur.service';
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        CardComponent,
         NzFormModule,
         NzInputModule,
         NzButtonModule,

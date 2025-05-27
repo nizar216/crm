@@ -1,409 +1,169 @@
-<app-card>
-  <div class="flex flex-col sm:flex-row flex-wrap sm:items-center justify-between p-6 pb-0 sm:pb-6">
-    <h2 class="text-3xl font-semibold leading-tight">Modification de Réclamation</h2>
-    <div class="text-lg text-gray-600">Status: {{ currentStatus }}</div>
+<div class="reclamation-edit-container">
+  <div class="modern-card">
+    <div class="header-section">
+      <div class="header-content">
+        <h2 class="section-title">Modification de Réclamation</h2>
+      </div>
+    </div>
+    <form [formGroup]="reclamationForm" (ngSubmit)="onSubmit()">
+      <div *ngIf="errorMessage" class="modern-empty alert modern-alert mb-3">
+        {{ errorMessage }}
+      </div>
+      <div class="card-body">
+        <!-- Informations Client Section -->
+        <div class="modern-section personal-section">
+          <h4 class="section-title">Informations Client</h4>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Client</label>
+              <input nz-input type="text" class="form-control modern-input" formControlName="nomClient"
+                [readonly]="true">
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Personne à contacter</label>
+              <input nz-input type="text" class="form-control modern-input" formControlName="personneAcontacter"
+                [readonly]="true">
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Téléphone</label>
+              <input nz-input type="text" class="form-control modern-input" formControlName="telephone1"
+                [readonly]="true">
+            </div>
+          </div>
+        </div>
+        <!-- Informations Article Section -->
+        <div class="modern-section contact-section">
+          <h4 class="section-title">Informations Article</h4>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Article</label>
+              <nz-select nzBorderless formControlName="idArticle" nzPlaceHolder="Sélectionner un article"
+                [nzOptions]="articles" class="modern-input"></nz-select>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Numéro de série</label>
+              <input nz-input type="text" class="form-control modern-input" formControlName="serial_number"
+                [readonly]="true">
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Revendeur</label>
+              <input nz-input type="text" class="form-control modern-input" formControlName="nomRevendeur"
+                [readonly]="true">
+            </div>
+          </div>
+        </div>
+        <!-- Informations Intervention Section -->
+        <div class="modern-section address-section" *ngIf="showInterventionSection">
+          <h4 class="section-title">Informations Intervention</h4>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Type Intervention</label>
+              <nz-select nzBorderless formControlName="typeIntervention" class="modern-input">
+                <nz-option nzValue="réparation" nzLabel="Réparation"></nz-option>
+                <nz-option nzValue="maintenance" nzLabel="Maintenance"></nz-option>
+                <nz-option nzValue="installation" nzLabel="Installation"></nz-option>
+              </nz-select>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Type Régulation</label>
+              <nz-select nzBorderless formControlName="typeregulation" class="modern-input">
+                <nz-option nzValue="garantie" nzLabel="Garantie"></nz-option>
+                <nz-option nzValue="hors garantie" nzLabel="Hors Garantie"></nz-option>
+              </nz-select>
+            </div>
+            <div class="col-md-4 mb-3" *ngIf="showTechnicianSection">
+              <label class="form-label">Technicien <span class="text-danger">*</span></label>
+              <nz-select nzBorderless formControlName="IdTechnicien" nzPlaceHolder="Sélectionner un technicien"
+                [nzOptions]="techniciens" class="modern-input"></nz-select>
+              <div *ngIf="reclamationForm.get('IdTechnicien')?.invalid && reclamationForm.get('IdTechnicien')?.touched"
+                class="text-danger small">
+                Veuillez sélectionner un technicien
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Planning Section -->
+        <div class="modern-section planning-section">
+          <h4 class="section-title">Planning</h4>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Date Saisie <span class="text-danger">*</span></label>
+              <nz-date-picker formControlName="dateSaisie" [nzFormat]="'dd/MM/yyyy'"
+                class="modern-input"></nz-date-picker>
+              <div *ngIf="reclamationForm.get('dateSaisie')?.invalid && reclamationForm.get('dateSaisie')?.touched"
+                class="text-danger small">
+                Veuillez sélectionner une date
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Date RDV <span class="text-danger">*</span></label>
+              <nz-date-picker formControlName="dateDeRandezVous" [nzFormat]="'dd/MM/yyyy'"
+                class="modern-input"></nz-date-picker>
+              <div
+                *ngIf="reclamationForm.get('dateDeRandezVous')?.invalid && reclamationForm.get('dateDeRandezVous')?.touched"
+                class="text-danger small">
+                Veuillez sélectionner une date
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Heure Début <span class="text-danger">*</span></label>
+              <nz-time-picker formControlName="heureDebut" [nzFormat]="'HH:mm'" class="modern-input"></nz-time-picker>
+              <div *ngIf="reclamationForm.get('heureDebut')?.invalid && reclamationForm.get('heureDebut')?.touched"
+                class="text-danger small">
+                Veuillez sélectionner une heure
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Notes Section -->
+        <div class="modern-section notes-section" *ngIf="showNotesSection">
+          <h4 class="section-title">Notes</h4>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Note SAV</label>
+              <textarea nz-input class="form-control modern-input" formControlName="note_Sav" rows="3"
+                placeholder="Entrez les notes SAV ici..."></textarea>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Note Technicien</label>
+              <textarea nz-input class="form-control modern-input" formControlName="note_technicien" rows="3"
+                placeholder="Entrez les notes technicien ici..."></textarea>
+            </div>
+          </div>
+        </div>
+        <!-- Section Visite -->
+        <div class="modern-section visite-section" *ngIf="showVisiteSection">
+          <h4 class="section-title">Section Visite</h4>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">État de la visite</label>
+              <nz-select nzBorderless formControlName="etat_visite" nzPlaceHolder="Sélectionner l'état de la visite"
+                class="modern-input">
+                <nz-option nzValue="Client Injoignable" nzLabel="Client Injoignable"></nz-option>
+                <nz-option nzValue="Difficult repair" nzLabel="Difficult repair"></nz-option>
+                <nz-option nzValue="En Attente PDR" nzLabel="En Attente PDR"></nz-option>
+                <nz-option nzValue="PDR/ Produit non Disponible" nzLabel="PDR/ Produit non Disponible"></nz-option>
+                <nz-option nzValue="Terminé" nzLabel="Terminé"></nz-option>
+              </nz-select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Visite terminée</label>
+              <div class="switch-container">
+                <nz-switch [(ngModel)]="visite_termine" [ngModelOptions]="{standalone: true}"></nz-switch>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer text-end">
+        <button type="button" class="glass-btn btn me-2" (click)="annuler()">
+          <i ant-icon type="close"></i> Annuler
+        </button>
+        <button type="submit" class="modern-primary-btn btn" [disabled]="isLoading">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+          <i *ngIf="!isLoading" ant-icon type="save"></i> {{ getSubmitButtonText() }}
+        </button>
+      </div>
+    </form>
   </div>
-
-  <form [formGroup]="reclamationForm" (ngSubmit)="onSubmit()" class="p-6">
-    <!-- Informations Client -->
-    <div class="mb-8">
-      <h3 class="text-xl font-semibold mb-4 text-gray-700 border-b pb-2">Informations Client</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Client -->
-        <nz-form-item>
-          <nz-form-label>Client</nz-form-label>
-          <nz-form-control>
-            <input nz-input formControlName="nomClient" [readonly]="true" />
-          </nz-form-control>
-        </nz-form-item>
-
-        <!-- Personne à contacter -->
-        <nz-form-item>
-          <nz-form-label>Personne à contacter</nz-form-label>
-          <nz-form-control>
-            <input nz-input formControlName="personneAcontacter" [readonly]="true" />
-          </nz-form-control>
-        </nz-form-item>
-
-        <!-- Téléphone -->
-        <nz-form-item>
-          <nz-form-label>Téléphone</nz-form-label>
-          <nz-form-control>
-            <input nz-input formControlName="telephone1" [readonly]="true" />
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-    </div>
-
-    <!-- Informations Article -->
-    <div class="mb-8">
-      <h3 class="text-xl font-semibold mb-4 text-gray-700 border-b pb-2">Informations Article</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Article -->
-        <nz-form-item>
-          <nz-form-label>Article</nz-form-label>
-          <nz-form-control>
-            <nz-select
-              formControlName="idArticle"
-              nzPlaceHolder="Sélectionner un article"
-              [nzOptions]="articles"
-            ></nz-select>
-          </nz-form-control>
-        </nz-form-item>
-
-        <!-- Numéro de série -->
-        <nz-form-item>
-          <nz-form-label>Numéro de série</nz-form-label>
-          <nz-form-control>
-            <input nz-input formControlName="serial_number" [readonly]="true" />
-          </nz-form-control>
-        </nz-form-item>
-
-        <!-- Revendeur -->
-        <nz-form-item>
-          <nz-form-label>Revendeur</nz-form-label>
-          <nz-form-control>
-            <input nz-input formControlName="nomRevendeur" [readonly]="true" />
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-    </div>
-
-    <!-- Informations Intervention -->
-    <div class="mb-8" *ngIf="showInterventionSection">
-      <h3 class="text-xl font-semibold mb-4 text-gray-700 border-b pb-2">Informations Intervention</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Type Intervention -->
-        <nz-form-item>
-          <nz-form-label>Type Intervention</nz-form-label>
-          <nz-form-control>
-            <nz-select formControlName="typeIntervention">
-              <nz-option nzValue="réparation" nzLabel="Réparation"></nz-option>
-              <nz-option nzValue="maintenance" nzLabel="Maintenance"></nz-option>
-              <nz-option nzValue="installation" nzLabel="Installation"></nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-
-        <!-- Type Régulation -->
-        <nz-form-item>
-          <nz-form-label>Type Régulation</nz-form-label>
-          <nz-form-control>
-            <nz-select formControlName="typeregulation">
-              <nz-option nzValue="garantie" nzLabel="Garantie"></nz-option>
-              <nz-option nzValue="hors garantie" nzLabel="Hors Garantie"></nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-
-        <!-- Technicien -->
-        <nz-form-item *ngIf="showTechnicianSection">
-          <nz-form-label [nzRequired]="true">Technicien</nz-form-label>
-          <nz-form-control nzErrorTip="Veuillez sélectionner un technicien">
-            <nz-select
-              formControlName="IdTechnicien"
-              nzPlaceHolder="Sélectionner un technicien"
-              [nzOptions]="techniciens"
-            ></nz-select>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-    </div>
-
-    <!-- Planning -->
-    <div class="mb-8">
-      <h3 class="text-xl font-semibold mb-4 text-gray-700 border-b pb-2">Planning</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Date Saisie -->
-        <nz-form-item>
-          <nz-form-label [nzRequired]="true">Date Saisie</nz-form-label>
-          <nz-form-control nzErrorTip="Veuillez sélectionner une date">
-            <nz-date-picker
-              formControlName="dateSaisie"
-              [nzFormat]="'dd/MM/yyyy'"
-            ></nz-date-picker>
-          </nz-form-control>
-        </nz-form-item>
-
-        <!-- Date RDV -->
-        <nz-form-item>
-          <nz-form-label [nzRequired]="true">Date RDV</nz-form-label>
-          <nz-form-control nzErrorTip="Veuillez sélectionner une date">
-            <nz-date-picker
-              formControlName="dateDeRandezVous"
-              [nzFormat]="'dd/MM/yyyy'"
-            ></nz-date-picker>
-          </nz-form-control>
-        </nz-form-item>
-
-        <!-- Heure Début -->
-        <nz-form-item>
-          <nz-form-label [nzRequired]="true">Heure Début</nz-form-label>
-          <nz-form-control nzErrorTip="Veuillez sélectionner une heure">
-            <nz-time-picker
-              formControlName="heureDebut"
-              [nzFormat]="'HH:mm'"
-            ></nz-time-picker>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-    </div>
-
-    <!-- Notes -->
-    <div class="mb-8" *ngIf="showNotesSection">
-      <h3 class="text-xl font-semibold mb-4 text-gray-700 border-b pb-2">Notes</h3>
-      <div class="grid grid-cols-1 gap-6">
-        <!-- Note SAV -->
-        <nz-form-item>
-          <nz-form-label>Note SAV</nz-form-label>
-          <nz-form-control>
-            <textarea
-              nz-input
-              formControlName="note_Sav"
-              [nzAutosize]="{ minRows: 3, maxRows: 5 }"
-              placeholder="Entrez les notes SAV ici..."
-            ></textarea>
-          </nz-form-control>
-        </nz-form-item>
-
-        <!-- Note Technicien -->
-        <nz-form-item>
-          <nz-form-label>Note Technicien</nz-form-label>
-          <nz-form-control>
-            <textarea
-              nz-input
-              formControlName="note_technicien"
-              [nzAutosize]="{ minRows: 3, maxRows: 5 }"
-              placeholder="Entrez les notes technicien ici..."
-            ></textarea>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-    </div>
-
-    <!-- Section Visite -->
-    <div *ngIf="showVisiteSection" class="mb-4">
-      <h3>Section Visite</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="form-group">
-          <label>État de la visite</label>
-          <nz-select formControlName="etat_visite" nzPlaceHolder="Sélectionner l'état de la visite">
-            <nz-option nzValue="Client Injoignable" nzLabel="Client Injoignable"></nz-option>
-            <nz-option nzValue="Difficult repair" nzLabel="Difficult repair"></nz-option>
-            <nz-option nzValue="En Attente PDR" nzLabel="En Attente PDR"></nz-option>
-            <nz-option nzValue="PDR/ Produit non Disponible" nzLabel="PDR/ Produit non Disponible"></nz-option>
-            <nz-option nzValue="Terminé" nzLabel="Terminé"></nz-option>
-          </nz-select>
-        </div>
-        <div class="form-group">
-          <label>Visite terminée</label>
-          <nz-switch [(ngModel)]="visite_termine" [ngModelOptions]="{standalone: true}"></nz-switch>
-        </div>
-      </div>
-    </div>
-
-    <!-- Cost Section -->
-    <div *ngIf="showCostSection" class="mt-4">
-      <app-card [title]="'Coûts et Services'">
-        <form [formGroup]="reclamationForm">
-          <!-- Services Section -->
-          <div class="mb-4">
-            <div class="flex justify-between items-center mb-3">
-              <h3 class="text-lg font-semibold">Services</h3>
-              <button nz-button nzType="primary" (click)="addService()">
-                <i nz-icon nzType="plus"></i> Ajouter un service
-              </button>
-            </div>
-            
-            <div formArrayName="services">
-              <div *ngFor="let service of servicesFormArray.controls; let i = index" [formGroupName]="i" class="mb-4 p-4 border rounded">
-                <div class="flex justify-between items-center mb-3">
-                  <h4 class="text-md font-medium">Service #{{i + 1}}</h4>
-                  <button nz-button nzType="text" nzDanger (click)="removeService(i)">
-                    <i nz-icon nzType="delete"></i>
-                  </button>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <nz-form-item>
-                    <nz-form-label>Service</nz-form-label>
-                    <nz-form-control>
-                      <nz-select
-                        formControlName="serviceId"
-                        (ngModelChange)="onServiceSelect($event, i)"
-                        nzPlaceHolder="Sélectionner un service">
-                        <nz-option
-                          *ngFor="let service of services"
-                          [nzValue]="service.value"
-                          [nzLabel]="service.label">
-                        </nz-option>
-                      </nz-select>
-                    </nz-form-control>
-                  </nz-form-item>
-
-                  <nz-form-item>
-                    <nz-form-label>Nom Maintenance Informatique</nz-form-label>
-                    <nz-form-control>
-                      <input nz-input formControlName="serviceName" readonly />
-                    </nz-form-control>
-                  </nz-form-item>
-
-                  <nz-form-item>
-                    <nz-form-label>Prix (HT)</nz-form-label>
-                    <nz-form-control>
-                      <nz-input-number
-                        formControlName="servicePrice"
-                        [nzMin]="0"
-                        [nzStep]="0.01"
-                        [nzPrecision]="2">
-                      </nz-input-number>
-                    </nz-form-control>
-                  </nz-form-item>
-
-                  <nz-form-item>
-                    <nz-form-label>Part Technicien</nz-form-label>
-                    <nz-form-control>
-                      <nz-input-number
-                        formControlName="technicianPart"
-                        [nzMin]="0"
-                        [nzStep]="0.01"
-                        [nzPrecision]="2">
-                      </nz-input-number>
-                    </nz-form-control>
-                  </nz-form-item>
-
-                  <nz-form-item>
-                    <nz-form-label>Part Entreprise</nz-form-label>
-                    <nz-form-control>
-                      <nz-input-number
-                        formControlName="companyPart"
-                        [nzMin]="0"
-                        [nzStep]="0.01"
-                        [nzPrecision]="2">
-                      </nz-input-number>
-                    </nz-form-control>
-                  </nz-form-item>
-
-                  <nz-form-item>
-                    <nz-form-label>Remise (%)</nz-form-label>
-                    <nz-form-control>
-                      <nz-input-number
-                        formControlName="serviceDiscount"
-                        [nzMin]="0"
-                        [nzMax]="100"
-                        [nzStep]="1">
-                      </nz-input-number>
-                    </nz-form-control>
-                  </nz-form-item>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Articles Section -->
-          <div class="mb-4">
-            <div class="flex justify-between items-center mb-3">
-              <h3 class="text-lg font-semibold">Articles</h3>
-              <button nz-button nzType="primary" (click)="addArticle()">
-                <i nz-icon nzType="plus"></i> Ajouter un article
-              </button>
-            </div>
-            
-            <div formArrayName="articles">
-              <div *ngFor="let article of articlesFormArray.controls; let i = index" [formGroupName]="i" class="mb-4 p-4 border rounded">
-                <div class="flex justify-between items-center mb-3">
-                  <h4 class="text-md font-medium">Article #{{i + 1}}</h4>
-                  <button nz-button nzType="text" nzDanger (click)="removeArticle(i)">
-                    <i nz-icon nzType="delete"></i>
-                  </button>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <nz-form-item>
-                    <nz-form-label>Article</nz-form-label>
-                    <nz-form-control>
-                      <nz-select
-                        formControlName="articleId"
-                        (ngModelChange)="onArticleSelect($event, i)"
-                        nzPlaceHolder="Sélectionner un article">
-                        <nz-option
-                          *ngFor="let article of articles"
-                          [nzValue]="article.value"
-                          [nzLabel]="article.label">
-                        </nz-option>
-                      </nz-select>
-                    </nz-form-control>
-                  </nz-form-item>
-
-                  <nz-form-item>
-                    <nz-form-label>Marque</nz-form-label>
-                    <nz-form-control>
-                      <input nz-input formControlName="articleBrand" readonly />
-                    </nz-form-control>
-                  </nz-form-item>
-
-                  <nz-form-item>
-                    <nz-form-label>Prix HT</nz-form-label>
-                    <nz-form-control>
-                      <nz-input-number
-                        formControlName="articlePrice"
-                        [nzMin]="0"
-                        [nzStep]="0.01"
-                        [nzPrecision]="2">
-                      </nz-input-number>
-                    </nz-form-control>
-                  </nz-form-item>
-
-                  <nz-form-item>
-                    <nz-form-label>Quantité</nz-form-label>
-                    <nz-form-control>
-                      <nz-input-number
-                        formControlName="articleQuantity"
-                        [nzMin]="1"
-                        [nzStep]="1">
-                      </nz-input-number>
-                    </nz-form-control>
-                  </nz-form-item>
-
-                  <nz-form-item>
-                    <nz-form-label>Remise (%)</nz-form-label>
-                    <nz-form-control>
-                      <nz-input-number
-                        formControlName="articleDiscount"
-                        [nzMin]="0"
-                        [nzMax]="100"
-                        [nzStep]="1">
-                      </nz-input-number>
-                    </nz-form-control>
-                  </nz-form-item>
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
-      </app-card>
-    </div>
-
-    <!-- Actions -->
-    <div class="flex justify-end space-x-4 mt-8 pt-4 border-t">
-      <button 
-        nz-button 
-        type="button" 
-        (click)="annuler()"
-        class="px-6"
-      >
-        Annuler
-      </button>
-      <button
-        nz-button
-        nzType="primary"
-        type="submit"
-        [nzLoading]="isLoading"
-        [disabled]="reclamationForm.invalid"
-        class="px-6"
-      >
-        {{ getSubmitButtonText() }}
-      </button>
-    </div>
-  </form>
-</app-card> 
+</div>
