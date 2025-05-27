@@ -1,7 +1,8 @@
 // angular import
-import { Component, OnInit, viewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 // project import
+import { FactureService } from 'src/app/core/services/facture.service';
 
 // third party
 import { NgApexchartsModule, ChartComponent, ApexOptions } from 'ng-apexcharts';
@@ -14,8 +15,10 @@ import { NgApexchartsModule, ChartComponent, ApexOptions } from 'ng-apexcharts';
 })
 export class MonthlyBarChartComponent implements OnInit {
   // public props
-  chart = viewChild.required<ChartComponent>('chart');
+  @ViewChild('chart') chart: ChartComponent;
   chartOptions!: Partial<ApexOptions>;
+
+  constructor(private factureService: FactureService) {}
 
   // life cycle hook
   ngOnInit() {
@@ -23,7 +26,7 @@ export class MonthlyBarChartComponent implements OnInit {
     this.chartOptions = {
       chart: {
         height: 450,
-        type: 'area',
+        type: 'bar',
         toolbar: {
           show: false
         },
@@ -32,15 +35,11 @@ export class MonthlyBarChartComponent implements OnInit {
       dataLabels: {
         enabled: false
       },
-      colors: ['#1677ff', '#0050b3'],
+      colors: ['#1677ff'],
       series: [
         {
-          name: 'Page Views',
-          data: [0, 86, 28, 115, 48, 210, 136]
-        },
-        {
-          name: 'Sessions',
-          data: [0, 43, 14, 56, 24, 105, 68]
+          name: 'Facture Total',
+          data: []
         }
       ],
       stroke: {
@@ -48,23 +47,10 @@ export class MonthlyBarChartComponent implements OnInit {
         width: 2
       },
       xaxis: {
-        categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        categories: [],
         labels: {
           style: {
-            colors: [
-              '#8c8c8c',
-              '#8c8c8c',
-              '#8c8c8c',
-              '#8c8c8c',
-              '#8c8c8c',
-              '#8c8c8c',
-              '#8c8c8c',
-              '#8c8c8c',
-              '#8c8c8c',
-              '#8c8c8c',
-              '#8c8c8c',
-              '#8c8c8c'
-            ]
+            colors: ['#8c8c8c']
           }
         },
         axisBorder: {
@@ -87,27 +73,43 @@ export class MonthlyBarChartComponent implements OnInit {
         mode: 'light'
       }
     };
+    // Fetch facture totals per client
+    this.factureService.getRentableClient().subscribe((data: any[]) => {
+      const categories = data.map(item => item.nom);
+      const totals = data.map(item => item.total);
+      this.chartOptions = {
+        ...this.chartOptions,
+        xaxis: {
+          ...this.chartOptions.xaxis,
+          categories
+        },
+        series: [
+          {
+            name: 'Facture Total',
+            data: totals
+          }
+        ]
+      };
+    });
   }
 
   // public method
   toggleActive(value: string) {
-    this.chartOptions.series = [
-      {
-        name: 'Page Views',
-        data: value === 'month' ? [76, 85, 101, 98, 87, 105, 91, 114, 94, 86, 115, 35] : [31, 40, 28, 51, 42, 109, 100]
-      },
-      {
-        name: 'Sessions',
-        data: value === 'month' ? [110, 60, 150, 35, 60, 36, 26, 45, 65, 52, 53, 41] : [11, 32, 45, 32, 34, 52, 41]
-      }
-    ];
-    const xaxis = { ...this.chartOptions.xaxis };
-    xaxis.categories =
-      value === 'month'
-        ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-        : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    xaxis.tickAmount = value === 'month' ? 11 : 7;
-    this.chartOptions = { ...this.chartOptions, xaxis };
+  // Always fetch and display client facture data, regardless of month/week toggle
+  this.factureService.getRentableClient().subscribe((data: any[]) => {
+    const categories = data.map(item => item.nom);
+    const totals = data.map(item => item.total);
+    const xaxis = { ...this.chartOptions.xaxis, categories };
+    this.chartOptions = {
+      ...this.chartOptions,
+      xaxis,
+      series: [
+        {
+          name: 'Facture Total',
+          data: totals
+        }
+      ]
+    };
     if (value === 'month') {
       document.querySelector('.chart-income.month')?.classList.add('active');
       document.querySelector('.chart-income.week')?.classList.remove('active');
@@ -115,5 +117,6 @@ export class MonthlyBarChartComponent implements OnInit {
       document.querySelector('.chart-income.week')?.classList.add('active');
       document.querySelector('.chart-income.month')?.classList.remove('active');
     }
-  }
+  });
+}
 }

@@ -131,6 +131,14 @@
                 </td>
                 <td class="actions-cell data-cell">
                   <div class="table-actions modern-actions">
+                    <button nz-button nzType="default" nzSize="small" (click)="showFacture(facture.idFacture)"
+                      class="action-button show-btn" nz-tooltip nzTooltipTitle="Voir facture">
+                      <span nz-icon nzType="eye"></span>
+                    </button>
+                    <button nz-button nzDanger nzSize="small" (click)="openDeleteModal(facture.idFacture)"
+                      class="action-button delete-btn" nz-tooltip nzTooltipTitle="Supprimer la facture">
+                      <span nz-icon nzType="delete"></span>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -139,15 +147,37 @@
         </div>
       </div>
 
-      <!-- Enhanced Delete Modal with Modern Design -->
       <nz-modal [(nzVisible)]="showDeleteModal" nzTitle="Confirmer la suppression" (nzOnCancel)="closeDeleteModal()"
         (nzOnOk)="confirmDelete()" nzOkText="Supprimer" nzCancelText="Annuler" nzOkDanger="true" nzWidth="450px"
         class="delete-modal modern-modal">
-        <div class="modal-content">
-          <span nz-icon nzType="warning" class="modal-warning-icon"></span>
-          <div class="modal-text">Êtes-vous sûr de vouloir supprimer cette facture ?</div>
+        <div class="modal-content modern-modal-content">
+          <div class="warning-section">
+            <div class="warning-icon modern-warning-icon">
+              <span nz-icon nzType="exclamation-circle" nzTheme="twotone" nzTwoToneColor="#ff4d4f"></span>
+              <div class="warning-pulse"></div>
+            </div>
+            <div class="modal-text">
+              <div class="warning-title">Êtes-vous sûr de vouloir supprimer cette facture ?</div>
+              <div class="warning-text">Cette action est irréversible.</div>
+            </div>
+          </div>
         </div>
       </nz-modal>
     </app-card>
+    <nz-modal [(nzVisible)]="articleModalVisible" nzTitle="Détails de l'article" (nzOnCancel)="closeArticleModal()"
+      nzFooter="null" nzWidth="600px">
+      <ng-container *ngIf="selectedArticle">
+        <div class="article-details-modal">
+          <p><strong>Code Facture:</strong> {{ selectedArticle.idFacture }}</p>
+          <p><strong>Date:</strong> {{ selectedArticle.date | date:'shortDate' }}</p>
+          <p><strong>Prix Total:</strong> {{ selectedArticle.prixTotal | number:'1.2-2' }} TND</p>
+          <p><strong>Total Article:</strong> {{ selectedArticle.totalArticle }}</p>
+          <p><strong>Total Service:</strong> {{ selectedArticle.totalService }}</p>
+          <p><strong>Prix HT:</strong> {{ selectedArticle.prixHT }}</p>
+          <p><strong>TVA Global:</strong> {{ selectedArticle.TVAglobal }}</p>
+          <!-- Add more details here as needed -->
+        </div>
+      </ng-container>
+    </nz-modal>
   </div>
 </div>

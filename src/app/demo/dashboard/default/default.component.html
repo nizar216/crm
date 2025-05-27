@@ -7,85 +7,151 @@
       <p class="mt-2">Loading dashboard data...</p>
     </div>
   } @else {
-    @for (analytic of AnalyticEcommerce; track analytic) {
-      <div class="col-md-6 col-xl-3">
-        <app-card [showHeader]="false" blockClass="dashboard-card">
-          <h6 class="mb-2 f-w-400 text-muted">{{ analytic.title }}</h6>
-          <h4 class="mb-3">
-            {{ analytic.amount }}
-            <span class="badge {{ analytic.background }} border {{ analytic.border }} ">
-              <i antIcon type="{{ analytic.icon }}" theme="outline"></i>
-              {{ analytic.percentage }}
-            </span>
-          </h4>
-          <p class="mb-0 text-muted text-sm">
-            @if (analytic.title === 'Total Invoices') {
-              New invoices this month:
-            } @else if (analytic.title === 'Total Clients') {
-              New clients this month:
-            } @else if (analytic.title === 'Total Articles') {
-              Available articles in stock
-            } @else {
-              Revenue this month:
-            }
-            <span class="{{ analytic.color }}">{{ analytic.number }}</span>
-          </p>
-        </app-card>
-      </div>
-    }
+    <!-- Statistics Cards using the original design -->
+    <div class="col-md-6 col-xl-3">
+      <app-card [showHeader]="false" blockClass="dashboard-card">
+        <h6 class="mb-2 f-w-400 text-muted">Total Invoices</h6>
+        <h4 class="mb-3">
+          {{ recentOrder.length }}
+          <span class="badge bg-light-success border border-success">
+            <i antIcon type="rise" theme="outline"></i>
+            +12%
+          </span>
+        </h4>
+        <p class="mb-0 text-muted text-sm">
+          New invoices this month:
+          <span class="text-success">{{ (recentOrder.length * 0.3) | number:'1.0-0' }}</span>
+        </p>
+      </app-card>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+      <app-card [showHeader]="false" blockClass="dashboard-card">
+        <h6 class="mb-2 f-w-400 text-muted">Total Clients</h6>
+        <h4 class="mb-3">
+          {{ clients.length }}
+          <span class="badge bg-light-primary border border-primary">
+            <i antIcon type="rise" theme="outline"></i>
+            +8%
+          </span>
+        </h4>
+        <p class="mb-0 text-muted text-sm">
+          New clients this month:
+          <span class="text-primary">{{ (clients.length * 0.15) | number:'1.0-0' }}</span>
+        </p>
+      </app-card>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+      <app-card [showHeader]="false" blockClass="dashboard-card">
+        <h6 class="mb-2 f-w-400 text-muted">Total Technicians</h6>
+        <h4 class="mb-3">
+          {{ techniciens.length }}
+          <span class="badge bg-light-info border border-info">
+            <i antIcon type="rise" theme="outline"></i>
+            +5%
+          </span>
+        </h4>
+        <p class="mb-0 text-muted text-sm">
+          Active technicians:
+          <span class="text-info">{{ (techniciens.length * 0.9) | number:'1.0-0' }}</span>
+        </p>
+      </app-card>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+      <app-card [showHeader]="false" blockClass="dashboard-card">
+        <h6 class="mb-2 f-w-400 text-muted">Total Articles</h6>
+        <h4 class="mb-3">
+          {{ articles.length }}
+          <span class="badge bg-light-warning border border-warning">
+            <i antIcon type="fall" theme="outline"></i>
+            -2%
+          </span>
+        </h4>
+        <p class="mb-0 text-muted text-sm">
+          Available articles in stock:
+          <span class="text-warning">{{ (articles.length * 0.85) | number:'1.0-0' }}</span>
+        </p>
+      </app-card>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+      <app-card [showHeader]="false" blockClass="dashboard-card">
+        <h6 class="mb-2 f-w-400 text-muted">Total Services</h6>
+        <h4 class="mb-3">
+          {{ services.length }}
+          <span class="badge bg-light-success border border-success">
+            <i antIcon type="rise" theme="outline"></i>
+            +15%
+          </span>
+        </h4>
+        <p class="mb-0 text-muted text-sm">
+          Available services:
+          <span class="text-success">{{ services.length }}</span>
+        </p>
+      </app-card>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+      <app-card [showHeader]="false" blockClass="dashboard-card">
+        <h6 class="mb-2 f-w-400 text-muted">Total Revendeurs</h6>
+        <h4 class="mb-3">
+          {{ revendeurs.length }}
+          <span class="badge bg-light-secondary border border-secondary">
+            <i antIcon type="rise" theme="outline"></i>
+            +3%
+          </span>
+        </h4>
+        <p class="mb-0 text-muted text-sm">
+          Active revendeurs:
+          <span class="text-secondary">{{ (revendeurs.length * 0.8) | number:'1.0-0' }}</span>
+        </p>
+      </app-card>
+    </div>
   }
+
   <div class="col-md-12 col-xl-8">
     <app-monthly-bar-chart />
   </div>
-  <div class="col-md-12 col-xl-4">
-    <app-income-overview-chart />
-  </div>
 
-  <div class="col-md-12 col-xl-8">
-    <h5 class="mb-3">Recent Invoices</h5>
+  <!-- Table of Recent Clients -->
+  <div class="col-md-12 col-xl-6">
+    <h5 class="mb-3">Recent Clients</h5>
     <div class="card tbl-card">
       <div class="table-responsive">
         <table class="table table-hover mb-0">
           <thead>
             <tr>
-              <th>INVOICE ID</th>
-              <th>INVOICE NAME</th>
-              <th>STATUS</th>
-              <th class="text-end">ITEMS</th>
-              <th class="text-end">TOTAL AMOUNT</th>
+              <th>Client Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>City</th>
             </tr>
           </thead>
           <tbody>
             @if (isLoading) {
               <tr>
-                <td colspan="5" class="text-center py-4">
+                <td colspan="4" class="text-center py-4">
                   <div class="spinner-border spinner-border-sm text-primary" role="status">
                     <span class="visually-hidden">Loading...</span>
                   </div>
-                  <span class="ms-2">Loading invoice data...</span>
+                  <span class="ms-2">Loading client data...</span>
                 </td>
               </tr>
-            } @else if (recentOrder.length === 0) {
+            } @else if (clients.length === 0) {
               <tr>
-                <td colspan="5" class="text-center py-4">
-                  <span>No invoices found</span>
+                <td colspan="4" class="text-center py-4">
+                  <span>No clients found</span>
                 </td>
               </tr>
             } @else {
-              @for (order of recentOrder; track order) {
+              @for (client of clients.slice(0, 8); track client) {
                 <tr>
-                  <td>
-                    <a href="javascript:" class="text-muted">{{ order.id }}</a>
-                  </td>
-                  <td>{{ order.name }}</td>
-                  <td>
-                    <span class="d-block">
-                      <i class="badge-circle {{ order.status_type }} f-10 m-r-5"></i>
-                      {{ order.status }}
-                    </span>
-                  </td>
-                  <td class="text-end">{{ order.quantity }}</td>
-                  <td class="text-end">{{ order.amount }}</td>
+                  <td>{{ client.nom }} {{ client.prenom }}</td>
+                  <td>{{ client.email }}</td>
+                  <td>{{ client.telephone1 }}</td>
+                  <td>{{ client.ville || '-' }}</td>
                 </tr>
               }
             }
@@ -94,88 +160,48 @@
       </div>
     </div>
   </div>
-  <div class="col-md-12 col-xl-4">
-    <app-analytics-chart />
-  </div>
 
-  <div class="col-md-12 col-xl-8">
-    <app-sales-report-chart />
-  </div>
-  <div class="col-md-12 col-xl-4">
-    <h5 class="mb-3">Invoice Status</h5>
-    <div class="card">
-      <div class="list-group list-group-flush">
-        @if (isLoading) {
-          <div class="text-center py-4">
-            <div class="spinner-border spinner-border-sm text-primary" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-            <p class="mb-0 mt-2">Loading invoice status...</p>
-          </div>
-        } @else {
-          @for (history of transaction; track history) {
-            <a href="javascript:" class="list-group-item list-group-item-action px-3">
-              <div class="d-flex">
-                <div class="flex-shrink-0">
-                  <div class="avatar avatar-s rounded-circle {{ history.background }}">
-                    <i class="f-16" antIcon type="{{ history.icon }}" theme="outline"></i>
+  <!-- Table of Recent Articles -->
+  <div class="col-md-12 col-xl-6">
+    <h5 class="mb-3">Recent Articles</h5>
+    <div class="card tbl-card">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th>Article</th>
+              <th>Category</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (isLoading) {
+              <tr>
+                <td colspan="4" class="text-center py-4">
+                  <div class="spinner-border spinner-border-sm text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
                   </div>
-                </div>
-                <div class="flex-grow-1 ms-3">
-                  <h6 class="mb-1">{{ history.title }}</h6>
-                  <p class="mb-0 text-muted">{{ history.time }}</p>
-                </div>
-                <div class="flex-shrink-0 text-end">
-                  <h6 class="mb-1">{{ history.amount }}</h6>
-                  <p class="mb-0 text-muted">{{ history.percentage }}</p>
-                </div>
-              </div>
-            </a>
-          }
-        }
-      </div>
-    </div>
-    @if (!isLoading && rentableClients.length > 0) {
-      <div class="card mt-4">
-        <div class="card-header">
-          <h5>Top Client Revenue</h5>
-        </div>
-        <div class="card-body">
-          <ul class="list-group list-group-flush">
-            @for (client of rentableClients.slice(0, 3); track client) {
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                <div>
-                  <h6 class="mb-1">{{ client.client?.name || 'Client ' + client.clientId }}</h6>
-                  <small class="text-muted">{{ client.count || 0 }} invoices</small>
-                </div>
-                <span class="badge bg-primary rounded-pill">${{ client.total || 0 }}</span>
-              </li>
+                  <span class="ms-2">Loading article data...</span>
+                </td>
+              </tr>
+            } @else if (articles.length === 0) {
+              <tr>
+                <td colspan="4" class="text-center py-4">
+                  <span>No articles found</span>
+                </td>
+              </tr>
+            } @else {
+              @for (article of articles.slice(0, 8); track article) {
+                <tr>
+                  <td>{{ article.designation }}</td>
+                  <td>{{ article.category }}</td>
+                  <td>{{ article.prix | number:'1.2-2' }}</td>
+                </tr>
+              }
             }
-          </ul>
-        </div>
-      </div>
-    }
-    
-    <div class="card mt-4">
-      <div class="card-body">
-        <div class="row justify-content-between">
-          <div class="col-auto">
-            <h5>Help & Support</h5>
-            <p class="mb-3">Need help with invoice management?</p>
-          </div>
-          <div class="col-auto">
-            <div class="user-group mb-3">
-              <img src="assets/images/user/avatar-1.jpg" alt="image" />
-              <img src="assets/images/user/avatar-2.jpg" alt="image" />
-              <img src="assets/images/user/avatar-3.jpg" alt="image" />
-            </div>
-          </div>
-        </div>
-        <div class="d-grid">
-          <div class="btn btn-primary">Contact Support</div>
-        </div>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
-  <!-- [ sample-page ] end -->
 </div>

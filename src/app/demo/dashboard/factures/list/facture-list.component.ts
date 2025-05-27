@@ -37,6 +37,8 @@ import { CardComponent } from 'src/app/theme/shared/components/card/card.compone
   ]
 })
 export class FactureListComponent implements OnInit {
+  articleModalVisible = false;
+  selectedArticle: any = null;
   factures: any[] = [];
   searchTerm = '';
   isLoading = false;
@@ -82,6 +84,11 @@ export class FactureListComponent implements OnInit {
         this.message.error('Erreur lors du chargement des factures');
       }
     });
+  }
+
+  closeArticleModal() {
+    this.articleModalVisible = false;
+    this.selectedArticle = null;
   }
 
   showFacture(idFacture: any) {

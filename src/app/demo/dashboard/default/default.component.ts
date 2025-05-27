@@ -15,6 +15,11 @@ import { CardComponent } from 'src/app/theme/shared/components/card/card.compone
 
 // services
 import { FactureService } from 'src/app/core/services/facture.service';
+import { ArticleService } from 'src/app/core/services/article.service';
+import { ClientService } from 'src/app/core/services/client.service';
+import { TechnicienService } from 'src/app/core/services/technicien.service';
+import { ServiceService } from 'src/app/core/services/service.service';
+import { RevendeurService } from 'src/app/core/services/revendeur.service';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -24,9 +29,6 @@ import { forkJoin } from 'rxjs';
     CardComponent,
     IconDirective,
     MonthlyBarChartComponent,
-    IncomeOverviewChartComponent,
-    AnalyticsChartComponent,
-    SalesReportChartComponent
   ],
   templateUrl: './default.component.html',
   styleUrls: ['./default.component.scss']
@@ -40,6 +42,12 @@ export class DefaultComponent implements OnInit {
   articlesCount: number = 0;
   rentableClients: any[] = [];
   isLoading: boolean = true;
+
+  articles: any[] = [];
+  clients: any[] = [];
+  techniciens: any[] = [];
+  services: any[] = [];
+  revendeurs: any[] = [];
 
   AnalyticEcommerce = [
     {
@@ -112,7 +120,14 @@ export class DefaultComponent implements OnInit {
   ];
 
   // constructor
-  constructor(private factureService: FactureService) {
+  constructor(
+    private factureService: FactureService,
+    private articleService: ArticleService,
+    private clientService: ClientService,
+    private technicienService: TechnicienService,
+    private serviceService: ServiceService,
+    private revendeurService: RevendeurService
+  ) {
     this.iconService.addIcon(...[RiseOutline, FallOutline, SettingOutline, GiftOutline, MessageOutline]);
   }
 
@@ -126,7 +141,12 @@ export class DefaultComponent implements OnInit {
       articlesCount: this.factureService.getArticlesCount(),
       clientStats: this.factureService.getClientStats(),
       factureStats: this.factureService.getFactureStats(),
-      rentableClients: this.factureService.getRentableClient()
+      rentableClients: this.factureService.getRentableClient(),
+      articles: this.articleService.getAllArticles(),
+      clients: this.clientService.getAllClients(),
+      techniciens: this.technicienService.getAllTechniciens(),
+      services: this.serviceService.getAllServices(),
+      revendeurs: this.revendeurService.getAllRevendeurs()
     }).subscribe({
       next: (results) => {
         // Process factures for recent orders
@@ -138,22 +158,29 @@ export class DefaultComponent implements OnInit {
           quantity: facture.totalQuantity || facture.items?.length || 0,
           amount: `$${facture.total || 0}`
         }));
-        
-        // Set article count
-        this.articlesCount = results.articlesCount?.count || 0;
-        
-        // Set client stats
+
+        // Set article count and articles
+        this.articlesCount = results.articlesCount?.count || results.articles?.length || 0;
+        this.articles = results.articles || [];
+
+        // Set client stats and clients
         this.clientStats = results.clientStats;
-        
+        this.clients = results.clients || [];
+
         // Set facture stats
         this.factureStats = results.factureStats;
-        
+
         // Set rentable clients
         this.rentableClients = results.rentableClients;
-        
+
+        // Set techniciens, services, revendeurs
+        this.techniciens = results.techniciens || [];
+        this.services = results.services || [];
+        this.revendeurs = results.revendeurs || [];
+
         // Update analytics data
         this.updateAnalyticsData();
-        
+
         this.isLoading = false;
       },
       error: (error) => {
@@ -184,7 +211,7 @@ export class DefaultComponent implements OnInit {
       this.AnalyticEcommerce[0].number = this.factureStats.newFactures || '0';
       this.AnalyticEcommerce[0].icon = this.factureStats.growthRate > 0 ? 'rise' : 'fall';
     }
-    
+
     // Update total clients
     if (this.clientStats?.totalClients !== undefined) {
       this.AnalyticEcommerce[1].amount = this.clientStats.totalClients.toString();
@@ -192,11 +219,11 @@ export class DefaultComponent implements OnInit {
       this.AnalyticEcommerce[1].number = this.clientStats.newClients || '0';
       this.AnalyticEcommerce[1].icon = this.clientStats.growthRate > 0 ? 'rise' : 'fall';
     }
-    
+
     // Update total articles
     this.AnalyticEcommerce[2].amount = this.articlesCount.toString();
-    this.AnalyticEcommerce[2].number = '0';
-    
+    this.AnalyticEcommerce[2].number = this.articles.length.toString();
+
     // Update total sales
     if (this.factureStats?.totalRevenue !== undefined) {
       this.AnalyticEcommerce[3].amount = `$${this.factureStats.totalRevenue.toLocaleString()}`;
@@ -204,23 +231,8 @@ export class DefaultComponent implements OnInit {
       this.AnalyticEcommerce[3].number = `$${this.factureStats.newRevenue || 0}`;
       this.AnalyticEcommerce[3].icon = this.factureStats.revenueGrowth > 0 ? 'rise' : 'fall';
     }
-    
-    // Update transaction history
-    if (this.factureStats) {
-      // Pending invoices
-      this.transaction[0].title = 'Pending Invoices';
-      this.transaction[0].amount = `${this.factureStats.pendingCount || 0}`;
-      this.transaction[0].percentage = `${this.factureStats.pendingPercentage || 0}%`;
-      
-      // Paid invoices
-      this.transaction[1].title = 'Paid Invoices';
-      this.transaction[1].amount = `${this.factureStats.paidCount || 0}`;
-      this.transaction[1].percentage = `${this.factureStats.paidPercentage || 0}%`;
-      
-      // Overdue invoices
-      this.transaction[2].title = 'Overdue Invoices';
-      this.transaction[2].amount = `${this.factureStats.overdueCount || 0}`;
-      this.transaction[2].percentage = `${this.factureStats.overduePercentage || 0}%`;
-    }
+
+    // Optionally, you can display other data in the dashboard using new cards or sections.
+    // For example, you could add cards for total techniciens, services, or revendeurs if desired.
   }
 }
