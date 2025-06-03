@@ -67,6 +67,12 @@
                                         Montant Total
                                     </div>
                                 </th>
+                                <th nzWidth="100px" class="header-cell">
+                                    <div class="header-content">
+                                        <span nz-icon nzType="check-circle" class="header-icon"></span>
+                                        Confirmé
+                                    </div>
+                                </th>
                                 <th nzWidth="160px" nzAlign="center" class="header-cell">
                                     <div class="header-content">
                                         <span nz-icon nzType="setting" class="header-icon"></span>
@@ -93,6 +99,16 @@
                                 <td class="data-cell">
                                     <span class="secondary-text modern-text">{{ d.prixFinalTTC | number:'1.2-2' }}
                                         TND</span>
+                                </td>
+                                <td class="data-cell" style="text-align:center;">
+                                    <ng-container *ngIf="d.confirme; else notConfirmed">
+                                        <span nz-icon nzType="check-circle" nzTheme="twotone"
+                                            nzTwoToneColor="#52c41a"></span> Oui
+                                    </ng-container>
+                                    <ng-template #notConfirmed>
+                                        <span nz-icon nzType="close-circle" nzTheme="twotone"
+                                            nzTwoToneColor="#f5222d"></span> Non
+                                    </ng-template>
                                 </td>
                                 <td class="actions-cell data-cell">
                                     <div class="table-actions modern-actions">

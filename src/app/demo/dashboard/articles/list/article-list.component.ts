@@ -18,6 +18,7 @@ import autoTable from 'jspdf-autotable';
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-article-list',
@@ -48,7 +49,8 @@ export class ArticleListComponent implements OnInit {
   constructor(
     private articleService: ArticleService,
     private router: Router,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private modal: NzModalService
   ) {}
 
   ngOnInit() {
@@ -165,7 +167,13 @@ export class ArticleListComponent implements OnInit {
     }
 
     doc.save(`liste_articles_${dateStr.replace(/\//g, '-')}.pdf`);
-    this.message.success('PDF exporté avec succès');
+    this.modal.info({
+    nzTitle: 'Export PDF',
+    nzContent: 'Le PDF a été exporté avec succès.',
+    nzOkText: 'OK',
+    nzCentered: true,
+    nzClassName: 'modern-modal'
+  });
   }
 
   exportToExcel() {

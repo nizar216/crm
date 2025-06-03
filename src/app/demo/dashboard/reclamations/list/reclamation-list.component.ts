@@ -89,6 +89,10 @@ export class ReclamationListComponent implements OnInit {
         this.router.navigate(['/dashboard/reclamations/edit', idReclamation]);
     }
 
+    viewReclamation(idReclamation: number) {
+        this.router.navigate(['/dashboard/reclamations/view', idReclamation]);
+    }
+
     openDeleteModal(idReclamation: number) {
         this.reclamationToDelete = idReclamation;
         this.showDeleteModal = true;

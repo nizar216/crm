@@ -6,7 +6,8 @@ import { CardComponent } from 'src/app/theme/shared/components/card/card.compone
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
+import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { RevendeurService } from 'src/app/core/services/revendeur.service';
 
 @Component({
@@ -21,7 +22,8 @@ import { RevendeurService } from 'src/app/core/services/revendeur.service';
         NzFormModule,
         NzInputModule,
         NzButtonModule,
-        NzMessageModule
+        NzMessageModule,
+        NzModalModule
     ]
 })
 export class RevendeurEditComponent implements OnInit {
@@ -34,7 +36,7 @@ export class RevendeurEditComponent implements OnInit {
         private revendeurService: RevendeurService,
         private router: Router,
         private route: ActivatedRoute,
-        private message: NzMessageService
+        private modal: NzModalService
     ) {
         this.revendeurForm = this.fb.group({
             nom: ['', [Validators.required]],
@@ -65,7 +67,10 @@ export class RevendeurEditComponent implements OnInit {
             },
             error: (err) => {
                 console.error('Error loading revendeur:', err);
-                this.message.error('Erreur lors du chargement du revendeur');
+                this.modal.error({
+                  nzTitle: 'Erreur',
+                  nzContent: 'Veuillez remplir tous les champs obligatoires du formulaire.'
+                });
                 this.isLoading = false;
                 this.router.navigate(['/dashboard/revendeurs']);
             }
@@ -79,13 +84,22 @@ export class RevendeurEditComponent implements OnInit {
 
             this.revendeurService.updateRevendeur(this.idRevendeur, revendeurData).subscribe({
                 next: () => {
-                    this.message.success('Revendeur mis à jour avec succès');
-                    this.router.navigate(['/dashboard/revendeurs']);
+                    this.isLoading = false;
+                    this.modal.success({
+                      nzTitle: 'Succès',
+                      nzContent: 'Le revendeur a été mis à jour avec succès !',
+                      nzOnOk: () => {
+                        this.router.navigate(['/dashboard/revendeurs']);
+                      }
+                    });
                 },
                 error: (err) => {
-                    console.error('Error updating revendeur:', err);
-                    this.message.error('Erreur lors de la mise à jour du revendeur');
                     this.isLoading = false;
+                    console.error('Error updating revendeur:', err);
+                    this.modal.error({
+                      nzTitle: 'Erreur',
+                      nzContent: 'Erreur lors de la mise à jour du revendeur'
+                    });
                 }
             });
         } else {

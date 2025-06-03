@@ -19,6 +19,7 @@ export interface Devis {
   createdAt?: Date;
   updatedAt?: Date;
   Client?: any;
+  confirme?: boolean;
 }
 
 @Injectable({

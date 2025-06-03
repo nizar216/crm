@@ -57,18 +57,17 @@
           <h4 class="section-title">Informations Intervention</h4>
           <div class="row">
             <div class="col-md-4 mb-3">
-              <label class="form-label">Type Intervention</label>
-              <nz-select nzBorderless formControlName="typeIntervention" class="modern-input">
-                <nz-option nzValue="réparation" nzLabel="Réparation"></nz-option>
-                <nz-option nzValue="maintenance" nzLabel="Maintenance"></nz-option>
+              <label class="form-label">Type Intervention <span class="text-danger">*</span></label>
+              <nz-select nzBorderless formControlName="typeIntervention" class="modern-input" required>
                 <nz-option nzValue="installation" nzLabel="Installation"></nz-option>
+                <nz-option nzValue="Réparation" nzLabel="Réparation"></nz-option>
               </nz-select>
             </div>
             <div class="col-md-4 mb-3">
-              <label class="form-label">Type Régulation</label>
-              <nz-select nzBorderless formControlName="typeregulation" class="modern-input">
-                <nz-option nzValue="garantie" nzLabel="Garantie"></nz-option>
-                <nz-option nzValue="hors garantie" nzLabel="Hors Garantie"></nz-option>
+              <label class="form-label">Type Régulation <span class="text-danger">*</span></label>
+              <nz-select nzBorderless formControlName="typeregulation" class="modern-input" required>
+                <nz-option nzValue="Paiement sur revendeur" nzLabel="Paiement sur revendeur"></nz-option>
+                <nz-option nzValue="Paiement sur client" nzLabel="Paiement sur client"></nz-option>
               </nz-select>
             </div>
             <div class="col-md-4 mb-3" *ngIf="showTechnicianSection">
@@ -143,7 +142,6 @@
                 <nz-option nzValue="Difficult repair" nzLabel="Difficult repair"></nz-option>
                 <nz-option nzValue="En Attente PDR" nzLabel="En Attente PDR"></nz-option>
                 <nz-option nzValue="PDR/ Produit non Disponible" nzLabel="PDR/ Produit non Disponible"></nz-option>
-                <nz-option nzValue="Terminé" nzLabel="Terminé"></nz-option>
               </nz-select>
             </div>
             <div class="col-md-6 mb-3">
@@ -151,6 +149,138 @@
               <div class="switch-container">
                 <nz-switch [(ngModel)]="visite_termine" [ngModelOptions]="{standalone: true}"></nz-switch>
               </div>
+            </div>
+          </div>
+        </div>
+        <!-- Cost Section: Only visible when status is 'clôturée' -->
+        <div *ngIf="showCostSection" class="modern-section cost-section mt-4">
+          <h4 class="section-title">Coûts (Articles &amp; Services)</h4>
+          <div class="row">
+            <div class="col-12 mb-3">
+              <h5>Articles</h5>
+              <button nz-button nzType="dashed" class="mb-2" (click)="addArticle()">
+                <i nz-icon nzType="plus"></i> Ajouter un article
+              </button>
+              <nz-table #articleTable [nzData]="articlesFormArray.controls" [nzFrontPagination]="false">
+                <thead>
+                  <tr>
+                    <th>Article</th>
+                    <th>Marque</th>
+                    <th>Quantité</th>
+                    <th>Prix HT</th>
+                    <th>TVA (%)</th>
+                    <th>Remise (%)</th>
+                    <th>Prix TTC</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let group of getArticleGroups(); let i = index" [formGroup]="group">
+                    <td>
+                      <nz-select nzBorderless formControlName="articleId" nzPlaceHolder="Sélectionner"
+                        [nzOptions]="articles" style="min-width:120px"></nz-select>
+                    </td>
+                    <td>
+                      <input nz-input formControlName="articleBrand" [readonly]="true" style="min-width:90px" />
+                    </td>
+                    <td>
+                      <input nz-input formControlName="quantite" type="number" min="1" style="width:70px" />
+                    </td>
+                    <td>
+                      <input nz-input formControlName="articlePrice" type="number" min="0" style="width:90px" />
+                    </td>
+                    <td>
+                      <input nz-input formControlName="tva" type="number" min="0" style="width:70px" />
+                    </td>
+                    <td>
+                      <input nz-input formControlName="articleDiscount" type="number" min="0" style="width:80px" />
+                    </td>
+                    <td>
+                      <input nz-input formControlName="prixTTC" [readonly]="true" style="width:90px" />
+                    </td>
+                    <td>
+                      <button nz-button nzType="default" nzDanger (click)="removeArticle(i)" [disabled]="articlesFormArray.length === 1">
+                        <i nz-icon nzType="delete"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </nz-table>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 mb-3">
+              <h5>Services</h5>
+              <button nz-button nzType="dashed" class="mb-2" (click)="addService()">
+                <i nz-icon nzType="plus"></i> Ajouter un service
+              </button>
+              <nz-table #serviceTable [nzData]="servicesFormArray.controls" [nzFrontPagination]="false">
+                <thead>
+                  <tr>
+                    <th>Service</th>
+                    <th>Quantité</th>
+                    <th>Prix</th>
+                    <th>TVA (%)</th>
+                    <th>Remise (%)</th>
+                    <th>Prix TTC</th>
+                    <th>Part Tech</th>
+                    <th>Part Ents</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let group of getServiceGroups(); let j = index" [formGroup]="group">
+                    <td>
+                      <nz-select nzBorderless formControlName="serviceId" nzPlaceHolder="Sélectionner"
+                        [nzOptions]="services" style="min-width:120px"></nz-select>
+                    </td>
+                    <td>
+                      <input nz-input formControlName="quantite" type="number" min="1" style="width:70px" />
+                    </td>
+                    <td>
+                      <input nz-input formControlName="servicePrice" type="number" min="0" style="width:90px" />
+                    </td>
+                    <td>
+                      <input nz-input formControlName="tva" type="number" min="0" style="width:70px" />
+                    </td>
+                    <td>
+                      <input nz-input formControlName="serviceDiscount" type="number" min="0" style="width:80px" />
+                    </td>
+                    <td>
+                      <input nz-input formControlName="prixTTC" [readonly]="true" style="width:90px" />
+                    </td>
+                    <td>
+                      <input nz-input formControlName="technicianPart" type="number" min="0" style="width:90px" />
+                    </td>
+                    <td>
+                      <input nz-input formControlName="companyPart" type="number" min="0" style="width:90px" />
+                    </td>
+                    <td>
+                      <button nz-button nzType="default" nzDanger (click)="removeService(j)" [disabled]="servicesFormArray.length === 1">
+                        <i nz-icon nzType="delete"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </nz-table>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-3">
+              <label>Prix Total</label>
+              <input nz-input formControlName="prixTotal" [readonly]="true" />
+            </div>
+            <div class="col-md-3">
+              <label>Remise Totale</label>
+              <input nz-input formControlName="remiseTotale" [readonly]="true" />
+            </div>
+            <div class="col-md-3">
+              <label>Total TVA</label>
+              <input nz-input formControlName="totalTva" [readonly]="true" />
+            </div>
+            <div class="col-md-3">
+              <label>Prix Final TTC</label>
+              <input nz-input formControlName="prixFinalTTC" [readonly]="true" />
             </div>
           </div>
         </div>

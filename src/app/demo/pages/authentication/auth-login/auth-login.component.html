@@ -1,81 +1,61 @@
-<div class="auth-main">
-  <div class="auth-wrapper v3">
-    <div class="auth-form">
-      <div class="auth-header">
-        <a href="javascript:"><img src="assets/images/logo-dark.svg" alt="logo" /></a>
-      </div>
-      <div class="card my-5">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-end mb-4">
-            <h3 class="mb-0"><b>Login</b></h3>
-            <a [routerLink]="['/register']" class="link-primary">Don't have an account?</a>
-          </div>
-          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-            <div class="form-group mb-3">
-              <label class="form-label" for="email">Email Address</label>
-              <input type="email" class="form-control" id="email" placeholder="Email Address" formControlName="email" />
-              <div *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)" class="text-danger small mt-1">
-                <div *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</div>
-                <div *ngIf="loginForm.get('email')?.errors?.['email']">Enter a valid email address</div>
-              </div>
-            </div>
-            <div class="form-group mb-3">
-              <label class="form-label" for="password">Password</label>
-              <input type="password" class="form-control" id="password" placeholder="Password" formControlName="password" />
-              <div *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)" class="text-danger small mt-1">
-                <div *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</div>
-                <div *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</div>
-              </div>
-            </div>
-            <div class="d-flex mt-1 justify-content-between">
-              <div class="form-check">
-                <input class="form-check-input input-primary" type="checkbox" id="rememberMe" formControlName="rememberMe" />
-                <label class="form-check-label text-muted" for="rememberMe">Keep me sign in</label>
-              </div>
-              <h5 class="text-secondary f-w-400"><a href="javascript:">Forgot Password?</a></h5>
-            </div>
-            <div *ngIf="errorMessage" class="alert alert-danger mt-3" role="alert">
-              {{ errorMessage }}
-            </div>
-            <div class="d-grid mt-4">
-              <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid || isLoading">
-                <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-                Login
-              </button>
-            </div>
-          </form>
-          <div class="saprator mt-3">
-            <span>Login with</span>
-          </div>
-          <div class="row">
-            @for (item of SignInOptions; track item) {
-              <div class="col-4">
-                <div class="d-grid">
-                  <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
-                    <img src="{{ item.image }}" alt="google img" />
-                    <span class="d-none d-sm-inline-block">{{ item.name }}</span>
-                  </button>
-                </div>
-              </div>
-            }
+<div class="login-container">
+  <div class="login-card">
+    <!-- Image Section -->
+    <div class="login-image">
+      <img src="assets/images/logo_io.png" alt="logo" />
+    </div>
+
+    <!-- Form Section -->
+    <div class="login-form">
+      <h2 class="text-center mb-4">Login</h2>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="form-group mb-3">
+          <label class="form-label" for="email">Email Address</label>
+          <input type="email" class="form-control" id="email" placeholder="Email Address" formControlName="email" />
+          <div
+            *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)"
+            class="text-danger small mt-1">
+            <div *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</div>
+            <div *ngIf="loginForm.get('email')?.errors?.['email']">Enter a valid email address</div>
           </div>
         </div>
-      </div>
-      <div class="auth-footer row">
-        <div class="col my-1">
-          <p class="m-0">
-            Copyright ©
-            <a href="https://codedthemes.com/" target="_blank">CodedThemes</a>
-          </p>
+
+        <div class="form-group mb-3 position-relative">
+          <label class="form-label" for="password">Password</label>
+          <div class="input-group password-group">
+            <input [type]="showPassword ? 'text' : 'password'" class="form-control" id="password" placeholder="Password"
+              formControlName="password" />
+            <button type="button" class="btn btn-outline-secondary eye-btn" (click)="togglePasswordVisibility()"
+              tabindex="-1"
+              style="border: none; background: transparent; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); z-index: 2;">
+              <span nz-icon [nzType]="showPassword ? 'eye-invisible' : 'eye'" nzTheme="outline"></span>
+            </button>
+          </div>
+
         </div>
-        <div class="col-auto my-1">
-          <ul class="list-inline footer-link mb-0">
-            <li class="list-inline-item"><a href="https://codedthemes.com/" target="_blank">Home</a></li>
-            <li class="list-inline-item"><a href="https://codedthemes.com/privacy-policy/" target="_blank">Privacy Policy</a></li>
-            <li class="list-inline-item"><a href="https://codedthemes.support-hub.io/" target="_blank">Contact us</a></li>
-          </ul>
+
+        <div *ngIf="errorMessage" class="alert alert-danger mt-3" role="alert">
+          {{ errorMessage }}
         </div>
-      </div>
+
+        <div class="text-center mt-4">
+          <button nz-button nzType="primary" class="w-100 d-flex align-items-center justify-content-center gap-2"
+            [disabled]="loginForm.invalid || isLoading" style="height: 45px;">
+            <ng-container *ngIf="isLoading; else defaultText">
+              <span>Logging in...</span>
+              <nz-spin nzSize="small" class="ms-2"></nz-spin>
+            </ng-container>
+            <ng-template #defaultText>
+              <span>Login</span>
+            </ng-template>
+          </button>
+        </div>
+      </form>
     </div>
   </div>
+</div>
+
+<div *ngIf="isLoading" class="mt-3 text-center">
+  <nz-spin nzSize="large" nzTip="Loading..."></nz-spin>
 </div>

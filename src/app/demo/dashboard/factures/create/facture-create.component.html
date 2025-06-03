@@ -15,12 +15,15 @@
               <label class="form-label">Date <span class="text-danger">*</span></label>
               <nz-date-picker formControlName="date" style="width: 100%"></nz-date-picker>
             </div>
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Devis <span class="text-danger">*</span></label>
-              <nz-select nzMode="multiple" formControlName="devis" [nzOptions]="devisOptions"
-                nzPlaceHolder="Sélectionner un ou plusieurs devis" style="width: 100%"></nz-select>
+            <div class="col-md-12 mb-3">
+              <label class="form-label">Réclamations fermées <span class="text-danger">*</span></label>
+              <nz-select formControlName="reclamations" nzMode="multiple"
+                nzPlaceHolder="Sélectionner une ou plusieurs réclamations" style="width: 100%">
+                <nz-option *ngFor="let r of allReclamations" [nzValue]="r.idReclamation"
+                  [nzLabel]="'[' + (r.Client?.nom || '-') + '] ' + r.idReclamation + ' - ' + (r.status || '')"></nz-option>
+              </nz-select>
               <div *ngIf="clientMismatch" class="modern-empty alert modern-alert mt-2">
-                Attention : Les devis sélectionnés ne sont pas tous du même client.
+                Attention : Les réclamations sélectionnées ne sont pas toutes du même client.
               </div>
             </div>
           </div>

@@ -107,6 +107,10 @@ const routes: Routes = [
         loadComponent: () => import('./demo/dashboard/reclamations/edit/reclamation-edit.component').then((c) => c.ReclamationEditComponent)
       },
       {
+        path: 'dashboard/reclamations/view/:id',
+        loadComponent: () => import('./demo/dashboard/reclamations/view/reclamation-view.component').then((c) => c.ReclamationViewComponent)
+      },
+      {
         path: 'dashboard/devis',
         loadComponent: () => import('./demo/dashboard/devis/list/devis-list.component').then((c) => c.DevisListComponent)
       },

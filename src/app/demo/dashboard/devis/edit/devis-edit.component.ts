@@ -6,7 +6,8 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
+import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
@@ -33,7 +34,8 @@ import { ServiceService, Service } from 'src/app/core/services/service.service';
     NzSelectModule,
     NzTableModule,
     NzDividerModule,
-    NzSpinModule
+    NzSpinModule,
+    NzModalModule
   ]
 })
 export class DevisEditComponent implements OnInit {
@@ -50,7 +52,7 @@ export class DevisEditComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private message: NzMessageService,
+    private modal: NzModalService,
     private devisService: DevisService,
     private clientService: ClientService,
     private articleService: ArticleService,
@@ -63,7 +65,8 @@ export class DevisEditComponent implements OnInit {
       prixTotal: [{ value: 0, disabled: true }],
       remiseTotale: [{ value: 0, disabled: true }],
       prixFinalTTC: [{ value: 0, disabled: true }],
-      totalTva: [{ value: 0, disabled: true }]
+      totalTva: [{ value: 0, disabled: true }],
+      confirme: [false]
     });
   }
 

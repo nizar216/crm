@@ -8,6 +8,9 @@ import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { FactureService } from 'src/app/core/services/facture.service';
+import { ReclamationService } from 'src/app/core/services/reclamation.service';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-facture-view',
@@ -25,6 +28,8 @@ import { FactureService } from 'src/app/core/services/facture.service';
   ]
 })
 export class FactureViewComponent implements OnInit {
+  public facture: any = null;
+  public reclamation: any = null;
   client: any = null;
   articles: any[] = [];
   services: any[] = [];
@@ -42,7 +47,8 @@ export class FactureViewComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private message: NzMessageService,
-    private factureService: FactureService
+    private factureService: FactureService,
+    private reclamationService: ReclamationService
   ) { }
 
   ngOnInit(): void {
@@ -55,6 +61,7 @@ export class FactureViewComponent implements OnInit {
       next: (factures) => {
         const facture = factures.find((f: any) => f.idFacture == id);
         if (facture) {
+          this.facture = facture;
           this.client = facture.Client || facture.client;
           this.articles = facture.articles || [];
           this.services = facture.services || [];
@@ -67,6 +74,7 @@ export class FactureViewComponent implements OnInit {
             TVAglobal: facture.TVAglobal || 0,
             remiseGlobal: facture.remiseGlobal || 0
           };
+          this.fetchReclamationByFactureId(facture.idFacture);
         }
       },
       error: () => {
@@ -77,5 +85,37 @@ export class FactureViewComponent implements OnInit {
 
   cancel() {
     this.router.navigate(['/dashboard/factures']);
+  }
+
+  fetchReclamationByFactureId(factureId: any) {
+    this.reclamationService.getReclamations().subscribe({
+      next: (reclamations) => {
+        this.reclamation = reclamations.find((rec: any) => rec.idFacture == factureId) || null;
+        console.log(this.reclamation);
+      },
+      error: () => {
+        this.message.error('Erreur lors du chargement de la réclamation');
+      }
+    });
+  }
+
+  generatePDF() {
+    const factureElement = document.getElementById('facture-content');
+    if (!factureElement) {
+      this.message.error('Impossible de trouver la facture à imprimer.');
+      return;
+    }
+    html2canvas(factureElement).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      // Calculate the image dimensions to fit the page
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pageWidth;
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`facture_${this.facture?.idFacture || ''}.pdf`);
+    });
   }
 }

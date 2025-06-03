@@ -5,15 +5,18 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { UserLoggedOutDirective } from 'src/app/core/directives/user-logged-out.directive';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-auth-login',
-  imports: [RouterModule, ReactiveFormsModule, CommonModule],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule, NzSpinModule, NzIconModule],
   templateUrl: './auth-login.component.html',
   styleUrl: './auth-login.component.scss',
   hostDirectives: [UserLoggedOutDirective]
 })
 export class AuthLoginComponent implements OnInit {
+  showPassword = false; // Controls password visibility
   // form properties
   loginForm!: FormGroup;
   isLoading = false;
@@ -79,5 +82,9 @@ export class AuthLoginComponent implements OnInit {
         }
       }
     });
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 }

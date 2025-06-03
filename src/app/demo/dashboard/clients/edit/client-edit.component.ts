@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ClientService, Client } from 'src/app/core/services/client.service';
 import { CardComponent } from 'src/app/theme/shared/components/card/card.component';
 import { NzSelectModule } from 'ng-zorro-antd/select';
-import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-client-edit',
@@ -42,7 +42,8 @@ export class ClientEditComponent implements OnInit {
     private clientService: ClientService,
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private modal: NzModalService
   ) {
     this.clientForm = this.fb.group({
       nom: ['', [Validators.required]],
@@ -126,7 +127,13 @@ export class ClientEditComponent implements OnInit {
     this.clientService.updateClient(this.clientForm.value, this.clientId).subscribe({
       next: (response) => {
         this.isSubmitting = false;
-        this.router.navigate(['/dashboard/clients']);
+        this.modal.success({
+          nzTitle: 'Succès',
+          nzContent: 'Le client a été modifié avec succès !',
+          nzOnOk: () => {
+            this.router.navigate(['/dashboard/clients']);
+          }
+        });
       },
       error: (err) => {
         this.isSubmitting = false;

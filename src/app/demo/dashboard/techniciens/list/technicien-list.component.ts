@@ -18,7 +18,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
-import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-technicien-list',
@@ -57,7 +57,8 @@ export class TechnicienListComponent implements OnInit {
   constructor(
     private technicienService: TechnicienService,
     private router: Router,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private modal: NzModalService
   ) { }
 
   ngOnInit() {
@@ -117,10 +118,12 @@ export class TechnicienListComponent implements OnInit {
   }
 
   get filteredTechniciens() {
+    if (!this.searchTerm) return this.techniciens;
+    const term = this.searchTerm.toLowerCase();
     return this.techniciens.filter(technicien =>
-      technicien.nom.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      technicien.email.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      technicien.nomSociete.toLowerCase().includes(this.searchTerm.toLowerCase())
+      Object.values(technicien).some(value =>
+        value && value.toString().toLowerCase().includes(term)
+      )
     );
   }
 
@@ -200,7 +203,13 @@ export class TechnicienListComponent implements OnInit {
     }
 
     doc.save(`liste_techniciens_${dateStr.replace(/\//g, '-')}.pdf`);
-    this.message.success('PDF exporté avec succès');
+    this.modal.info({
+      nzTitle: 'Export PDF',
+      nzContent: 'Le PDF a été exporté avec succès.',
+      nzOkText: 'OK',
+      nzCentered: true,
+      nzClassName: 'modern-modal'
+    });
   }
 
   // Export to Excel

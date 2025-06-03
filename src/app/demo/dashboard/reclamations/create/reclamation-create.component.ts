@@ -14,7 +14,8 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
-import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
+import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 
 
 @Component({
@@ -31,7 +32,8 @@ import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
         NzSelectModule,
         NzDatePickerModule,
         NzTimePickerModule,
-        NzMessageModule
+        NzMessageModule,
+        NzModalModule
     ]
 })
 export class ReclamationCreateComponent implements OnInit {
@@ -52,7 +54,7 @@ export class ReclamationCreateComponent implements OnInit {
         private revendeurService: RevendeurService,
         private articleService: ArticleService,
         private router: Router,
-        private message: NzMessageService
+        private modal: NzModalService
     ) {
         this.reclamationForm = this.fb.group({
             dateSaisie: [this.formatDateToday(), Validators.required],
@@ -62,8 +64,8 @@ export class ReclamationCreateComponent implements OnInit {
             IdRevendeur: [null],
             idArticle: [null],
             serial_number: [''],
-            typeIntervention: [null],
-            typeregulation: [null],
+            typeIntervention: [null, [Validators.required, Validators.pattern(/^(installation|Réparation)$/i)]],
+            typeregulation: [null, [Validators.required, Validators.pattern(/^(Paiement sur revendeur|Paiement sur client)$/i)]],
             IdTechnicien: [null],
             dateDeRandezVous: [null],
             heureDebut: [null],
@@ -106,7 +108,10 @@ export class ReclamationCreateComponent implements OnInit {
                     value: client.idClient
                 }));
             },
-            error: () => this.message.error('Erreur lors du chargement des clients')
+            error: () => this.modal.error({
+  nzTitle: 'Erreur',
+  nzContent: 'Erreur lors du chargement des clients'
+})
         });
     }
 
@@ -118,7 +123,10 @@ export class ReclamationCreateComponent implements OnInit {
                     value: tech.idTechnicien
                 }));
             },
-            error: () => this.message.error('Erreur lors du chargement des techniciens')
+            error: () => this.modal.error({
+  nzTitle: 'Erreur',
+  nzContent: 'Erreur lors du chargement des techniciens'
+})
         });
     }
 
@@ -130,7 +138,10 @@ export class ReclamationCreateComponent implements OnInit {
                     value: revendeur.idRevendeur
                 }));
             },
-            error: () => this.message.error('Erreur lors du chargement des revendeurs')
+            error: () => this.modal.error({
+  nzTitle: 'Erreur',
+  nzContent: 'Erreur lors du chargement des revendeurs'
+})
         });
     }
 
@@ -142,7 +153,10 @@ export class ReclamationCreateComponent implements OnInit {
                     value: article.idArticle
                 }));
             },
-            error: () => this.message.error('Erreur lors du chargement des articles')
+            error: () => this.modal.error({
+  nzTitle: 'Erreur',
+  nzContent: 'Erreur lors du chargement des articles'
+})
         });
     }
 
@@ -175,42 +189,53 @@ export class ReclamationCreateComponent implements OnInit {
     }
 
     onSubmit() {
-        console.log(this.reclamationForm.value.heureDebut)
-        if (this.reclamationForm.valid) {
-            this.isLoading = true;
-            this.updateStatus();
-
-            const formValue = { ...this.reclamationForm.value };
-
-            if (formValue.heureDebut) {
-                if (formValue.heureDebut instanceof Date) {
-                    const h = formValue.heureDebut.getHours().toString().padStart(2, '0');
-                    const m = formValue.heureDebut.getMinutes().toString().padStart(2, '0');
-                    const s = formValue.heureDebut.getSeconds().toString().padStart(2, '0');
-                    formValue.heureDebut = `${h}:${m}:${s}`;
-                } else if (typeof formValue.heureDebut === 'string') {
-                    formValue.heureDebut = formValue.heureDebut.split('T')[1]?.substring(0, 8) || null;
-                }
-            }
-
-            this.reclamationService.addReclamation(formValue).subscribe({
-                next: () => {
-                    this.message.success('Réclamation créée avec succès');
-                    this.router.navigate(['/dashboard/reclamations']);
-                },
-                error: () => {
-                    this.message.error('Erreur lors de la création de la réclamation');
-                    this.isLoading = false;
-                }
-            });
-        } else {
-            Object.values(this.reclamationForm.controls).forEach(control => {
+        if (this.reclamationForm.invalid) {
+            Object.values(this.reclamationForm.controls).forEach((control: any) => {
                 if (control.invalid) {
                     control.markAsTouched();
                     control.updateValueAndValidity({ onlySelf: true });
                 }
             });
+            this.modal.error({
+                nzTitle: 'Erreur',
+                nzContent: 'Veuillez remplir tous les champs requis'
+            });
+            return;
         }
+        this.isLoading = true;
+        this.updateStatus();
+
+        const formValue = { ...this.reclamationForm.value };
+
+        if (formValue.heureDebut) {
+            if (formValue.heureDebut instanceof Date) {
+                const h = formValue.heureDebut.getHours().toString().padStart(2, '0');
+                const m = formValue.heureDebut.getMinutes().toString().padStart(2, '0');
+                const s = formValue.heureDebut.getSeconds().toString().padStart(2, '0');
+                formValue.heureDebut = `${h}:${m}:${s}`;
+            } else if (typeof formValue.heureDebut === 'string') {
+                formValue.heureDebut = formValue.heureDebut.split('T')[1]?.substring(0, 8) || null;
+            }
+        }
+
+        this.reclamationService.addReclamation(formValue).subscribe({
+            next: () => {
+                this.modal.success({
+                    nzTitle: 'Succès',
+                    nzContent: 'La réclamation a été créée avec succès !',
+                    nzOnOk: () => {
+                        this.router.navigate(['/dashboard/reclamations']);
+                    }
+                });
+            },
+            error: () => {
+                this.modal.error({
+                    nzTitle: 'Erreur',
+                    nzContent: 'Erreur lors de la création de la réclamation'
+                });
+                this.isLoading = false;
+            }
+        });
     }
 
     onCancel() {

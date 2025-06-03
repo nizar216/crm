@@ -19,6 +19,7 @@ import autoTable from 'jspdf-autotable';
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 
@@ -46,7 +47,8 @@ export class ClientListComponent implements OnInit {
   constructor(
     private clientService: ClientService,
     private router: Router,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private modal: NzModalService
   ) { }
 
   ngOnInit() {
@@ -195,8 +197,14 @@ export class ClientListComponent implements OnInit {
     // Save the PDF
     doc.save(`liste_clients_${dateStr.replace(/\//g, '-')}.pdf`);
 
-    // Show success message
-    this.message.success('PDF exporté avec succès');
+    // Show success modal
+    this.modal.info({
+      nzTitle: 'Export PDF',
+      nzContent: 'Le PDF a été exporté avec succès.',
+      nzOkText: 'OK',
+      nzCentered: true,
+      nzClassName: 'modern-modal'
+    });
   }
 
   // Export to Excel

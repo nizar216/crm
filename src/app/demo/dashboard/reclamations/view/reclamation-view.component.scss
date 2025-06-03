@@ -1,0 +1,349 @@
+/* Simplified Color Palette CSS */
+.reclamation-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f0f0f0;
+  margin: 1.5rem auto;
+  max-width: 1000px;
+  overflow: hidden;
+}
+
+.reclamation-card .ant-card-head {
+  background: #1890ff;
+  border-bottom: none;
+  padding: 1.5rem 2rem;
+}
+
+.reclamation-card .ant-card-head-title {
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.reclamation-content {
+  padding: 2rem;
+}
+
+/* Header Information */
+.reclamation-header {
+  margin-bottom: 2.5rem;
+}
+
+.header-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  align-items: center;
+}
+
+.header-row:last-child {
+  margin-bottom: 0;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #fafafa;
+  border-radius: 8px;
+  border-left: 4px solid #1890ff;
+}
+
+.info-item .label {
+  font-weight: 600;
+  color: #666666;
+  min-width: 100px;
+  font-size: 0.9rem;
+}
+
+.info-item .value {
+  color: #262626;
+  font-weight: 500;
+  flex: 1;
+}
+
+.status-item {
+  border-left-color: #1890ff;
+}
+
+.status-tag {
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+}
+
+.price-highlight {
+  border-left-color: #1890ff;
+  background: #f0f8ff;
+}
+
+.total-price {
+  color: #1890ff;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* Section Containers */
+.section-container {
+  margin-bottom: 2.5rem;
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid #f0f0f0;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #262626;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #e8e8e8;
+}
+
+.section-title i {
+  color: #1890ff;
+  font-size: 1.2rem;
+}
+
+/* Custom Table Styles */
+.custom-table {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.custom-table .ant-table-thead > tr > th {
+  background: #f5f5f5;
+  border-bottom: 2px solid #e8e8e8;
+  font-weight: 600;
+  color: #262626;
+  padding: 1rem;
+}
+
+.custom-table .ant-table-tbody > tr > td {
+  padding: 0.75rem 1rem;
+  vertical-align: middle;
+}
+
+.custom-table .ant-table-tbody > tr:hover > td {
+  background: #f8f8f8;
+}
+
+.designation-cell {
+  font-weight: 500;
+  color: #262626;
+}
+
+.quantity-cell {
+  text-align: center;
+  font-weight: 600;
+  color: #1890ff;
+}
+
+.price-cell {
+  text-align: right;
+  font-weight: 600;
+  color: #262626;
+}
+
+.discount-cell {
+  text-align: center;
+  font-weight: 600;
+  color: #666666;
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  color: #999999;
+  background: white;
+  border-radius: 8px;
+  border: 2px dashed #e8e8e8;
+}
+
+.empty-state i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #cccccc;
+}
+
+.empty-state span {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Description */
+.description-content {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #1890ff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.description-content p {
+  margin: 0;
+  line-height: 1.6;
+  color: #262626;
+  font-size: 1rem;
+}
+
+/* Actions */
+.actions-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #f0f0f0;
+}
+
+.back-button {
+  padding: 0.75rem 2rem;
+  height: auto;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background: #f0f8ff;
+  border-color: #1890ff;
+  color: #1890ff;
+  transform: translateY(-1px);
+}
+
+.back-button i {
+  font-size: 1.1rem;
+}
+
+/* Loading State */
+.loading-card {
+  max-width: 400px;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.loading-content {
+  padding: 3rem 2rem;
+}
+
+.loading-content p {
+  margin-top: 1rem;
+  color: #999999;
+  font-size: 1rem;
+}
+
+/* No Data State */
+.no-data-card {
+  max-width: 500px;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.no-data-content {
+  padding: 3rem 2rem;
+}
+
+.no-data-content i {
+  font-size: 4rem;
+  color: #1890ff;
+  margin-bottom: 1.5rem;
+}
+
+.no-data-content h3 {
+  color: #262626;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.no-data-content p {
+  color: #999999;
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .reclamation-card {
+    margin: 1rem;
+    max-width: none;
+  }
+  
+  .reclamation-content {
+    padding: 1.5rem;
+  }
+  
+  .header-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .custom-table {
+    font-size: 0.9rem;
+  }
+  
+  .custom-table .ant-table-thead > tr > th,
+  .custom-table .ant-table-tbody > tr > td {
+    padding: 0.5rem;
+  }
+  
+  .section-container {
+    padding: 1rem;
+  }
+  
+  .info-item .label {
+    min-width: 80px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .reclamation-card .ant-card-head {
+    padding: 1rem;
+  }
+  
+  .reclamation-card .ant-card-head-title {
+    font-size: 1.1rem;
+  }
+  
+  .reclamation-content {
+    padding: 1rem;
+  }
+  
+  .info-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+  
+  .info-item .label {
+    min-width: unset;
+  }
+  
+  .section-title {
+    font-size: 1rem;
+  }
+  
+  .custom-table .ant-table {
+    font-size: 0.8rem;
+  }
+}

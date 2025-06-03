@@ -9,8 +9,8 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
-import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-article-create',
@@ -40,7 +40,7 @@ export class ArticleCreateComponent implements OnInit {
     private fb: FormBuilder,
     private articleService: ArticleService,
     private router: Router,
-    private message: NzMessageService
+    private modal: NzModalService
   ) {
     this.articleForm = this.fb.group({
       famille: [null, [Validators.required]],
@@ -73,7 +73,10 @@ export class ArticleCreateComponent implements OnInit {
     }
 
     if (this.articleForm.invalid) {
-      this.message.error('Veuillez remplir tous les champs obligatoires du formulaire.');
+      this.modal.error({
+        nzTitle: 'Erreur',
+        nzContent: 'Veuillez remplir tous les champs obligatoires du formulaire.'
+      });
       return;
     }
 
@@ -95,13 +98,21 @@ export class ArticleCreateComponent implements OnInit {
     this.articleService.addArticle(formData).subscribe({
       next: () => {
         this.isSubmitting = false;
-        this.message.success('Article créé avec succès!');
-        this.router.navigate(['/dashboard/articles']);
+        this.modal.success({
+          nzTitle: 'Succès',
+          nzContent: "L'article a été créé avec succès !",
+          nzOnOk: () => {
+            this.router.navigate(['/dashboard/articles']);
+          }
+        });
       },
       error: (err) => {
         this.isSubmitting = false;
         console.error(err);
-        this.message.error('Erreur lors de la création de l\'article');
+        this.modal.error({
+          nzTitle: 'Erreur',
+          nzContent: 'Erreur lors de la création de l\'article'
+        });
       }
     });
   }

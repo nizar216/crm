@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { CardComponent } from 'src/app/theme/shared/components/card/card.component';
@@ -121,8 +123,77 @@ export class ServiceListComponent implements OnInit {
   }
 
   exportToPdf() {
-    // TODO: Implement export to PDF for services
-    this.message.info('Export PDF à venir');
+    const doc = new jsPDF();
+    const today = new Date();
+    const dateStr = today.toLocaleDateString('fr-FR');
+
+    doc.setProperties({
+      title: `Liste des Services - ${dateStr}`,
+      author: 'Système de Gestion',
+      subject: 'Liste des Services',
+      keywords: 'services, liste, rapport',
+      creator: 'Application Web'
+    });
+
+    doc.setFontSize(18);
+    doc.text('Liste des Services', 105, 15, { align: 'center' });
+
+    doc.setFontSize(11);
+    doc.text(`Date: ${dateStr}`, 105, 22, { align: 'center' });
+
+    const columns = [
+      { header: 'Nom', dataKey: 'nom' },
+      { header: 'Prix HT', dataKey: 'prix' },
+      { header: 'TVA (%)', dataKey: 'tva' },
+      { header: 'Prix Total', dataKey: 'prixTot' },
+      { header: 'Part Technique', dataKey: 'partTech' },
+      { header: 'Part Entreprise', dataKey: 'partEnts' }
+    ];
+
+    const data = this.filteredServices.map(service => ({
+      nom: service.nom,
+      prix: service.prix != null ? service.prix : '-',
+      tva: service.tva != null ? service.tva : '-',
+      prixTot: service.prixTot != null ? service.prixTot : '-',
+      partTech: service.partTech != null ? service.partTech : '-',
+      partEnts: service.partEnts != null ? service.partEnts : '-'
+    }));
+
+    autoTable(doc, {
+      columns: columns,
+      body: data,
+      startY: 30,
+      headStyles: {
+        fillColor: [114, 103, 239],
+        textColor: [255, 255, 255],
+        fontStyle: 'bold'
+      },
+      alternateRowStyles: {
+        fillColor: [240, 240, 250]
+      },
+      margin: { top: 30 },
+      styles: {
+        fontSize: 10,
+        cellPadding: 3
+      }
+    });
+
+    const pageCount = doc.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(10);
+      doc.text(`Page ${i} de ${pageCount}`, 105, doc.internal.pageSize.height - 10, { align: 'center' });
+    }
+
+    doc.save(`liste_services_${dateStr.replace(/\//g, '-')}.pdf`);
+
+    this.modal.info({
+      nzTitle: 'Export PDF',
+      nzContent: 'Le PDF a été exporté avec succès.',
+      nzOkText: 'OK',
+      nzCentered: true,
+      nzClassName: 'modern-modal'
+    });
   }
 
   exportToExcel() {

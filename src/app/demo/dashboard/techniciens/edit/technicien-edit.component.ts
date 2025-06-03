@@ -7,7 +7,8 @@ import { CardComponent } from 'src/app/theme/shared/components/card/card.compone
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
+import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 @Component({
@@ -22,6 +23,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
     NzInputModule,
     NzButtonModule,
     NzMessageModule,
+    NzModalModule,
     NzSpinModule
   ]
 })
@@ -37,7 +39,7 @@ export class TechnicienEditComponent implements OnInit {
     private technicienService: TechnicienService,
     private router: Router,
     private route: ActivatedRoute,
-    private message: NzMessageService
+    private modal: NzModalService
   ) {
     this.technicienForm = this.fb.group({
       nom: ['', [Validators.required]],
@@ -57,7 +59,10 @@ export class TechnicienEditComponent implements OnInit {
       this.loadTechnicien(this.technicienId);
     } else {
       this.errorMessage = 'ID du technicien non trouvé';
-      this.message.error(this.errorMessage);
+      this.modal.error({
+        nzTitle: 'Erreur',
+        nzContent: this.errorMessage
+      });
       setTimeout(() => {
         this.router.navigate(['/dashboard/techniciens']);
       }, 2000);
@@ -74,7 +79,10 @@ export class TechnicienEditComponent implements OnInit {
       error: (err) => {
         this.isLoading = false;
         console.error('Error loading technicien:', err);
-        this.message.error('Erreur lors du chargement du technicien');
+        this.modal.error({
+  nzTitle: 'Erreur',
+  nzContent: 'Erreur lors du chargement du technicien'
+});
         this.router.navigate(['/dashboard/techniciens']);
       }
     });
@@ -95,14 +103,22 @@ export class TechnicienEditComponent implements OnInit {
     this.technicienService.updateTechnicien(this.technicienId!, this.technicienForm.value).subscribe({
       next: () => {
         this.isSubmitting = false;
-        this.message.success('Technicien mis à jour avec succès');
-        this.router.navigate(['/dashboard/techniciens']);
+        this.modal.success({
+          nzTitle: 'Succès',
+          nzContent: 'Le technicien a été mis à jour avec succès !',
+          nzOnOk: () => {
+            this.router.navigate(['/dashboard/techniciens']);
+          }
+        });
       },
       error: (err) => {
         this.isSubmitting = false;
         console.error('Error updating technicien:', err);
         this.errorMessage = err.error?.message || 'Erreur lors de la mise à jour du technicien';
-        this.message.error(this.errorMessage);
+        this.modal.error({
+          nzTitle: 'Erreur',
+          nzContent: this.errorMessage
+        });
       }
     });
   }

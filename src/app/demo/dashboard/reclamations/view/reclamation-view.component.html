@@ -1,0 +1,160 @@
+<nz-card *ngIf="!isLoading && reclamation" nzTitle="Détail de la Réclamation" class="reclamation-card">
+  <div class="reclamation-content">
+    <!-- Header Information -->
+    <div class="reclamation-header">
+      <div class="header-row">
+        <div class="info-item">
+          <span class="label">Client:</span>
+          <span class="value">{{ reclamation.Client?.nom }}</span>
+        </div>
+        <div class="info-item status-item">
+          <span class="label">Statut:</span>
+          <nz-tag [nzColor]="reclamation.status === 'fermée' ? 'red' : 'green'" class="status-tag">
+            {{ reclamation.status }}
+          </nz-tag>
+        </div>
+      </div>
+      
+      <div class="header-row">
+        <div class="info-item">
+          <span class="label">Date Saisie:</span>
+          <span class="value">{{ reclamation.dateSaisie | date:'short' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Type Intervention:</span>
+          <span class="value">{{ reclamation.typeIntervention }}</span>
+        </div>
+      </div>
+      
+      <div class="header-row">
+        <div class="info-item">
+          <span class="label">Technicien:</span>
+          <span class="value">{{ reclamation.Technicien?.nom }}</span>
+        </div>
+        <div class="info-item price-highlight">
+          <span class="label">Prix Total:</span>
+          <span class="total-price">{{ reclamation.prixTotal | number:'1.2-2' }} DH</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Articles Section -->
+    <div class="section-container">
+      <div class="section-title">
+        <i class="bi bi-box-seam"></i>
+        <span>Articles</span>
+      </div>
+      
+      <nz-table
+        *ngIf="reclamation.Articles?.length"
+        [nzData]="reclamation.Articles"
+        [nzSize]="'middle'"
+        [nzBordered]="true"
+        [nzFrontPagination]=false
+        class="custom-table"
+      >
+        <thead>
+          <tr>
+            <th>Désignation</th>
+            <th>Quantité</th>
+            <th>Prix Final</th>
+            <th>Remise</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let art of reclamation.Articles">
+            <td class="designation-cell">{{ art.libelle }}</td>
+            <td class="quantity-cell">{{ art.ReclamationArticle.quantite }}</td>
+            <td class="price-cell">{{ art.ReclamationArticle.prixFinal | number:'1.2-2' }} DH</td>
+            <td class="discount-cell">{{ art.ReclamationArticle.remise }}%</td>
+          </tr>
+        </tbody>
+      </nz-table>
+      
+      <div *ngIf="!reclamation.Articles?.length" class="empty-state">
+        <i class="bi bi-inbox"></i>
+        <span>Aucun article trouvé</span>
+      </div>
+    </div>
+
+    <!-- Services Section -->
+    <div class="section-container">
+      <div class="section-title">
+        <i class="bi bi-tools"></i>
+        <span>Services</span>
+      </div>
+      
+      <nz-table
+        *ngIf="reclamation.Services?.length"
+        [nzData]="reclamation.Services"
+        [nzSize]="'middle'"
+        [nzBordered]="true"
+        [nzFrontPagination]=false
+        class="custom-table"
+      >
+        <thead>
+          <tr>
+            <th>Nom du Service</th>
+            <th>Part Entreprise</th>
+            <th>Part Technicien</th>
+            <th>Remise</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let srv of reclamation.Services">
+            <td class="designation-cell">{{ srv.nom }}</td>
+            <td class="price-cell">{{ srv.ReclamationService.partEnts | number:'1.2-2' }} DH</td>
+            <td class="price-cell">{{ srv.ReclamationService.partTech | number:'1.2-2' }} DH</td>
+            <td class="discount-cell">{{ srv.ReclamationService.remise }}%</td>
+          </tr>
+        </tbody>
+      </nz-table>
+      
+      <div *ngIf="!reclamation.Services?.length" class="empty-state">
+        <i class="bi bi-inbox"></i>
+        <span>Aucun service trouvé</span>
+      </div>
+    </div>
+
+    <!-- Description Section -->
+    <div class="section-container">
+      <div class="section-title">
+        <i class="bi bi-file-text"></i>
+        <span>Description</span>
+      </div>
+      
+      <div class="description-content">
+        <p>{{ reclamation.description || 'Aucune description disponible' }}</p>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions-container">
+      <button nz-button nzType="default" nzSize="large" (click)="cancel()" class="back-button">
+        <i class="bi bi-arrow-left"></i>
+        Retour
+      </button>
+    </div>
+  </div>
+</nz-card>
+
+<!-- Loading State -->
+<nz-card *ngIf="isLoading" class="loading-card">
+  <div class="loading-content">
+    <nz-spin nzSize="large"></nz-spin>
+    <p>Chargement des détails...</p>
+  </div>
+</nz-card>
+
+<!-- No Data State -->
+<nz-card *ngIf="!isLoading && !reclamation" class="no-data-card">
+  <div class="no-data-content">
+    <i class="bi bi-exclamation-triangle"></i>
+    <h3>Aucune réclamation trouvée</h3>
+    <p>La réclamation demandée n'existe pas ou n'est plus disponible.</p>
+    <button nz-button nzType="primary" (click)="cancel()">
+      <i class="bi bi-arrow-left"></i>
+      Retour à la liste
+    </button>
+  </div>
+</nz-card>

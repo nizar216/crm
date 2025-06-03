@@ -17,7 +17,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
-import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-revendeur-list',
@@ -48,7 +48,8 @@ export class RevendeurListComponent implements OnInit {
   constructor(
     private revendeurService: RevendeurService,
     private router: Router,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private modal: NzModalService
   ) { }
 
   ngOnInit() {
@@ -108,10 +109,12 @@ export class RevendeurListComponent implements OnInit {
   }
 
   get filteredRevendeurs() {
+    if (!this.searchTerm) return this.revendeurs;
+    const term = this.searchTerm.toLowerCase();
     return this.revendeurs.filter(revendeur =>
-      (revendeur.nom && revendeur.nom.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
-      (revendeur.email && revendeur.email.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
-      (revendeur.Telephone && revendeur.Telephone.toLowerCase().includes(this.searchTerm.toLowerCase()))
+      Object.values(revendeur).some(value =>
+        value && value.toString().toLowerCase().includes(term)
+      )
     );
   }
 
@@ -171,7 +174,13 @@ export class RevendeurListComponent implements OnInit {
     }
 
     doc.save(`liste_revendeurs_${dateStr.replace(/\//g, '-')}.pdf`);
-    this.message.success('PDF exporté avec succès');
+    this.modal.info({
+      nzTitle: 'Export PDF',
+      nzContent: 'Le PDF a été exporté avec succès.',
+      nzOkText: 'OK',
+      nzCentered: true,
+      nzClassName: 'modern-modal'
+    });
   }
 
   exportToExcel() {

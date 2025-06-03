@@ -7,13 +7,8 @@
           <div class="search-section">
             <div class="search-wrapper">
               <nz-input-group [nzSuffix]="suffixIconSearch" class="modern-search">
-                <input 
-                  type="text" 
-                  nz-input 
-                  placeholder="Rechercher par client, status, type..." 
-                  [(ngModel)]="searchTerm"
-                  class="search-input-field" 
-                />
+                <input type="text" nz-input placeholder="Rechercher par client, status, type..."
+                  [(ngModel)]="searchTerm" class="search-input-field" />
               </nz-input-group>
               <ng-template #suffixIconSearch>
                 <span nz-icon nzType="search" class="search-icon"></span>
@@ -23,35 +18,18 @@
           <div class="actions-section">
             <div class="export-buttons">
               <nz-button-group nzSize="small" class="glass-buttons">
-                <button 
-                  nz-button 
-                  nzType="default" 
-                  nz-tooltip
-                  nzTooltipTitle="Exporter en PDF"
-                  (click)="exportToPdf()"
-                  class="export-btn glass-btn"
-                >
+                <button nz-button nzType="default" nz-tooltip nzTooltipTitle="Exporter en PDF" (click)="exportToPdf()"
+                  class="export-btn glass-btn">
                   <span nz-icon nzType="file-pdf"></span>
                 </button>
-                <button 
-                  nz-button 
-                  nzType="default" 
-                  nz-tooltip
-                  nzTooltipTitle="Exporter en Excel"
-                  (click)="exportToExcel()"
-                  class="export-btn glass-btn"
-                >
+                <button nz-button nzType="default" nz-tooltip nzTooltipTitle="Exporter en Excel"
+                  (click)="exportToExcel()" class="export-btn glass-btn">
                   <span nz-icon nzType="file-excel"></span>
                 </button>
               </nz-button-group>
             </div>
-            <button 
-              nz-button 
-              nzType="primary" 
-              (click)="createReclamation()"
-              class="add-reclamation-btn primary-gradient"
-              nzSize="small"
-            >
+            <button nz-button nzType="primary" (click)="createReclamation()"
+              class="add-reclamation-btn primary-gradient" nzSize="small">
               <span nz-icon nzType="plus"></span>
               <span class="btn-text">Nouvelle Réclamation</span>
             </button>
@@ -72,24 +50,12 @@
       <!-- Enhanced Table Section with Modern Design -->
       <div class="table-section modern-table-section" *ngIf="!isLoading">
         <div class="table-wrapper glass-table">
-          <nz-table 
-            #reclamationTable 
-            [nzData]="filteredReclamations" 
-            [nzFrontPagination]="true"
-            [nzShowPagination]="true"
-            [nzPageSize]="pageSize"
-            [nzPageIndex]="currentPage"
-            [nzTotal]="filteredReclamations.length"
-            [nzPageSizeOptions]="pageSizeOptions"
-            [nzShowSizeChanger]="true"
-            (nzPageIndexChange)="changePage($event)"
-            (nzPageSizeChange)="onPageSizeChange($event)"
-            [nzLoading]="isLoading"
-            [nzShowTotal]="rangeTemplate"
-            nzTableLayout="fixed"
-            class="enhanced-table modern-table"
-            [nzScroll]="{ x: '800px' }"
-          >
+          <nz-table #reclamationTable [nzData]="filteredReclamations" [nzFrontPagination]="true"
+            [nzShowPagination]="true" [nzPageSize]="pageSize" [nzPageIndex]="currentPage"
+            [nzTotal]="filteredReclamations.length" [nzPageSizeOptions]="pageSizeOptions" [nzShowSizeChanger]="true"
+            (nzPageIndexChange)="changePage($event)" (nzPageSizeChange)="onPageSizeChange($event)"
+            [nzLoading]="isLoading" [nzShowTotal]="rangeTemplate" nzTableLayout="fixed"
+            class="enhanced-table modern-table" [nzScroll]="{ x: '800px' }">
             <thead>
               <tr class="table-header">
                 <th nzWidth="180px" class="header-cell">
@@ -153,29 +119,21 @@
                 </td>
                 <td class="actions-cell data-cell">
                   <div class="table-actions modern-actions">
-                    <button 
-                      nz-button 
-                      nzType="default" 
-                      nzSize="small" 
-                      (click)="editReclamation(reclamation.idReclamation)" 
-                      class="action-button edit-btn"
-                      nz-tooltip
-                      nzTooltipTitle="Modifier la réclamation"
-                    >
-                      <span nz-icon nzType="edit"></span>
-                    </button>
-                    <button 
-                      nz-button 
-                      nzDanger 
-                      nzSize="small" 
-                      (click)="openDeleteModal(reclamation.idReclamation)"
-                      class="action-button delete-btn"
-                      nz-tooltip
-                      nzTooltipTitle="Supprimer la réclamation"
-                    >
-                      <span nz-icon nzType="delete"></span>
-                    </button>
-                  </div>
+  <button *ngIf="reclamation.status !== 'fermée'" nz-button nzType="default" nzSize="small"
+    (click)="editReclamation(reclamation.idReclamation)" class="action-button edit-btn" nz-tooltip
+    nzTooltipTitle="Modifier la réclamation">
+    <span nz-icon nzType="edit"></span>
+  </button>
+  <button *ngIf="reclamation.status === 'fermée'" nz-button nzType="default" nzSize="small"
+    (click)="viewReclamation(reclamation.idReclamation)" class="action-button view-btn" nz-tooltip
+    nzTooltipTitle="Voir la réclamation">
+    <span nz-icon nzType="eye"></span>
+  </button>
+  <button nz-button nzDanger nzSize="small" (click)="openDeleteModal(reclamation.idReclamation)"
+    class="action-button delete-btn" nz-tooltip nzTooltipTitle="Supprimer la réclamation">
+    <span nz-icon nzType="delete"></span>
+  </button>
+</div>
                 </td>
                 <td class="data-cell">
                   <nz-tag [nzColor]="getStatusColor(reclamation.status)">
@@ -194,44 +152,11 @@
             </div>
           </ng-template>
         </div>
-        <!-- Enhanced Empty State -->
-        <div class="empty-state modern-empty" *ngIf="filteredReclamations.length === 0 && !isLoading">
-          <div class="empty-content">
-            <div class="empty-icon-container">
-              <span nz-icon nzType="file-exclamation" class="empty-icon"></span>
-              <div class="icon-bg-effect"></div>
-            </div>
-            <h3 class="empty-title">
-              {{ searchTerm ? 'Aucune réclamation trouvée' : 'Aucune réclamation enregistrée' }}
-            </h3>
-            <p class="empty-description">
-              {{ searchTerm ? 'Essayez de modifier vos critères de recherche' : 'Commencez par ajouter votre première réclamation' }}
-            </p>
-            <button 
-              *ngIf="!searchTerm"
-              nz-button 
-              nzType="primary" 
-              (click)="createReclamation()"
-              class="empty-action-btn modern-primary-btn"
-            >
-              <span nz-icon nzType="plus"></span>
-              <span>Ajouter une Réclamation</span>
-            </button>
-          </div>
-        </div>
       </div>
       <!-- Enhanced Delete Modal with Modern Design -->
-      <nz-modal
-        [(nzVisible)]="showDeleteModal"
-        nzTitle="Confirmer la suppression"
-        (nzOnCancel)="closeDeleteModal()"
-        (nzOnOk)="confirmDelete()"
-        nzOkText="Supprimer"
-        nzCancelText="Annuler"
-        nzOkDanger="true"
-        nzWidth="450px"
-        class="delete-modal modern-modal"
-      >
+      <nz-modal [(nzVisible)]="showDeleteModal" nzTitle="Confirmer la suppression" (nzOnCancel)="closeDeleteModal()"
+        (nzOnOk)="confirmDelete()" nzOkText="Supprimer" nzCancelText="Annuler" nzOkDanger="true" nzWidth="450px"
+        class="delete-modal modern-modal">
         <div class="modal-content modern-modal-content">
           <div class="warning-section">
             <div class="warning-icon modern-warning-icon">
@@ -253,4 +178,4 @@
       </nz-modal>
     </app-card>
   </div>
-</div> 
+</div>

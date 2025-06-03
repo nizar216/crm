@@ -8,7 +8,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzMessageModule } from 'ng-zorro-antd/message';
-import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 @Component({
@@ -36,7 +36,8 @@ export class TechnicienCreateComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private technicienService: TechnicienService,
-    private router: Router
+    private router: Router,
+    private modal: NzModalService
   ) {
     this.technicienForm = this.fb.group({
       nom: ['', [Validators.required]],
@@ -66,12 +67,20 @@ export class TechnicienCreateComponent implements OnInit {
 
     this.technicienService.createTechnicien(this.technicienForm.value).subscribe({
       next: () => {
-        this.isSubmitting = false;
-        this.router.navigate(['/dashboard/techniciens']);
+        this.modal.success({
+          nzTitle: 'Succès',
+          nzContent: 'Le technicien a été créé avec succès !',
+          nzOnOk: () => {
+            this.router.navigate(['/dashboard/techniciens']);
+          }
+        });
       },
       error: (err) => {
         this.isSubmitting = false;
-        this.errorMessage = err.error?.message || 'Erreur lors de la création du technicien';
+        this.modal.error({
+          nzTitle: 'Erreur',
+          nzContent: 'Erreur lors de la création du technicien'
+        });
         console.error('Error creating technicien:', err);
       }
     });

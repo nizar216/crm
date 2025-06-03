@@ -259,7 +259,7 @@
 .table-actions.modern-actions {
   display: flex;
   gap: 8px;
-  justify-content: center;
+  justify-content: flex-end;
   .action-button {
     width: 36px;
     height: 36px;

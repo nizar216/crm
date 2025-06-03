@@ -1,9 +1,154 @@
-.facture-view-details {
+.facture-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+
+  button {
+    background: white;
+    border: 1px solid #ccc;
+    color: #333;
+    font-weight: bold;
+    padding: 5px 12px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    transition: background 0.2s ease;
+
+    i {
+      font-size: 16px;
+      margin-right: 6px;
+    }
+
+    &:hover {
+      background-color: #f2f2f2;
+    }
+  }
+}
+
+.facture-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 24px auto 0;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 24px;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+  position: relative;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  padding-bottom: 100px;
+}
+
+.facture-logo {
+  text-align: center;
+  background: #e5e5e5;
+  color: black;
+  padding: 20px;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+
+  img {
+    height: 20px;
+    margin: 0 auto 10px;
+  }
+
+  p {
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+
+  h4 {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 16px;
+
+    strong {
+      font-weight: 700;
+    }
+  }
+}
+
+.client-info {
+  background: #f9f9f9;
   padding: 16px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin: 20px 0;
+  border-radius: 4px;
+
+  p {
+    margin: 0 0 8px;
+  }
+
+  strong {
+    font-weight: bold;
+  }
+}
+
+.facture-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+
+  th, td {
+    padding: 8px;
+    border: 1px solid #ccc;
+  }
+
+  thead {
+    background-color: #6e2419;
+    color: white;
+
+    th {
+      font-weight: bold;
+    }
+  }
+
+  tbody {
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    tr:nth-child(odd) {
+      background-color: white;
+    }
+  }
+}
+
+.facture-total {
+  margin-top: 32px;
+  background: #f9f9f9;
+  padding: 16px;
+  width: 280px;
+  border-radius: 4px;
+  margin-left: auto;
+
+  p {
+    margin: 0 0 8px;
+  }
+
+  h4 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+
+    span {
+      color: red;
+    }
+  }
+
+  hr {
+    margin: 8px 0;
+  }
+}
+
+.facture-signature {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  text-align: right;
+
+  p {
+    margin: 4px 0;
+  }
 }

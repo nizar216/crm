@@ -10,8 +10,9 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { FactureService } from 'src/app/core/services/facture.service';
-import { DevisService, Devis } from 'src/app/core/services/devis.service';
-import { ReclamationService } from 'src/app/core/services/reclamation.service';
+import { ClientService, Client } from 'src/app/core/services/client.service';
+import { ReclamationService, Reclamation } from 'src/app/core/services/reclamation.service';
+
 
 @Component({
   selector: 'app-facture-create',
@@ -34,12 +35,11 @@ import { ReclamationService } from 'src/app/core/services/reclamation.service';
 export class FactureCreateComponent implements OnInit {
   factureForm: FormGroup;
   isSubmitting = false;
-  devisList: Devis[] = [];
-  selectedDevis: Devis[] = [];
-  client: any = null;
+  allReclamations: Reclamation[] = [];
+  selectedReclamations: Reclamation[] = [];
+  client: Client | null = null;
   articles: any[] = [];
   services: any[] = [];
-  reclamations: any[] = [];
   totals = {
     prixTotal: 0,
     totalArticle: 0,
@@ -55,68 +55,68 @@ export class FactureCreateComponent implements OnInit {
     private router: Router,
     private message: NzMessageService,
     private factureService: FactureService,
-    private devisService: DevisService,
     private reclamationService: ReclamationService
   ) {
     this.factureForm = this.fb.group({
       date: [null, Validators.required],
-      devis: [[], Validators.required]
+      reclamations: [[], Validators.required]
     });
   }
 
   ngOnInit() {
-    this.devisService.getAllDevis().subscribe({
-      next: devis => this.devisList = devis,
-      error: () => this.message.error('Erreur lors du chargement des devis')
+    this.reclamationService.getReclamationsWhereStatus().subscribe({
+      next: (data) => {
+        // Map backend 'Articles' and 'Services' to lowercase keys for frontend compatibility
+        this.allReclamations = data.map((rec: any) => ({
+          ...rec,
+          articles: rec.Articles || [],
+          services: rec.Services || []
+        }));
+      },
+      error: () => {
+        this.message.error('Erreur lors du chargement des réclamations fermées');
+      }
     });
 
-    this.factureForm.get('devis')?.valueChanges.subscribe((ids: number[]) => {
-      this.onDevisSelection(ids);
+    this.factureForm.get('reclamations')?.valueChanges.subscribe((selectedIds: number[]) => {
+      this.onReclamationsSelection(selectedIds);
     });
   }
 
-  async onDevisSelection(ids: number[]) {
-    this.selectedDevis = this.devisList.filter(d => ids.includes(d.idDevis!));
-
-    if (this.selectedDevis.length === 0) {
+  onReclamationsSelection(selectedIds: number[]) {
+    this.selectedReclamations = this.allReclamations.filter(r => selectedIds.includes(r.idReclamation));
+    if (this.selectedReclamations.length === 0) {
       this.client = null;
       this.articles = [];
       this.services = [];
-      this.reclamations = [];
+      this.resetTotals();
       this.clientMismatch = false;
+      return;
+    }
+    // Check all selected reclamations are for the same client
+    const clientId = this.selectedReclamations[0].IdClient;
+    this.clientMismatch = !this.selectedReclamations.every(r => r.IdClient === clientId);
+    if (this.clientMismatch) {
+      this.client = null;
+      this.articles = [];
+      this.services = [];
       this.resetTotals();
       return;
     }
-
-    const devisId = this.selectedDevis[0].idDevis;
-
-    if (devisId) {
-      try {
-        const response = await this.reclamationService.getReclamationsByDevis(devisId).toPromise();
-        if (response?.success) {
-          this.reclamations = response.data || [];
-        }
-      } catch {
-        this.message.error('Erreur lors de la récupération des réclamations');
-      }
-    }
-
-    const clientId = this.selectedDevis[0].IdClient || this.selectedDevis[0].client?.idClient || this.selectedDevis[0].Client?.idClient;
-    this.clientMismatch = !this.selectedDevis.every(d => (d.IdClient || d.client?.idClient || d.Client?.idClient) === clientId);
-    this.client = this.selectedDevis[0].Client || this.selectedDevis[0].client;
-    this.articles = this.selectedDevis.flatMap(d => d.DevisArticles || d.articles || []);
-    this.services = this.selectedDevis.flatMap(d => d.DevisServices || d.services || []);
-
+    this.client = this.selectedReclamations[0].Client || null;
+    // Aggregate articles and services
+    this.articles = this.selectedReclamations.flatMap(r => r.articles || []);
+    this.services = this.selectedReclamations.flatMap(r => r.services || []);
     this.calculateTotals();
   }
 
   calculateTotals() {
-    this.totals.prixTotal = this.selectedDevis.reduce((sum, d) => sum + (d.prixTotal || 0), 0);
     this.totals.totalArticle = this.articles.reduce((sum, a) => sum + ((a.prixHT || 0) * (a.quantite || 1)), 0);
     this.totals.totalService = this.services.reduce((sum, s) => sum + ((s.prix || 0) * (s.quantite || 1)), 0);
-    this.totals.prixHT = this.selectedDevis.reduce((sum, d) => sum + (d.prixTotal || 0) - (d.totalTva || 0), 0);
-    this.totals.TVAglobal = this.selectedDevis.reduce((sum, d) => sum + (d.totalTva || 0), 0);
-    this.totals.remiseGlobal = this.selectedDevis.reduce((sum, d) => sum + (d.remiseTotale || 0), 0);
+    this.totals.prixTotal = this.totals.totalArticle + this.totals.totalService;
+    this.totals.prixHT = this.totals.totalArticle;
+    this.totals.TVAglobal = this.articles.reduce((sum, a) => sum + ((a.tva || 0) * (a.prixHT || 0) * (a.quantite || 1) / 100), 0);
+    this.totals.remiseGlobal = this.articles.reduce((sum, a) => sum + (a.remise || 0), 0) + this.services.reduce((sum, s) => sum + (s.remise || 0), 0);
   }
 
   resetTotals() {
@@ -140,16 +140,12 @@ export class FactureCreateComponent implements OnInit {
 
     const facturePayload: any = {
       date: this.factureForm.value.date,
-      devisIds: this.selectedDevis.map(d => d.idDevis),
       client: this.client,
       articles: this.articles,
       services: this.services,
-      ...this.totals
+      ...this.totals,
+      reclamationIds: this.selectedReclamations.map(r => r.idReclamation)
     };
-    console.log(this.reclamations)
-    if (this.reclamations && this.reclamations.length > 0) {
-      facturePayload.reclamationIds = this.reclamations.map(r => r.idReclamation);
-    }
 
     this.factureService.AddFacture(facturePayload).subscribe({
       next: () => {
@@ -165,13 +161,6 @@ export class FactureCreateComponent implements OnInit {
 
   cancel() {
     this.router.navigate(['/dashboard/factures/list']);
-  }
-
-  get devisOptions() {
-    return this.devisList.map(d => ({
-      label: 'Devis #' + d.idDevis + ' - ' + (d.Client?.nom || d.client?.nom || ''),
-      value: d.idDevis
-    }));
   }
 
   get tableScroll() {

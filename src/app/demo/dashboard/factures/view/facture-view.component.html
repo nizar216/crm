@@ -1,37 +1,89 @@
-<div class="p-4">
-  <h2 class="text-2xl font-bold mb-6">Détails de la facture</h2>
-  <div>
-    <strong>Date :</strong> {{ client?.date | date:'shortDate' }}
+<div class="facture-header">
+  <button (click)="cancel()">
+    <i class="bi bi-arrow-left"></i> Retour à la liste des factures
+  </button>
+  <button (click)="generatePDF()">
+    <i class="bi bi-printer-fill me-2"></i> Générer la facture
+  </button>
+</div>
+
+<div class="facture-container" id="facture-content">
+  <div class="facture-logo">
+    <img src="../../../../../assets/images/logo_io.png" alt="SaviFirst Logo" />
+    <p>Adresse: Av. Monji Slim, Sakiet Ezzit / TEL 74 250 323</p>
+    <h4>
+      FACTURE N° <strong>{{ facture?.idFacture }}</strong>
+    </h4>
   </div>
 
-  <div *ngIf="client" class="bg-gray-50 p-4 rounded-md my-4">
-    <h3 class="text-lg font-semibold mb-2">Client</h3>
-    <p>{{ client.nom }} {{ client.prenom }}</p>
-    <p>{{ client.telephone1 }}</p>
-    <p>{{ client.email }}</p>
+  <div class="facture-summary" style="margin-bottom: 1.5rem; border: 1px solid #eee; padding: 1rem; border-radius: 8px; background: #fafbfc;">
+    <h4>Détails de la facture</h4>
+    <table>
+      <tr><td><strong>ID Facture:</strong></td><td>{{ facture?.idFacture }}</td></tr>
+      <tr><td><strong>Date:</strong></td><td>{{ facture?.date | date:'yyyy-MM-dd HH:mm:ss' }}</td></tr>
+      <tr><td><strong>Prix Total:</strong></td><td>{{ facture?.prixTotal }}</td></tr>
+      <tr><td><strong>Total Article:</strong></td><td>{{ facture?.totalArticle }}</td></tr>
+      <tr><td><strong>Total Service:</strong></td><td>{{ facture?.totalService }}</td></tr>
+      <tr><td><strong>Prix HT:</strong></td><td>{{ facture?.prixHT }}</td></tr>
+      <tr><td><strong>TVA global:</strong></td><td>{{ facture?.TVAglobal }}</td></tr>
+      <tr><td><strong>Remise Global:</strong></td><td>{{ facture?.remiseGlobal }}</td></tr>
+      <tr><td><strong>Créé le:</strong></td><td>{{ facture?.createdAt | date:'yyyy-MM-dd HH:mm:ss' }}</td></tr>
+      <tr><td><strong>Modifié le:</strong></td><td>{{ facture?.updatedAt | date:'yyyy-MM-dd HH:mm:ss' }}</td></tr>
+    </table>
   </div>
 
-
-  <div *ngIf="reclamations?.length" class="my-6">
-    <h3 class="text-lg font-semibold mb-4">Réclamations</h3>
-    <ul>
-      <li *ngFor="let r of reclamations">{{ r.objet || r.description }}</li>
-    </ul>
+  <div class="client-info">
+    <p><strong>Nom du client : </strong>{{ facture?.Reclamations?.[0]?.Client?.nom }}</p>
+    <p><strong>Adresse :</strong> {{ facture?.Reclamations?.[0]?.Client?.adresse }}</p>
+    <p><strong>Ville :</strong> {{ facture?.Reclamations?.[0]?.Client?.ville }}</p>
+    <p><strong>Tel :</strong> {{ facture?.Reclamations?.[0]?.Client?.telephone1 }}</p>
   </div>
 
-  <div class="bg-gray-50 p-4 rounded-md my-6">
-    <h3 class="text-lg font-semibold mb-4">Récapitulatif</h3>
-    <div class="grid grid-cols-2 gap-4">
-      <div>
-        <p>Total HT: <span class="font-medium">{{ totals.prixHT | number:'1.3-3' }} TND</span></p>
-        <p>Total TVA: <span class="font-medium">{{ totals.TVAglobal | number:'1.3-3' }} TND</span></p>
-        <p>Remise globale: <span class="font-medium">{{ totals.remiseGlobal | number:'1.3-3' }} TND</span></p>
-        <p class="text-lg font-bold mt-2">Total TTC: <span class="text-blue-600">{{ totals.prixTotal | number:'1.3-3' }} TND</span></p>
-      </div>
-    </div>
+  <table class="facture-table">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Désignation</th>
+        <th>Qté</th>
+        <th>Prix Unit.</th>
+        <th>Remise %</th>
+        <th>TVA %</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let service of facture?.Reclamations?.[0]?.Services">
+        <td>Service</td>
+        <td>{{ service.nom }}</td>
+        <td>1</td>
+        <td>{{ service.prix }}</td>
+        <td>{{ service.ReclamationService?.remise }}%</td>
+        <td>{{ service.tva }}%</td>
+        <td>{{ facture?.totalService }}</td>
+      </tr>
+      <tr *ngFor="let article of facture?.Reclamations?.[0]?.Articles">
+        <td>Article</td>
+        <td>{{ article.libelle }}</td>
+        <td>{{ article.ReclamationArticle?.quantite }}</td>
+        <td>{{ article.ReclamationArticle?.prixFinal }}</td>
+        <td>{{ article.ReclamationArticle?.remise }}%</td>
+        <td>{{ article.tva }}%</td>
+        <td>{{ facture?.totalArticle }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="facture-total">
+    <p><strong>Total HT:</strong> {{ facture?.prixHT }}</p>
+    <p><strong>TVA:</strong> {{ facture?.TVAglobal }}</p>
+    <p><strong>Total Remise:</strong> {{ facture?.remiseGlobal }}</p>
+    <p><strong>Timbre:</strong> 1,000</p>
+    <hr />
+    <h4><strong>Total TTC:</strong> <span>{{ facture?.prixTotal }}</span></h4>
   </div>
 
-  <div class="flex justify-end gap-4 mt-8">
-    <button nz-button nzType="default" (click)="cancel()">Retour</button>
+  <div class="facture-signature">
+    <p>___________________________</p>
+    <p>Signature & Cachet</p>
   </div>
 </div>

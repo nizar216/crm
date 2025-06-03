@@ -72,12 +72,18 @@
           <h4 class="section-title">Informations Intervention</h4>
           <div class="row">
             <div class="col-md-3 mb-3">
-              <label class="form-label">Type Intervention</label>
-              <input nz-input type="text" class="form-control modern-input" formControlName="typeIntervention">
+              <label class="form-label">Type Intervention <span class="text-danger">*</span></label>
+              <nz-select nzBorderless formControlName="typeIntervention" class="modern-input" required>
+  <nz-option nzValue="installation" nzLabel="Installation"></nz-option>
+  <nz-option nzValue="Réparation" nzLabel="Réparation"></nz-option>
+</nz-select>
             </div>
             <div class="col-md-3 mb-3">
-              <label class="form-label">Type Régulation</label>
-              <input nz-input type="text" class="form-control modern-input" formControlName="typeregulation">
+              <label class="form-label">Type Régulation <span class="text-danger">*</span></label>
+              <nz-select nzBorderless formControlName="typeregulation" class="modern-input" required>
+  <nz-option nzValue="Paiement sur revendeur" nzLabel="Paiement sur revendeur"></nz-option>
+  <nz-option nzValue="Paiement sur client" nzLabel="Paiement sur client"></nz-option>
+</nz-select>
             </div>
             <div class="col-md-3 mb-3">
               <label class="form-label">Technicien</label>

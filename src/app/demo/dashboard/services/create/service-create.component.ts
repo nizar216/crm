@@ -8,8 +8,8 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
-import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { ServiceService } from 'src/app/core/services/service.service';
 
 @Component({
@@ -39,7 +39,7 @@ export class ServiceCreateComponent implements OnInit {
     private fb: FormBuilder,
     private serviceService: ServiceService,
     private router: Router,
-    private message: NzMessageService
+    private modal: NzModalService
   ) {
     this.serviceForm = this.fb.group({
       nom: ['', [Validators.required, Validators.minLength(3)]],
@@ -140,7 +140,10 @@ export class ServiceCreateComponent implements OnInit {
       this.serviceForm.controls[i].updateValueAndValidity();
     }
     if (this.serviceForm.invalid) {
-      this.message.error('Veuillez remplir tous les champs obligatoires du formulaire et vérifier les parts.');
+      this.modal.error({
+            nzTitle: 'Erreur',
+            nzContent: 'Veuillez remplir tous les champs obligatoires du formulaire et vérifier les parts.'
+          });
       return;
     }
     const prix = parseFloat(this.serviceForm.value.prix);
@@ -158,13 +161,21 @@ export class ServiceCreateComponent implements OnInit {
     this.serviceService.addService(formData).subscribe({
       next: () => {
         this.isSubmitting = false;
-        this.message.success('Service créé avec succès!');
-        this.router.navigate(['/dashboard/services']);
+        this.modal.success({
+            nzTitle: 'Succès',
+            nzContent: 'Le service a été créé avec succès !',
+            nzOnOk: () => {
+              this.router.navigate(['/dashboard/services']);
+            }
+          });
       },
       error: (err) => {
         this.isSubmitting = false;
         console.error(err);
-        this.message.error('Erreur lors de la création du service');
+        this.modal.error({
+            nzTitle: 'Erreur',
+            nzContent: 'Erreur lors de la création du service'
+          });
       }
     });
   }

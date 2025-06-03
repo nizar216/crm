@@ -9,8 +9,8 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
-import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 @Component({
@@ -46,7 +46,7 @@ export class ArticleEditComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private message: NzMessageService
+    private modal: NzModalService
   ) {
     this.articleForm = this.fb.group({
       famille: [null, [Validators.required]],
@@ -138,8 +138,13 @@ export class ArticleEditComponent implements OnInit {
     this.articleService.updateArticle(formData, this.articleId).subscribe({
       next: (response) => {
         this.isSubmitting = false;
-        this.message.success('Article mis à jour avec succès');
-        this.router.navigate(['/dashboard/articles']);
+        this.modal.success({
+          nzTitle: 'Succès',
+          nzContent: "L'article a été mis à jour avec succès !",
+          nzOnOk: () => {
+            this.router.navigate(['/dashboard/articles']);
+          }
+        });
       },
       error: (err) => {
         this.isSubmitting = false;

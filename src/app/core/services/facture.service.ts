@@ -40,4 +40,8 @@ export class FactureService {
   deleteFacture(id: any): Observable<any> {
     return this.http.delete(`${this.URL}/delete-facture/${id}`);
   }
+
+  getFactureDataFromClosedReclamations(clientId: number): Observable<any> {
+    return this.http.get(`${this.URL}/data-from-reclamations/${clientId}`);
+  }
 }

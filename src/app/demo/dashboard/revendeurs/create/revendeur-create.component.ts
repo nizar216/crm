@@ -7,7 +7,8 @@ import { CardComponent } from 'src/app/theme/shared/components/card/card.compone
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
+import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-revendeur-create',
@@ -21,7 +22,8 @@ import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
     NzFormModule,
     NzInputModule,
     NzButtonModule,
-    NzMessageModule
+    NzMessageModule,
+    NzModalModule
   ]
 })
 export class RevendeurCreateComponent {
@@ -32,7 +34,7 @@ export class RevendeurCreateComponent {
     private fb: FormBuilder,
     private revendeurService: RevendeurService,
     private router: Router,
-    private message: NzMessageService
+    private modal: NzModalService
   ) {
     this.revendeurForm = this.fb.group({
       nom: ['', [Validators.required]],
@@ -48,12 +50,20 @@ export class RevendeurCreateComponent {
       this.isLoading = true;
       this.revendeurService.createRevendeur(this.revendeurForm.value).subscribe({
         next: () => {
-          this.message.success('Revendeur créé avec succès');
-          this.router.navigate(['/dashboard/revendeurs']);
+          this.modal.success({
+            nzTitle: 'Succès',
+            nzContent: 'Le revendeur a été créé avec succès !',
+            nzOnOk: () => {
+              this.router.navigate(['/dashboard/revendeurs']);
+            }
+          });
         },
         error: (err) => {
           console.error('Error creating revendeur:', err);
-          this.message.error('Erreur lors de la création du revendeur');
+          this.modal.error({
+            nzTitle: 'Erreur',
+            nzContent: 'Erreur lors de la création du revendeur'
+          });
           this.isLoading = false;
         }
       });

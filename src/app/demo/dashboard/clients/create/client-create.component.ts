@@ -10,6 +10,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-client-create',
@@ -25,7 +26,8 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
     NzInputModule,
     NzIconModule,
     NzMessageModule,
-    NzSelectModule
+    NzSelectModule,
+    NzModalModule
   ]
 })
 export class ClientCreateComponent implements OnInit {
@@ -54,7 +56,8 @@ export class ClientCreateComponent implements OnInit {
   constructor(
     private clientService: ClientService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private modal: NzModalService
   ) {
     this.clientForm = this.fb.group({
       nom: ['', [Validators.required]],
@@ -94,7 +97,13 @@ export class ClientCreateComponent implements OnInit {
     this.clientService.addClient(this.clientForm.value).subscribe({
       next: (response) => {
         this.isSubmitting = false;
-        this.router.navigate(['/dashboard/clients']);
+        this.modal.success({
+          nzTitle: 'Succès',
+          nzContent: 'Le client a été créé avec succès !',
+          nzOnOk: () => {
+            this.router.navigate(['/dashboard/clients']);
+          }
+        });
       },
       error: (err) => {
         this.isSubmitting = false;
